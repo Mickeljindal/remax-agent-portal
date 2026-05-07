@@ -235,26 +235,29 @@ const Auth = () => {
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90" />
       
-      <Card className="w-full max-w-md relative z-10 shadow-2xl border-0 backdrop-blur-sm">
-        <CardHeader className="text-center pb-2 pt-8">
-          <div className="mx-auto mb-6">
-            <img 
-              src={remaxLogo} 
-              alt="REMAX Excellence" 
-              className="h-14 w-auto object-contain"
-            />
+      <Card className="relative z-10 w-full max-w-md overflow-hidden border-0 bg-white/95 text-card-foreground shadow-2xl shadow-[#1a1f36]/15 ring-1 ring-black/5 backdrop-blur-md">
+        <CardHeader className="space-y-0 pb-4 pt-0 text-center">
+          {/* Dark band only behind logo so white artwork stays visible */}
+          <div className="-mx-6 -mt-px mb-5 bg-gradient-to-b from-[#1a1f36] to-[#232a4a] px-8 pb-7 pt-8">
+            <div className="mx-auto max-w-[280px] rounded-xl bg-black/15 px-5 py-4 ring-1 ring-white/10">
+              <img
+                src={remaxLogo}
+                alt="REMAX Excellence"
+                className="mx-auto h-14 w-auto object-contain drop-shadow-sm"
+              />
+            </div>
           </div>
-          <CardTitle className="font-display text-2xl font-bold text-foreground">
+          <CardTitle className="font-display text-2xl font-bold text-[#1a1f36]">
             REMAX Excellence Canada
           </CardTitle>
-          <CardDescription className="text-muted-foreground mt-2">
+          <CardDescription className="mt-2 text-muted-foreground">
             Agent Portal — sign in to access training, listings, and support
           </CardDescription>
         </CardHeader>
-        
-        <CardContent className="pt-4">
+
+        <CardContent className="pt-2">
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6">
+            <TabsList className="mb-6 grid w-full grid-cols-3">
               <TabsTrigger value="login">Sign In</TabsTrigger>
               <TabsTrigger value="signup">Register</TabsTrigger>
               <TabsTrigger value="client-preview">Client Demo</TabsTrigger>
@@ -263,11 +266,11 @@ const Auth = () => {
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-reco" className="text-foreground font-medium">
+                  <Label htmlFor="login-reco" className="font-medium text-foreground">
                     RECO number
                   </Label>
                   <div className="relative">
-                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="login-reco"
                       type="text"
@@ -286,19 +289,19 @@ const Auth = () => {
 
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <Label htmlFor="login-password" className="text-foreground font-medium">
+                    <Label htmlFor="login-password" className="font-medium text-foreground">
                       Password
                     </Label>
                     <button
                       type="button"
-                      className="text-xs text-accent hover:underline"
+                      className="text-xs text-primary underline-offset-4 hover:underline"
                       onClick={() => setForgotOpen(true)}
                     >
                       Forgot password?
                     </button>
                   </div>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="login-password"
                       type={showPassword ? "text" : "password"}
@@ -312,7 +315,7 @@ const Auth = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -328,8 +331,8 @@ const Auth = () => {
               </form>
 
               {forgotOpen && (
-                <div className="mt-4 rounded-lg border border-border p-4 space-y-3 bg-card">
-                  <p className="text-sm font-medium">Reset password</p>
+                <div className="mt-4 space-y-3 rounded-lg border border-border bg-muted/50 p-4">
+                  <p className="text-sm font-medium text-foreground">Reset password</p>
                   <Input
                     type="email"
                     placeholder="Your account email"
@@ -351,11 +354,11 @@ const Auth = () => {
             <TabsContent value="signup">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name" className="text-foreground font-medium">
+                  <Label htmlFor="signup-name" className="font-medium text-foreground">
                     Full Name
                   </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="signup-name"
                       type="text"
@@ -372,11 +375,11 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-foreground font-medium">
+                  <Label htmlFor="signup-email" className="font-medium text-foreground">
                     Email Address
                   </Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="signup-email"
                       type="email"
@@ -393,11 +396,11 @@ const Auth = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-reco" className="text-foreground font-medium">
+                  <Label htmlFor="signup-reco" className="font-medium text-foreground">
                     RECO Number
                   </Label>
                   <div className="relative">
-                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="signup-reco"
                       type="text"
@@ -414,11 +417,11 @@ const Auth = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password" className="text-foreground font-medium">
+                  <Label htmlFor="signup-password" className="font-medium text-foreground">
                     Password
                   </Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="signup-password"
                       type={showPassword ? "text" : "password"}
@@ -431,7 +434,7 @@ const Auth = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -442,11 +445,11 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-confirm" className="text-foreground font-medium">
+                  <Label htmlFor="signup-confirm" className="font-medium text-foreground">
                     Confirm Password
                   </Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="signup-confirm"
                       type={showConfirmPassword ? "text" : "password"}
@@ -459,7 +462,7 @@ const Auth = () => {
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -477,11 +480,11 @@ const Auth = () => {
 
             <TabsContent value="client-preview">
               <form onSubmit={handleClientPreviewLogin} className="space-y-4">
-                <div className="rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+                <div className="rounded-lg border border-dashed border-border bg-muted/40 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
                   Special showcase access for client demos. This does not grant real admin permissions.
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="client-preview-code" className="text-foreground font-medium">
+                  <Label htmlFor="client-preview-code" className="font-medium text-foreground">
                     Preview access code
                   </Label>
                   <Input
@@ -493,13 +496,15 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-foreground font-medium">Preview type</Label>
+                  <Label className="font-medium text-foreground">Preview type</Label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
                       onClick={() => setClientPreviewMode("agent")}
-                      className={`rounded-md border px-3 py-2 text-sm ${
-                        clientPreviewMode === "agent" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"
+                      className={`rounded-md border px-3 py-2 text-sm transition-colors ${
+                        clientPreviewMode === "agent"
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/30 hover:bg-muted/50"
                       }`}
                     >
                       Agent Portal View
@@ -507,8 +512,10 @@ const Auth = () => {
                     <button
                       type="button"
                       onClick={() => setClientPreviewMode("admin")}
-                      className={`rounded-md border px-3 py-2 text-sm ${
-                        clientPreviewMode === "admin" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"
+                      className={`rounded-md border px-3 py-2 text-sm transition-colors ${
+                        clientPreviewMode === "admin"
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/30 hover:bg-muted/50"
                       }`}
                     >
                       Admin Management View
