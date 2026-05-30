@@ -10,6 +10,11 @@ export default defineConfig(() => ({
     hmr: {
       overlay: false,
     },
+    proxy: {
+      // During local dev, proxy upload/file requests to the standalone server (server/index.js on :4000)
+      "/api/upload": "http://localhost:4000",
+      "/files": "http://localhost:4000",
+    },
   },
   plugins: [react()],
   resolve: {

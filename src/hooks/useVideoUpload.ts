@@ -2,11 +2,12 @@ import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Base URL of the KloudBean Node.js upload server.
- * Set VITE_UPLOAD_SERVER_URL in .env (e.g. https://files.remaxexcellence.ca).
- * Files are stored on the KloudBean server disk — NOT in Supabase.
+ * Upload server base URL.
+ * Uploads run on the SAME origin as the app (the Node server serves both the
+ * React build and the /api/upload endpoints), so this is empty by default.
+ * Override with VITE_UPLOAD_SERVER_URL only if you run a separate upload host.
  */
-const UPLOAD_SERVER = (import.meta.env.VITE_UPLOAD_SERVER_URL as string | undefined)?.replace(/\/$/, "") || "http://localhost:4000";
+const UPLOAD_SERVER = (import.meta.env.VITE_UPLOAD_SERVER_URL as string | undefined)?.replace(/\/$/, "") || "";
 
 export interface UploadProgress {
   percent: number;
@@ -40,7 +41,7 @@ async function uploadToServer(
 
   return new Promise((resolve) => {
     const xhr = new XMLHttpRequest();
-    const url = `${UPLOAD_SERVER}/upload/${bucket}${folder ? `?folder=${encodeURIComponent(folder)}` : ""}`;
+    const url = `${UPLOAD_SERVER}/api/upload/${bucket}${folder ? `?folder=${encodeURIComponent(folder)}` : ""}`;
     xhr.open("POST", url);
     if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 

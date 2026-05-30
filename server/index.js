@@ -126,8 +126,8 @@ function makeUploader(bucket) {
 }
 
 // ─── Upload endpoint ───
-// POST /upload/:bucket?folder=<subfolder>
-app.post("/upload/:bucket", verifyToken(true), (req, res) => {
+// POST /api/upload/:bucket?folder=<subfolder>
+app.post("/api/upload/:bucket", verifyToken(true), (req, res) => {
   const bucket = req.params.bucket;
   const cfg = BUCKETS[bucket];
   if (!cfg) return res.status(400).json({ error: "Unknown bucket" });
