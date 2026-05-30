@@ -24,9 +24,11 @@ import {
   Award,
 } from "lucide-react";
 import { useTrainingCoursesData, type Course } from "@/hooks/useTrainingCoursesData";
+import { useNotifications } from "@/hooks/useNotifications";
 import { toast } from "@/hooks/use-toast";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import CertificateShareActions from "@/components/dashboard/CertificateShareActions";
+import VideoPlayer from "@/components/dashboard/VideoPlayer";
 
 interface TrainingCoursesProps {
   agentId: string | undefined;
@@ -51,7 +53,10 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
     setProgress,
   } = useTrainingCoursesData(agentId);
 
+  const { notifyCourseCompleted } = useNotifications();
+
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
   const [reminderFreq, setReminderFreq] = useState("weekly");
   const [certOpen, setCertOpen] = useState(false);
   const [assignedCourseIds, setAssignedCourseIds] = useState<Set<string>>(new Set());
@@ -89,6 +94,59 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
       if (idx >= 0) return prev.map((p, i) => (i === idx ? { ...p, completed: true } : p));
       return [...prev, { module_id: moduleId, completed: true, watched_seconds: 0, score: null }];
     });
+
+    // Check if entire course is now complete
+    if (selectedCourse) {
+      const courseModules = getCourseModules(selectedCourse.id);
+      const updatedProgress = [...progress];
+      const existingIdx = updatedProgress.findIndex((p) => p.module_id === moduleId);
+      if (existingIdx >= 0) updatedProgress[existingIdx] = { ...updatedProgress[existingIdx], completed: true };
+      else updatedProgress.push({ module_id: moduleId, completed: true, watched_seconds: 0, score: null });
+
+      const allDone = courseModules.every((m) =>
+        updatedProgress.some((p) => p.module_id === m.id && p.completed)
+      );
+
+      if (allDone) {
+        // Issue certificate
+        const totalWatch = updatedProgress
+          .filter((p) => courseModules.some((m) => m.id === p.module_id))
+          .reduce((sum, p) => sum + (p.watched_seconds || 0), 0);
+
+        const certNumber = `CERT-${Date.now().toString(36).toUpperCase()}-${agentId.slice(0, 4).toUpperCase()}`;
+
+        await supabase.from("course_certificates").upsert({
+          agent_id: agentId,
+          course_id: selectedCourse.id,
+          certificate_number: certNumber,
+          agent_name: agentName || "Agent",
+          reco_number: recoNumber || "",
+          course_title: selectedCourse.title,
+          total_watch_time_seconds: totalWatch,
+          issued_at: new Date().toISOString(),
+        }, { onConflict: "agent_id,course_id" });
+
+        // Send completion notification
+        const { data: agentData } = await supabase
+          .from("agents")
+          .select("email")
+          .eq("id", agentId)
+          .single();
+
+        if (agentData?.email) {
+          notifyCourseCompleted(
+            agentData.email,
+            agentName || "Agent",
+            agentId,
+            selectedCourse.title,
+            totalWatch
+          );
+        }
+
+        toast({ title: "🎉 Course completed!", description: "Your certificate is ready." });
+      }
+    }
+
     refetch();
   };
 
@@ -104,7 +162,12 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
     return (
       <Card
         className="min-w-[260px] max-w-[280px] border-border hover:shadow-lg transition-all cursor-pointer group shrink-0 snap-start"
-        onClick={() => setSelectedCourse(course)}
+        onClick={() => {
+          setSelectedCourse(course);
+          // Auto-select first video module
+          const firstVideoModule = getCourseModules(course.id).find((m) => m.video_url);
+          setActiveModuleId(firstVideoModule?.id || null);
+        }}
       >
         <div className="h-28 bg-gradient-to-br from-primary/80 to-primary rounded-t-lg flex items-center justify-center relative overflow-hidden">
           {course.thumbnail_url ? (
@@ -212,22 +275,34 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
 
               <div className="grid md:grid-cols-3 gap-4 mt-2">
                 <div className="md:col-span-2 space-y-3">
-                  <div className="aspect-video rounded-lg bg-muted overflow-hidden border">
-                    {getCourseModules(selectedCourse.id).find((m) => m.video_url)?.video_url ? (
-                      <iframe
-                        title="Course video"
-                        src={getCourseModules(selectedCourse.id).find((m) => m.video_url)?.video_url || ""}
-                        className="w-full h-full min-h-[200px]"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
+                  {(() => {
+                    const activeModule = activeModuleId
+                      ? getCourseModules(selectedCourse.id).find((m) => m.id === activeModuleId)
+                      : getCourseModules(selectedCourse.id).find((m) => m.video_url);
+                    const moduleProgress = activeModule
+                      ? progress.find((p) => p.module_id === activeModule.id)
+                      : undefined;
+
+                    return activeModule?.video_url ? (
+                      <VideoPlayer
+                        key={activeModule.id}
+                        moduleId={activeModule.id}
+                        agentId={agentId!}
+                        videoUrl={activeModule.video_url}
+                        durationMinutes={activeModule.duration_minutes}
+                        initialWatchedSeconds={moduleProgress?.watched_seconds || 0}
+                        isCompleted={isModuleCompleted(activeModule.id)}
+                        onComplete={() => {
+                          markComplete(activeModule.id);
+                        }}
                       />
                     ) : (
-                      <div className="h-full min-h-[200px] flex items-center justify-center text-muted-foreground text-sm">
+                      <div className="aspect-video rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-sm border">
                         <PlayCircle className="h-10 w-10 mr-2 opacity-40" />
-                        Video URL can be set in admin — mark modules complete below.
+                        Select a video module from the syllabus below.
                       </div>
-                    )}
-                  </div>
+                    );
+                  })()}
                   <div className="flex items-center justify-between gap-2 flex-wrap">
                     <span className="text-sm text-muted-foreground">Overall progress</span>
                     <Badge variant={doneCert ? "default" : "secondary"}>
@@ -267,9 +342,10 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
                   return (
                     <div
                       key={mod.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg border ${
-                        done ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800" : "border-border"
-                      }`}
+                      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                        done ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800" : "border-border hover:bg-muted/50"
+                      } ${activeModuleId === mod.id ? "ring-2 ring-primary" : ""}`}
+                      onClick={() => mod.video_url && setActiveModuleId(mod.id)}
                     >
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${

@@ -23,6 +23,15 @@ import ClientPreview from "./pages/ClientPreview";
 import ShareContactLanding from "./pages/ShareContactLanding";
 import ShareListingLanding from "./pages/ShareListingLanding";
 import AdminSocialShare from "./pages/AdminSocialShare";
+import AdminCourses from "./pages/AdminCourses";
+import AdminCourseAnalytics from "./pages/AdminCourseAnalytics";
+import AdminProperties from "./pages/AdminProperties";
+import AdminEvents from "./pages/AdminEvents";
+import AdminSupport from "./pages/AdminSupport";
+import AdminListings from "./pages/AdminListings";
+import AdminWorksheets from "./pages/AdminWorksheets";
+import AdminPreconLibrary from "./pages/AdminPreconLibrary";
+import AdminHelp from "./pages/AdminHelp";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +50,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin-portal" element={<AdminPanel />} />
           <Route path="/admin/analytics" element={<Analytics />} />
           <Route path="/admin/links" element={<LinkManager />} />
           <Route path="/admin/vendors" element={<AdminVendors />} />
@@ -48,6 +58,15 @@ const App = () => (
           <Route path="/admin/course-assignments" element={<AdminCourseAssignments />} />
           <Route path="/admin/reminders" element={<AdminAgentReminders />} />
           <Route path="/admin/social-share" element={<AdminSocialShare />} />
+          <Route path="/admin/courses" element={<AdminCourses />} />
+          <Route path="/admin/course-analytics" element={<AdminCourseAnalytics />} />
+          <Route path="/admin/properties" element={<AdminProperties />} />
+          <Route path="/admin/events" element={<AdminEvents />} />
+          <Route path="/admin/support" element={<AdminSupport />} />
+          <Route path="/admin/listings" element={<AdminListings />} />
+          <Route path="/admin/worksheets" element={<AdminWorksheets />} />
+          <Route path="/admin/precon-library" element={<AdminPreconLibrary />} />
+          <Route path="/admin/help" element={<AdminHelp />} />
           <Route path="/pending" element={<PendingActivation />} />
           <Route path="/quote" element={<Quote />} />
           <Route path="/directory" element={<AgentDirectory />} />

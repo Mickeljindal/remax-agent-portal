@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -47,6 +48,7 @@ interface AssignmentRow {
 export default function AdminCourseAssignments() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { notifyCourseAssigned } = useNotifications();
   const [agents, setAgents] = useState<AgentRow[]>([]);
   const [courses, setCourses] = useState<CourseRow[]>([]);
   const [rows, setRows] = useState<AssignmentRow[]>([]);
@@ -108,6 +110,28 @@ export default function AdminCourseAssignments() {
       return;
     }
     toast({ title: "Course assigned" });
+
+    // Send email notification to the agent
+    const assignedAgent = agents.find((a) => a.id === agentId);
+    const assignedCourse = courses.find((c) => c.id === courseId);
+    if (assignedAgent && assignedCourse) {
+      // Get agent email
+      const { data: agentData } = await supabase
+        .from("agents")
+        .select("email")
+        .eq("id", agentId)
+        .single();
+      if (agentData?.email) {
+        notifyCourseAssigned(
+          agentData.email,
+          assignedAgent.full_name || "Agent",
+          agentId,
+          assignedCourse.title,
+          dueAt || undefined
+        );
+      }
+    }
+
     setNote("");
     setDueAt("");
     load();

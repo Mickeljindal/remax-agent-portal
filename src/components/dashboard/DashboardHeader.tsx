@@ -25,6 +25,7 @@ import {
   Percent,
 } from "lucide-react";
 import { REMAX_HEADER_LOGO_URL } from "@/config/brandLogo";
+import NotificationBell from "@/components/dashboard/NotificationBell";
 
 const nav = [
   { label: "Dashboard", href: "#dashboard" },
@@ -44,6 +45,7 @@ interface DashboardHeaderProps {
   isAdmin: boolean;
   onLogout: () => void;
   notificationCount?: number;
+  agentId?: string;
   /** When set with onHideCommissionChange, agents can hide co-op % on pre-con cards (e.g. in front of clients). */
   hideCommissionRates?: boolean;
   onHideCommissionChange?: (hide: boolean) => void;
@@ -60,6 +62,7 @@ const DashboardHeader = ({
   isAdmin,
   onLogout,
   notificationCount = 3,
+  agentId,
   hideCommissionRates = false,
   onHideCommissionChange,
   reminderCount = 0,
@@ -111,6 +114,9 @@ const DashboardHeader = ({
           <NavLinks />
 
           <div className="flex items-center gap-1 sm:gap-2">
+            {/* In-app notifications bell (real-time) */}
+            {agentId && <NotificationBell agentId={agentId} />}
+
             <Button
               variant="ghost"
               size="icon"

@@ -79,20 +79,51 @@ export default function AdminAgentReminders() {
       return;
     }
     setSaving(true);
+    const remindAtIso = remindAt ? new Date(remindAt).toISOString() : new Date().toISOString();
     const { error } = await supabase.from("agent_reminders").insert({
       agent_id: agentId,
       title: title.trim(),
       body: body.trim() || null,
-      remind_at: remindAt ? new Date(remindAt).toISOString() : new Date().toISOString(),
+      remind_at: remindAtIso,
       entity_type: entityType,
       created_by: user.id,
     });
-    setSaving(false);
     if (error) {
+      setSaving(false);
       toast({ variant: "destructive", title: error.message });
       return;
     }
-    toast({ title: "Reminder sent to agent queue" });
+
+    // Send in-app notification to the agent's bell
+    await supabase.from("in_app_notifications").insert({
+      agent_id: agentId,
+      title: `Reminder: ${title.trim()}`,
+      body: body.trim() || `Due ${new Date(remindAtIso).toLocaleString()}`,
+      type: "reminder",
+      link: "/dashboard",
+    });
+
+    // Email the agent (best-effort via edge function)
+    const { data: agentData } = await supabase
+      .from("agents")
+      .select("email, full_name")
+      .eq("id", agentId)
+      .single();
+    if (agentData?.email) {
+      supabase.functions.invoke("send-notification", {
+        body: {
+          type: "course_reminder",
+          recipientEmail: agentData.email,
+          recipientName: agentData.full_name || "Agent",
+          recipientAgentId: agentId,
+          subject: `Reminder: ${title.trim()}`,
+          body: `Hi ${agentData.full_name || "Agent"},\n\n${title.trim()}\n${body.trim() ? `\n${body.trim()}` : ""}\n\nDue: ${new Date(remindAtIso).toLocaleString()}\n\nLog in to the portal for details.`,
+        },
+      }).catch(() => {});
+    }
+
+    setSaving(false);
+    toast({ title: "Reminder sent", description: "Agent notified in-app and by email." });
     setTitle("");
     setBody("");
     load();

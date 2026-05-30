@@ -1022,6 +1022,360 @@ export type Database = {
         }
         Relationships: []
       }
+      email_notifications: {
+        Row: {
+          id: string
+          recipient_email: string
+          recipient_name: string | null
+          recipient_agent_id: string | null
+          notification_type: string
+          subject: string
+          body: string
+          metadata: Json
+          status: string
+          error_message: string | null
+          created_at: string
+          sent_at: string | null
+        }
+        Insert: {
+          id?: string
+          recipient_email: string
+          recipient_name?: string | null
+          recipient_agent_id?: string | null
+          notification_type: string
+          subject: string
+          body: string
+          metadata?: Json
+          status?: string
+          error_message?: string | null
+          created_at?: string
+          sent_at?: string | null
+        }
+        Update: {
+          id?: string
+          recipient_email?: string
+          recipient_name?: string | null
+          recipient_agent_id?: string | null
+          notification_type?: string
+          subject?: string
+          body?: string
+          metadata?: Json
+          status?: string
+          error_message?: string | null
+          created_at?: string
+          sent_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_notifications_recipient_agent_id_fkey"
+            columns: ["recipient_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_certificates: {
+        Row: {
+          id: string
+          agent_id: string
+          course_id: string
+          certificate_number: string
+          issued_at: string
+          agent_name: string
+          reco_number: string
+          course_title: string
+          total_watch_time_seconds: number
+        }
+        Insert: {
+          id?: string
+          agent_id: string
+          course_id: string
+          certificate_number: string
+          issued_at?: string
+          agent_name: string
+          reco_number: string
+          course_title: string
+          total_watch_time_seconds?: number
+        }
+        Update: {
+          id?: string
+          agent_id?: string
+          course_id?: string
+          certificate_number?: string
+          issued_at?: string
+          agent_name?: string
+          reco_number?: string
+          course_title?: string
+          total_watch_time_seconds?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_certificates_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_certificates_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_notification_settings: {
+        Row: {
+          id: string
+          admin_user_id: string
+          notify_agent_signup: boolean
+          notify_course_completion: boolean
+          notify_support_ticket: boolean
+          email_override: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          admin_user_id: string
+          notify_agent_signup?: boolean
+          notify_course_completion?: boolean
+          notify_support_ticket?: boolean
+          email_override?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          admin_user_id?: string
+          notify_agent_signup?: boolean
+          notify_course_completion?: boolean
+          notify_support_ticket?: boolean
+          email_override?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      properties: {
+        Row: {
+          id: string
+          title: string
+          address: string
+          city: string | null
+          province: string | null
+          postal_code: string | null
+          property_type: string
+          listing_type: string
+          price: number | null
+          bedrooms: number | null
+          bathrooms: number | null
+          square_feet: number | null
+          description: string | null
+          mls_number: string | null
+          status: string
+          thumbnail_url: string | null
+          gallery_urls: Json
+          assigned_agent_id: string | null
+          is_active: boolean
+          created_by: string
+          listed_at: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          address: string
+          city?: string | null
+          province?: string | null
+          postal_code?: string | null
+          property_type?: string
+          listing_type?: string
+          price?: number | null
+          bedrooms?: number | null
+          bathrooms?: number | null
+          square_feet?: number | null
+          description?: string | null
+          mls_number?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          gallery_urls?: Json
+          assigned_agent_id?: string | null
+          is_active?: boolean
+          created_by: string
+          listed_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          address?: string
+          city?: string | null
+          province?: string | null
+          postal_code?: string | null
+          property_type?: string
+          listing_type?: string
+          price?: number | null
+          bedrooms?: number | null
+          bathrooms?: number | null
+          square_feet?: number | null
+          description?: string | null
+          mls_number?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          gallery_urls?: Json
+          assigned_agent_id?: string | null
+          is_active?: boolean
+          created_by?: string
+          listed_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_assigned_agent_id_fkey"
+            columns: ["assigned_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      in_app_notifications: {
+        Row: {
+          id: string
+          agent_id: string
+          title: string
+          body: string | null
+          type: string
+          link: string | null
+          is_read: boolean
+          metadata: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          agent_id: string
+          title: string
+          body?: string | null
+          type?: string
+          link?: string | null
+          is_read?: boolean
+          metadata?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          agent_id?: string
+          title?: string
+          body?: string | null
+          type?: string
+          link?: string | null
+          is_read?: boolean
+          metadata?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "in_app_notifications_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_notifications: {
+        Row: {
+          id: string
+          event_id: string
+          agent_id: string
+          notification_type: string
+          sent_at: string
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          agent_id: string
+          notification_type?: string
+          sent_at?: string
+        }
+        Update: {
+          id?: string
+          event_id?: string
+          agent_id?: string
+          notification_type?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_notifications_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_notifications_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      precon_tags: {
+        Row: { id: string; name: string; color: string; sort_order: number; is_active: boolean; created_at: string }
+        Insert: { id?: string; name: string; color?: string; sort_order?: number; is_active?: boolean; created_at?: string }
+        Update: { id?: string; name?: string; color?: string; sort_order?: number; is_active?: boolean; created_at?: string }
+        Relationships: []
+      }
+      precon_project_tags: {
+        Row: { project_id: string; tag_id: string }
+        Insert: { project_id: string; tag_id: string }
+        Update: { project_id?: string; tag_id?: string }
+        Relationships: []
+      }
+      precon_property_types: {
+        Row: { id: string; name: string; sort_order: number; is_active: boolean; created_at: string }
+        Insert: { id?: string; name: string; sort_order?: number; is_active?: boolean; created_at?: string }
+        Update: { id?: string; name?: string; sort_order?: number; is_active?: boolean; created_at?: string }
+        Relationships: []
+      }
+      precon_statuses: {
+        Row: { id: string; name: string; color: string; sort_order: number; is_active: boolean; created_at: string }
+        Insert: { id?: string; name: string; color?: string; sort_order?: number; is_active?: boolean; created_at?: string }
+        Update: { id?: string; name?: string; color?: string; sort_order?: number; is_active?: boolean; created_at?: string }
+        Relationships: []
+      }
+      precon_documents: {
+        Row: { id: string; project_id: string; title: string; doc_type: string; file_url: string; file_name: string; file_size: number | null; sort_order: number; is_active: boolean; created_at: string }
+        Insert: { id?: string; project_id: string; title: string; doc_type?: string; file_url: string; file_name: string; file_size?: number | null; sort_order?: number; is_active?: boolean; created_at?: string }
+        Update: { id?: string; project_id?: string; title?: string; doc_type?: string; file_url?: string; file_name?: string; file_size?: number | null; sort_order?: number; is_active?: boolean; created_at?: string }
+        Relationships: []
+      }
+      personal_reminders: {
+        Row: { id: string; agent_id: string; title: string; note: string | null; remind_at: string; notified: boolean; created_at: string }
+        Insert: { id?: string; agent_id: string; title: string; note?: string | null; remind_at: string; notified?: boolean; created_at?: string }
+        Update: { id?: string; agent_id?: string; title?: string; note?: string | null; remind_at?: string; notified?: boolean; created_at?: string }
+        Relationships: []
+      }
+      precon_worksheets: {
+        Row: { id: string; agent_id: string | null; project_name: string; model_name: string | null; floor_type: string | null; direction_exposure: string | null; choices: string[] | null; need_parking: boolean; need_locker: boolean; worksheet_date: string | null; additional_comments: string | null; brokerage_name: string | null; broker_agent_name: string | null; broker_agent_email: string | null; broker_office_phone: string | null; broker_cell_phone: string | null; broker_reco_number: string | null; purchasers: Json; id_attachment_filename: string | null; status: string; admin_notes: string | null; email_sent: boolean; created_at: string; updated_at: string }
+        Insert: { id?: string; agent_id?: string | null; project_name: string; model_name?: string | null; floor_type?: string | null; direction_exposure?: string | null; choices?: string[] | null; need_parking?: boolean; need_locker?: boolean; worksheet_date?: string | null; additional_comments?: string | null; brokerage_name?: string | null; broker_agent_name?: string | null; broker_agent_email?: string | null; broker_office_phone?: string | null; broker_cell_phone?: string | null; broker_reco_number?: string | null; purchasers?: Json; id_attachment_filename?: string | null; status?: string; admin_notes?: string | null; email_sent?: boolean; created_at?: string; updated_at?: string }
+        Update: { id?: string; agent_id?: string | null; project_name?: string; model_name?: string | null; floor_type?: string | null; direction_exposure?: string | null; choices?: string[] | null; need_parking?: boolean; need_locker?: boolean; worksheet_date?: string | null; additional_comments?: string | null; brokerage_name?: string | null; broker_agent_name?: string | null; broker_agent_email?: string | null; broker_office_phone?: string | null; broker_cell_phone?: string | null; broker_reco_number?: string | null; purchasers?: Json; id_attachment_filename?: string | null; status?: string; admin_notes?: string | null; email_sent?: boolean; created_at?: string; updated_at?: string }
+        Relationships: []
+      }
+      precon_library_documents: {
+        Row: { id: string; title: string; description: string | null; icon: string; file_url: string | null; link_url: string | null; file_name: string | null; sort_order: number; is_active: boolean; created_by: string | null; created_at: string; updated_at: string }
+        Insert: { id?: string; title: string; description?: string | null; icon?: string; file_url?: string | null; link_url?: string | null; file_name?: string | null; sort_order?: number; is_active?: boolean; created_by?: string | null; created_at?: string; updated_at?: string }
+        Update: { id?: string; title?: string; description?: string | null; icon?: string; file_url?: string | null; link_url?: string | null; file_name?: string | null; sort_order?: number; is_active?: boolean; created_by?: string | null; created_at?: string; updated_at?: string }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

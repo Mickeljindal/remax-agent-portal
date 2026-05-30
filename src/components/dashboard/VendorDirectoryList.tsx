@@ -32,11 +32,16 @@ const CATEGORY_ORDER = [
 ];
 
 const CATEGORY_COLORS = [
-  "from-[#dbeafe] to-[#f0f9ff] border-[#93c5fd] dark:from-[#1e3a5f]/50 dark:to-[#0f2744]/50 dark:border-[#2e6a99]/50",
-  "from-[#fee2e2] to-[#fff1f2] border-[#fda4af] dark:from-[#5a2230]/45 dark:to-[#3a1822]/45 dark:border-[#c15a72]/50",
-  "from-[#dcfce7] to-[#f0fdf4] border-[#86efac] dark:from-[#1f4a3b]/45 dark:to-[#16392e]/45 dark:border-[#4ea983]/50",
-  "from-[#fef3c7] to-[#fffbeb] border-[#fcd34d] dark:from-[#5b431a]/45 dark:to-[#3f2f12]/45 dark:border-[#c59a3f]/50",
-  "from-[#ede9fe] to-[#f5f3ff] border-[#c4b5fd] dark:from-[#362b62]/45 dark:to-[#281f49]/45 dark:border-[#7c6ad3]/50",
+  // RE/MAX blue
+  "from-[#dbeafe] to-[#eff6ff] border-[#1a4d8f] dark:from-[#10254a]/55 dark:to-[#0a1a36]/55 dark:border-[#2e6ab0]/55",
+  // RE/MAX red
+  "from-[#fee2e2] to-[#fff1f1] border-[#e2231a] dark:from-[#4d1414]/55 dark:to-[#2e0d0d]/55 dark:border-[#e2231a]/55",
+  // blue lighter
+  "from-[#e0ecfb] to-[#f0f6ff] border-[#3b6fb0] dark:from-[#15294d]/55 dark:to-[#0d1c38]/55 dark:border-[#3b6fb0]/55",
+  // red lighter
+  "from-[#fde8e8] to-[#fff4f4] border-[#c41e16] dark:from-[#451414]/55 dark:to-[#2a0c0c]/55 dark:border-[#c41e16]/55",
+  // navy
+  "from-[#dde7f5] to-[#eef4fc] border-[#0a2a52] dark:from-[#0d2042]/55 dark:to-[#08152c]/55 dark:border-[#1a4d8f]/55",
 ];
 
 function sortCategoryKeys(categories: string[]): string[] {
@@ -127,23 +132,23 @@ export function VendorDirectoryInner({
         <AccordionItem
           key={cat}
           value={cat}
-          className="overflow-hidden rounded-xl border border-[#003865]/20 bg-gradient-to-br from-white via-white to-[#f8fbff] px-2.5 shadow-sm dark:border-[#003865]/35 dark:from-card dark:via-card dark:to-[#0f2744]/[0.04]"
+          className="overflow-hidden rounded-xl border border-[#e2231a]/25 bg-gradient-to-br from-white via-white to-[#fff6f6] px-2.5 shadow-sm dark:border-[#e2231a]/35 dark:from-card dark:via-card dark:to-[#2e0d0d]/[0.05]"
         >
-          <AccordionTrigger className="px-1.5 py-2.5 font-display text-sm font-semibold text-[#0f2744] hover:no-underline sm:px-2 sm:py-3 dark:text-foreground">
+          <AccordionTrigger className="px-1.5 py-2.5 font-display text-sm font-semibold text-[#0a2a52] hover:no-underline sm:px-2 sm:py-3 dark:text-foreground">
             <div className="flex min-w-0 flex-1 items-center gap-2.5">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#003865]/10 text-[10px] font-bold uppercase tracking-wide text-[#003865] sm:h-7 sm:w-7 dark:bg-[#003865]/20 dark:text-[#7fb1db]">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-[#e2231a] to-[#1a4d8f] text-[10px] font-bold uppercase tracking-wide text-white sm:h-7 sm:w-7">
                 {initialsFromCategory(cat)}
               </div>
               <span className="truncate text-[13px] sm:text-sm">{cat}</span>
               <Badge
                 variant="secondary"
-                className="ml-1 shrink-0 rounded-full border border-[#003865]/20 bg-[#003865]/8 px-2.5 py-0.5 text-[10px] font-semibold text-[#003865] dark:text-[#7fb1db]"
+                className="ml-1 shrink-0 rounded-full border border-[#1a4d8f]/25 bg-[#1a4d8f]/10 px-2.5 py-0.5 text-[10px] font-semibold text-[#1a4d8f] dark:text-[#7fb1db]"
               >
                 {grouped.get(cat)?.length ?? 0} {(grouped.get(cat)?.length ?? 0) === 1 ? "contact" : "contacts"}
               </Badge>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="border-t border-[#003865]/10 pb-3 pt-3 dark:border-[#003865]/20">
+          <AccordionContent className="border-t border-[#e2231a]/10 pb-3 pt-3 dark:border-[#e2231a]/20">
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-6 bg-gradient-to-r from-background/85 to-transparent lg:block" />
               <div className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-6 bg-gradient-to-l from-background/85 to-transparent lg:block" />
@@ -177,7 +182,7 @@ export function VendorDirectoryInner({
                 >
                   <CardContent className="flex h-full flex-col gap-2 p-2.5">
                     <div className="min-w-0">
-                      <p className="truncate font-display text-xs font-semibold leading-tight text-[#0f2744] sm:text-[13px] dark:text-foreground">
+                      <p className="truncate font-display text-xs font-semibold leading-tight text-[#0a2a52] sm:text-[13px] dark:text-foreground">
                         {v.business_name}
                       </p>
                       {v.contact_name && <p className="truncate text-[10px] sm:text-[11px] text-muted-foreground">{v.contact_name}</p>}
@@ -185,7 +190,7 @@ export function VendorDirectoryInner({
 
                     <div className="flex flex-wrap items-center gap-1.5">
                       {v.phone && (
-                        <Button asChild size="sm" className="h-6 rounded-full px-2 text-[10px] shadow-sm">
+                        <Button asChild size="sm" className="h-6 rounded-full bg-[#e2231a] px-2 text-[10px] text-white shadow-sm hover:bg-[#c41e16]">
                           <a href={`tel:${v.phone.replace(/\s/g, "")}`}>
                             <Phone className="mr-1 h-2.5 w-2.5" />
                             Call

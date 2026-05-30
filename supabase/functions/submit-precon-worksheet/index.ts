@@ -86,6 +86,7 @@ serve(async (req: Request) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseAnonKey = Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     const adminEmail = Deno.env.get("PRECON_WORKSHEET_ADMIN_EMAIL");
     const fromEmail = Deno.env.get("PRECON_WORKSHEET_FROM_EMAIL") || "onboarding@resend.dev";
@@ -95,6 +96,11 @@ serve(async (req: Request) => {
 
     const userClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { authorization: authHeader } },
+    });
+
+    // Service client for writing to DB (bypasses RLS)
+    const serviceClient = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
     });
 
     const {
@@ -162,6 +168,59 @@ serve(async (req: Request) => {
       html,
       attachment: payload.idAttachment,
     });
+
+    // Persist submission to DB so it shows in admin portal
+    try {
+      await serviceClient.from("precon_worksheets").insert({
+        agent_id: payload.metadata?.agentId || null,
+        project_name: payload.projectName,
+        model_name: payload.modelName || null,
+        floor_type: payload.floorType || null,
+        direction_exposure: payload.directionExposure || null,
+        choices: payload.choices || [],
+        need_parking: !!payload.needParking,
+        need_locker: !!payload.needLocker,
+        worksheet_date: payload.date || null,
+        additional_comments: payload.additionalComments || null,
+        brokerage_name: payload.cooperatingBroker.brokerageName,
+        broker_agent_name: payload.cooperatingBroker.agentName || null,
+        broker_agent_email: payload.cooperatingBroker.agentEmail || null,
+        broker_office_phone: payload.cooperatingBroker.officePhone || null,
+        broker_cell_phone: payload.cooperatingBroker.cellPhone || null,
+        broker_reco_number: payload.cooperatingBroker.recoNumber || null,
+        purchasers: payload.purchasers || [],
+        id_attachment_filename: payload.idAttachment.filename || null,
+        status: "submitted",
+        email_sent: true,
+      });
+
+      // Notify admins in-app
+      if (payload.metadata?.agentId) {
+        const { data: adminRoles } = await serviceClient
+          .from("user_roles")
+          .select("user_id")
+          .eq("role", "admin");
+        for (const r of adminRoles || []) {
+          const { data: adminAgent } = await serviceClient
+            .from("agents")
+            .select("id")
+            .eq("user_id", r.user_id)
+            .single();
+          if (adminAgent) {
+            await serviceClient.from("in_app_notifications").insert({
+              agent_id: adminAgent.id,
+              title: `New Pre-Con Worksheet: ${payload.projectName}`,
+              body: `Submitted by ${payload.cooperatingBroker.agentName || "an agent"}`,
+              type: "info",
+              link: "/admin/worksheets",
+            });
+          }
+        }
+      }
+    } catch (dbError) {
+      console.error("Failed to persist worksheet:", dbError);
+      // Don't fail the request — emails already sent
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

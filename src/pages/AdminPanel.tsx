@@ -58,8 +58,10 @@ import {
   GraduationCap,
   Bell,
   Share2,
+  BookOpen,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import AdminHelpBot from "@/components/admin/AdminHelpBot";
 
 interface Agent {
   id: string;
@@ -389,6 +391,45 @@ const AdminPanel = () => {
               </div>
             </CardContent>
           </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/listings")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-sky-600/15 flex items-center justify-center">
+                  <MapPin className="h-6 w-6 text-sky-700" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Listings & categories</h3>
+                  <p className="text-sm text-muted-foreground">Tags, types, statuses, full CRUD</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/worksheets")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-blue-600/15 flex items-center justify-center">
+                  <LinkIcon className="h-6 w-6 text-blue-700" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Pre-con worksheets</h3>
+                  <p className="text-sm text-muted-foreground">View &amp; manage worksheet submissions</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/precon-library")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-fuchsia-600/15 flex items-center justify-center">
+                  <LinkIcon className="h-6 w-6 text-fuchsia-700" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Pre-con document library</h3>
+                  <p className="text-sm text-muted-foreground">Shared forms: showing instructions, clauses, etc.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/course-assignments")}>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
@@ -398,6 +439,32 @@ const AdminPanel = () => {
                 <div>
                   <h3 className="font-semibold">Course assignments</h3>
                   <p className="text-sm text-muted-foreground">Assign training to agents</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/courses")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-indigo-500/15 flex items-center justify-center">
+                  <GraduationCap className="h-6 w-6 text-indigo-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Course management</h3>
+                  <p className="text-sm text-muted-foreground">Create courses, add video modules</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/course-analytics")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-rose-500/15 flex items-center justify-center">
+                  <BarChart3 className="h-6 w-6 text-rose-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Course analytics</h3>
+                  <p className="text-sm text-muted-foreground">Watch time, completions, per-agent stats</p>
                 </div>
               </div>
             </CardContent>
@@ -415,6 +482,45 @@ const AdminPanel = () => {
               </div>
             </CardContent>
           </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/properties")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-teal-500/15 flex items-center justify-center">
+                  <Store className="h-6 w-6 text-teal-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Property management</h3>
+                  <p className="text-sm text-muted-foreground">Add/edit listings, assign to agents</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/events")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-cyan-500/15 flex items-center justify-center">
+                  <Bell className="h-6 w-6 text-cyan-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Events management</h3>
+                  <p className="text-sm text-muted-foreground">Create events, notify agents, track RSVPs</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/support")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-orange-500/15 flex items-center justify-center">
+                  <Bell className="h-6 w-6 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Support inbox</h3>
+                  <p className="text-sm text-muted-foreground">Chat with agents, manage tickets</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/social-share")}>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
@@ -424,6 +530,19 @@ const AdminPanel = () => {
                 <div>
                   <h3 className="font-semibold">Social share icons</h3>
                   <p className="text-sm text-muted-foreground">WhatsApp, Facebook, LinkedIn, X, email, copy</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-[#e2231a]/30" onClick={() => navigate("/admin/help")}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#e2231a]/15 to-[#1a4d8f]/15 flex items-center justify-center">
+                  <BookOpen className="h-6 w-6 text-[#e2231a]" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Documentation &amp; Help</h3>
+                  <p className="text-sm text-muted-foreground">Guides + assistant for "where do I find…"</p>
                 </div>
               </div>
             </CardContent>
@@ -710,6 +829,9 @@ const AdminPanel = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Floating AI help assistant */}
+      <AdminHelpBot />
     </div>
   );
 };

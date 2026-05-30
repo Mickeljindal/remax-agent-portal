@@ -147,6 +147,32 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
       message: newMessage,
       is_admin: false,
     });
+
+    // Notify admins via in-app notification (they'll see it in the support inbox)
+    const { data: adminRoles } = await supabase
+      .from("user_roles")
+      .select("user_id")
+      .eq("role", "admin");
+
+    if (adminRoles) {
+      for (const role of adminRoles) {
+        const { data: adminAgent } = await supabase
+          .from("agents")
+          .select("id")
+          .eq("user_id", role.user_id)
+          .single();
+        if (adminAgent) {
+          await supabase.from("in_app_notifications").insert({
+            agent_id: adminAgent.id,
+            title: `New message from agent: ${selectedTicket.subject}`,
+            body: newMessage.trim().slice(0, 80),
+            type: "info",
+            link: "/admin/support",
+          });
+        }
+      }
+    }
+
     setNewMessage("");
   };
 

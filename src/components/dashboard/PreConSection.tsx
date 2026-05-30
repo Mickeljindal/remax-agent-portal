@@ -23,6 +23,8 @@ import {
 } from "lucide-react";
 import { parseISO, differenceInDays } from "date-fns";
 import HSTCalculator from "@/components/dashboard/HSTCalculator";
+import CommissionCalculator from "@/components/dashboard/CommissionCalculator";
+import PreconLibrary from "@/components/dashboard/PreconLibrary";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -581,8 +583,11 @@ export default function PreConSection({
               ))}
             </div>
             <div className="mt-8 grid max-w-4xl grid-cols-1 gap-4 md:grid-cols-2">
-              <div id="hst-calculator-anchor" className="scroll-mt-28 md:col-span-2">
+              <div id="hst-calculator-anchor" className="scroll-mt-28">
                 <HSTCalculator />
+              </div>
+              <div id="commission-calculator-anchor" className="scroll-mt-28">
+                <CommissionCalculator />
               </div>
             </div>
             <div className="mt-10">
@@ -653,24 +658,7 @@ export default function PreConSection({
               </button>
             </div>
 
-            <div>
-              <h3 className="mb-3 font-display text-lg font-semibold text-foreground">Pre-con document library</h3>
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-                {docLabels.map((d) => (
-                  <button
-                    key={d.key}
-                    type="button"
-                    onClick={() =>
-                      toast({ title: d.title, description: "Preview/download can link to Drive or Supabase storage." })
-                    }
-                    className={`flex min-h-[120px] flex-col justify-between rounded-lg bg-gradient-to-br ${d.tint} p-4 text-left text-primary-foreground shadow-md transition-opacity hover:opacity-95`}
-                  >
-                    <FileText className="h-6 w-6 opacity-90" />
-                    <span className="text-xs font-semibold leading-tight">{d.title}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <PreconLibrary />
           </>
         )}
 

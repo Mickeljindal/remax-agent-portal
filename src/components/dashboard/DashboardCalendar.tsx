@@ -156,12 +156,21 @@ export default function DashboardCalendar({ agentId, isAdmin }: DashboardCalenda
 
   const loadReminders = useCallback(() => {
     if (!agentId) return;
-    try {
-      const raw = localStorage.getItem(REM_KEY(agentId));
-      setPersonal(raw ? JSON.parse(raw) : []);
-    } catch {
-      setPersonal([]);
-    }
+    supabase
+      .from("personal_reminders")
+      .select("*")
+      .eq("agent_id", agentId)
+      .order("remind_at", { ascending: true })
+      .then(({ data }) => {
+        setPersonal(
+          (data || []).map((r: any) => ({
+            id: r.id,
+            title: r.title,
+            at: r.remind_at,
+            note: r.note || "",
+          }))
+        );
+      });
   }, [agentId]);
 
   useEffect(() => {
@@ -302,22 +311,44 @@ export default function DashboardCalendar({ agentId, isAdmin }: DashboardCalenda
     }
   };
 
-  const saveReminder = () => {
+  const saveReminder = async () => {
     if (!agentId || !remTitle.trim() || !remAt) return;
-    const r: PersonalReminder = {
-      id: crypto.randomUUID(),
-      title: remTitle.trim(),
-      at: new Date(remAt).toISOString(),
-      note: remNote.trim(),
-    };
-    const next = [...personal, r];
-    setPersonal(next);
-    localStorage.setItem(REM_KEY(agentId), JSON.stringify(next));
+    const remindAt = new Date(remAt).toISOString();
+
+    const { data, error } = await supabase
+      .from("personal_reminders")
+      .insert({
+        agent_id: agentId,
+        title: remTitle.trim(),
+        note: remNote.trim() || null,
+        remind_at: remindAt,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      toast({ variant: "destructive", title: "Could not save reminder", description: error.message });
+      return;
+    }
+
+    // Add an in-app notification so the bell reflects it
+    await supabase.from("in_app_notifications").insert({
+      agent_id: agentId,
+      title: `Reminder set: ${remTitle.trim()}`,
+      body: `${format(new Date(remindAt), "PPp")}${remNote.trim() ? ` — ${remNote.trim()}` : ""}`,
+      type: "reminder",
+      link: "/dashboard",
+    });
+
+    setPersonal((prev) => [
+      ...prev,
+      { id: data.id, title: data.title, at: data.remind_at, note: data.note || "" },
+    ]);
     setReminderOpen(false);
     setRemTitle("");
     setRemAt("");
     setRemNote("");
-    toast({ title: "Reminder added", description: "Shown on your calendar." });
+    toast({ title: "Reminder added", description: "Shown on your calendar and notifications." });
   };
 
   return (

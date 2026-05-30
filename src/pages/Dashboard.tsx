@@ -13,7 +13,8 @@ import TrainingCourses from "@/components/dashboard/TrainingCourses";
 import PreConSection from "@/components/dashboard/PreConSection";
 import VendorDirectory from "@/components/dashboard/VendorDirectory";
 import SupportChat from "@/components/dashboard/SupportChat";
-import RoomBooking from "@/components/dashboard/RoomBooking";
+import OfficeBooking from "@/components/dashboard/OfficeBooking";
+import AgentHelpBot from "@/components/dashboard/AgentHelpBot";
 import PortalFooter from "@/components/dashboard/PortalFooter";
 import { useAuth } from "@/hooks/useAuth";
 import { useAgentPortalSettings } from "@/hooks/useAgentPortalSettings";
@@ -65,6 +66,7 @@ const Dashboard = () => {
         avatarUrl={agent?.avatar_url || null}
         initials={getInitials(agent?.full_name)}
         isAdmin={isAdmin}
+        agentId={agent?.id}
         hideCommissionRates={hideCommissionRates}
         onHideCommissionChange={async (hide) => {
           try {
@@ -160,11 +162,14 @@ const Dashboard = () => {
         <Separator className="opacity-60" />
 
         <section id="offices" className="scroll-mt-28 rounded-3xl border border-border/40 bg-card/40 p-5 md:p-8">
-          <RoomBooking agentId={agent?.id} />
+          <OfficeBooking agentId={agent?.id} />
         </section>
       </main>
 
       <PortalFooter />
+
+      {/* Floating AI help assistant for agents */}
+      <AgentHelpBot />
 
       <Sheet open={remindersOpen} onOpenChange={setRemindersOpen}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">

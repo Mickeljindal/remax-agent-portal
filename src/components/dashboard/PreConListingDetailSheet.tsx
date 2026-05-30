@@ -11,6 +11,7 @@ import { buildListingShareUrl, buildListingSharePayloadForPrecon } from "@/lib/s
 import { PRECON_DOC_SECTION_ORDER, classifyPreconDocAsset, type PreconDocSectionId } from "@/lib/preconDocumentSections";
 import { cn } from "@/lib/utils";
 import SocialShareIconRow from "@/components/share/SocialShareIconRow";
+import ListingDocuments from "@/components/dashboard/ListingDocuments";
 import {
   BarChart3,
   Bookmark,
@@ -299,7 +300,7 @@ export default function PreConListingDetailSheet({
     buildListingSharePayloadForPrecon(project, projectAssets, hideCommissionRates)
   );
 
-  const phone = project.contact_phone?.trim();
+  const phone = (project as any).phone_public === false ? undefined : project.contact_phone?.trim();
   const mainGallerySrc = galleryImages.length ? galleryImages[Math.min(activeGalleryIdx, galleryImages.length - 1)]! : null;
 
   return (
@@ -506,6 +507,10 @@ export default function PreConListingDetailSheet({
                 </div>
               </section>
             ) : null}
+
+            <section aria-label="Project documents" className="space-y-2">
+              <ListingDocuments projectId={project.id} />
+            </section>
 
             <section aria-label="Share listing" className="space-y-2">
               <p className="text-xs font-medium text-muted-foreground">Share</p>
