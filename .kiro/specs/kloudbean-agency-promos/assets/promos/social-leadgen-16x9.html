@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KloudBean — Lead Gen Cut (Landscape 16:9)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../shared/brand.css" />
+  <link rel="stylesheet" href="../shared/engine.css" />
+  <style>
+    .kb-logo { display:inline-flex; align-items:center; gap:14px; font-family:var(--kb-font-display); font-weight:var(--kb-fw-black); font-size:30px; }
+    .kb-logo .mark { width:44px; height:44px; border-radius:12px; background:var(--kb-grad-hero); box-shadow:var(--kb-glow-brand); display:grid; place-items:center; font-size:24px; }
+    .stack-list { display:flex; flex-wrap:wrap; justify-content:center; gap:18px 40px; margin-top:var(--kb-space-4); max-width:1200px; margin-left:auto; margin-right:auto;}
+    .stack-list .row { font-size:30px; font-weight:var(--kb-fw-bold); color:var(--kb-ink); }
+    .stack-list .row span { color:var(--kb-brand-2); }
+    .counter-big { font-family:var(--kb-font-display); font-weight:var(--kb-fw-black); font-size:var(--kb-fs-mega); line-height:1; }
+    .sub { font-size:30px; color:var(--kb-ink-dim); margin-top:var(--kb-space-3); }
+    .sub b { color:var(--kb-ink); }
+  </style>
+</head>
+<body class="ratio-16x9">
+  <div class="kb-viewport">
+    <div class="kb-stage">
+
+      <section class="kb-scene" data-scene="hook">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">For agencies & developers</span>
+          <h1 class="kb-title" data-anim style="--d:.12">Hosting client sites is <span class="kb-danger-text">eating your week.</span></h1>
+        </div>
+      </section>
+
+      <section class="kb-scene" data-scene="turn">
+        <div class="kb-scene-inner">
+          <h2 class="kb-title" data-anim style="--d:0">KloudBean <span class="kb-grad-text">manages it all.</span></h2>
+          <div class="stack-list">
+            <div class="row" data-anim style="--d:.2"><span>✓</span> One-click deploys</div>
+            <div class="row" data-anim style="--d:.3"><span>✓</span> Auto SSL & domains</div>
+            <div class="row" data-anim style="--d:.4"><span>✓</span> Managed databases</div>
+            <div class="row" data-anim style="--d:.5"><span>✓</span> 24/7 monitoring</div>
+            <div class="row" data-anim style="--d:.6"><span>✓</span> Any cloud — AWS, GCP & more</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="kb-scene" data-scene="money">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">Partner program</span>
+          <div class="counter-big kb-money-text" data-anim style="--d:.15">10%</div>
+          <h2 class="kb-title kb-h1" data-anim style="--d:.3">recurring commission. <span class="kb-money-text">For life.</span></h2>
+          <p class="sub" data-anim style="--d:.5">A <b>$1,000/mo</b> client = <b>$3,600</b> over 3 years. No caps.</p>
+        </div>
+      </section>
+
+      <section class="kb-scene" data-scene="cta">
+        <div class="kb-scene-inner">
+          <div class="kb-logo" data-anim style="--d:0"><span class="mark">☁</span> KloudBean</div>
+          <h2 class="kb-title" data-anim style="--d:.15">Start <span class="kb-grad-text">free.</span></h2>
+          <div class="kb-cta-row"><span class="kb-btn" data-anim style="--d:.35">Start Free Trial</span></div>
+          <p class="kb-url" data-anim style="--d:.55"><strong>kloudbean.com</strong> · No credit card</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../shared/engine.js"></script>
+  <script>
+    var TIMELINE = [
+      { id: "hook",  duration: 4, label: "Hook" },
+      { id: "turn",  duration: 6, label: "Solution" },
+      { id: "money", duration: 7, label: "10% for life" },
+      { id: "cta",   duration: 6, label: "Start free" }
+    ];
+    var engine = new SceneEngine(document.querySelector(".kb-stage"), {
+      timeline: TIMELINE, autoplay: true, holdOnEnd: true
+    });
+  </script>
+</body>
+</html>

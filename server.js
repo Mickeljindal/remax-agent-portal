@@ -7,7 +7,6 @@ import path from "path";
 import fs from "fs";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
-import jwt from "jsonwebtoken";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,8 +18,10 @@ const DIST = path.join(__dirname, "dist");
 // Where uploaded files are stored on the KloudBean server disk
 const UPLOAD_ROOT = process.env.UPLOAD_DIR || path.join(__dirname, "uploads");
 
-// Supabase JWT secret (Project Settings → API → JWT Secret) — verifies the uploader.
-const SUPABASE_JWT_SECRET = process.env.SUPABASE_JWT_SECRET || "";
+// Supabase project URL + anon key — used to validate the uploader's token
+// by asking Supabase who the user is (works with any JWT signing method).
+const SUPABASE_URL = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "").replace(/\/$/, "");
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
 
 // Public base URL of this app (e.g. https://agentportal.joinremaxex.com)
 const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL || `http://localhost:${PORT}`;
@@ -36,19 +37,26 @@ for (const b of Object.values(BUCKETS)) {
   fs.mkdirSync(path.join(UPLOAD_ROOT, b.folder), { recursive: true });
 }
 
-function verifyToken(req, res, next) {
-  if (!SUPABASE_JWT_SECRET) {
-    console.warn("[WARN] SUPABASE_JWT_SECRET not set — uploads are UNAUTHENTICATED.");
+async function verifyToken(req, res, next) {
+  // If Supabase isn't configured, allow (dev mode) — flag in logs.
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.warn("[WARN] SUPABASE_URL / anon key not set — uploads are UNAUTHENTICATED.");
     return next();
   }
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
   if (!token) return res.status(401).json({ error: "Missing token" });
   try {
-    req.user = jwt.verify(token, SUPABASE_JWT_SECRET);
+    // Ask Supabase to validate the token and return the user.
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { Authorization: `Bearer ${token}`, apikey: SUPABASE_ANON_KEY },
+    });
+    if (!r.ok) return res.status(401).json({ error: "Invalid or expired session" });
+    req.user = await r.json();
     next();
-  } catch {
-    return res.status(401).json({ error: "Invalid token" });
+  } catch (e) {
+    console.error("Auth check failed:", e);
+    return res.status(401).json({ error: "Auth check failed" });
   }
 }
 

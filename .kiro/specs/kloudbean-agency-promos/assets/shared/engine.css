@@ -1,0 +1,342 @@
+/* =============================================================================
+   KloudBean Promo — Engine Layout & Transitions
+   -----------------------------------------------------------------------------
+   Stage sizing (fixed logical canvas), scene stacking + transitions, controls
+   bar, clean-capture mode, and accessibility (reduced motion).
+   Depends on brand.css tokens.
+   ============================================================================= */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #000;            /* letterbox bars */
+  color: var(--kb-ink);
+  font-family: var(--kb-font-body);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---- Viewport: centers the scaled stage ------------------------------- */
+.kb-viewport {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(1200px 800px at 20% -10%, rgba(79,26,243,.16), transparent 60%),
+    radial-gradient(1000px 700px at 110% 120%, rgba(154,107,255,.10), transparent 60%),
+    #000;
+}
+
+/* ---- Stage: fixed logical canvas, scaled via --kb-scale --------------- */
+.kb-stage {
+  position: relative;
+  overflow: hidden;
+  background: var(--kb-bg-0);
+  color: var(--kb-ink);
+  transform: scale(var(--kb-scale, 1));
+  transform-origin: center center;
+  box-shadow: var(--kb-shadow);
+  /* subtle vignette + grid for depth */
+  background-image:
+    radial-gradient(1400px 1000px at 50% -20%, rgba(79,26,243,.20), transparent 55%),
+    radial-gradient(1000px 900px at 100% 120%, rgba(154,107,255,.12), transparent 55%);
+}
+
+.ratio-16x9 .kb-stage { width: 1920px; height: 1080px; }
+.ratio-1x1  .kb-stage { width: 1080px; height: 1080px; }
+.ratio-9x16 .kb-stage { width: 1080px; height: 1920px; }
+
+/* Faint dot-grid overlay for a "console" feel */
+.kb-stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(150,175,235,.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+  opacity: .6;
+}
+
+/* ---- Scenes ----------------------------------------------------------- */
+.kb-scene {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--kb-space-6);
+  opacity: 0;
+  transform: translateY(28px) scale(0.992);
+  transition:
+    opacity 0.6s var(--kb-ease),
+    transform 0.6s var(--kb-ease);
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+.kb-scene.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+/* Outgoing scene drifts up slightly while fading */
+.kb-scene.is-leaving {
+  opacity: 0;
+  transform: translateY(-24px) scale(0.992);
+}
+
+.kb-scene-inner {
+  width: 100%;
+  max-width: 1480px;
+  text-align: center;
+}
+.ratio-9x16 .kb-scene-inner { max-width: 920px; }
+.ratio-1x1  .kb-scene-inner { max-width: 900px; }
+
+/* ---- Reusable scene primitives --------------------------------------- */
+.kb-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--kb-fs-label);
+  letter-spacing: var(--kb-tracking-wide);
+  text-transform: uppercase;
+  font-weight: var(--kb-fw-semibold);
+  color: var(--kb-brand-2);
+  padding: 10px 18px;
+  border: 1px solid var(--kb-line);
+  border-radius: var(--kb-radius-pill);
+  background: rgba(56,214,201,.06);
+}
+
+.kb-title {
+  font-family: var(--kb-font-display);
+  font-weight: var(--kb-fw-black);
+  font-size: var(--kb-fs-display);
+  line-height: var(--kb-leading-tight);
+  letter-spacing: var(--kb-tracking-tight);
+  margin: var(--kb-space-3) 0;
+}
+.kb-title.kb-h1 { font-size: var(--kb-fs-h1); }
+.ratio-9x16 .kb-title { font-size: 72px; }
+.ratio-1x1  .kb-title { font-size: 76px; }
+
+.kb-lead {
+  font-size: var(--kb-fs-lead);
+  line-height: var(--kb-leading-snug);
+  color: var(--kb-ink-dim);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.kb-grad-text {
+  background: var(--kb-grad-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.kb-money-text {
+  background: var(--kb-grad-money);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.kb-ok-text { color: var(--kb-ok); }
+.kb-danger-text { color: var(--kb-danger); }
+
+/* Chips / tiles used across scenes */
+.kb-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--kb-space-2);
+  margin-top: var(--kb-space-4);
+}
+.kb-chip {
+  font-size: var(--kb-fs-label);
+  font-weight: var(--kb-fw-semibold);
+  color: var(--kb-ink);
+  padding: 14px 24px;
+  border-radius: var(--kb-radius-pill);
+  border: 1px solid var(--kb-line);
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.01));
+  backdrop-filter: blur(4px);
+}
+
+.kb-card-grid {
+  display: grid;
+  gap: var(--kb-space-3);
+  margin-top: var(--kb-space-4);
+}
+.kb-card {
+  text-align: left;
+  padding: var(--kb-space-3);
+  border-radius: var(--kb-radius);
+  border: 1px solid var(--kb-line);
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+}
+.kb-card h3 { font-size: 26px; font-weight: var(--kb-fw-bold); margin-bottom: 8px; }
+.kb-card p { font-size: 20px; color: var(--kb-ink-dim); line-height: var(--kb-leading-normal); }
+.kb-card .kb-ic { font-size: 34px; display: block; margin-bottom: 12px; }
+
+/* Stat badges */
+.kb-stat-row { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--kb-space-4); margin-top: var(--kb-space-4); }
+.kb-stat { min-width: 220px; }
+.kb-stat .kb-stat-num {
+  font-family: var(--kb-font-display);
+  font-weight: var(--kb-fw-black);
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: var(--kb-tracking-tight);
+}
+.kb-stat .kb-stat-label { font-size: var(--kb-fs-body); color: var(--kb-ink-dim); margin-top: 8px; }
+
+/* CTA buttons */
+.kb-cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--kb-space-3); margin-top: var(--kb-space-4); }
+.kb-btn {
+  font-size: 26px;
+  font-weight: var(--kb-fw-bold);
+  padding: 22px 44px;
+  border-radius: var(--kb-radius-pill);
+  border: 1px solid transparent;
+  color: #fff;
+  background: var(--kb-grad-hero);
+  box-shadow: var(--kb-glow-brand);
+}
+.kb-btn.kb-btn-ghost {
+  background: transparent;
+  border-color: var(--kb-line);
+  color: var(--kb-ink);
+  box-shadow: none;
+}
+.kb-url { margin-top: var(--kb-space-3); font-size: var(--kb-fs-body); color: var(--kb-ink-dim); }
+.kb-url strong { color: var(--kb-ink); }
+
+/* ---- Entrance animation helper --------------------------------------- */
+/* Elements with data-anim get a staggered rise-in once their scene is active.
+   --d sets the per-element delay (seconds). */
+.kb-scene [data-anim] {
+  opacity: 0;
+  transform: translateY(26px);
+}
+.kb-scene.is-active [data-anim] {
+  animation: kb-rise 0.7s var(--kb-ease-out) forwards;
+  animation-delay: calc(var(--d, 0) * 1s);
+}
+@keyframes kb-rise {
+  to { opacity: 1; transform: none; }
+}
+
+/* Soft pulse for hero/glow accents (non-flashing, slow) */
+.kb-pulse { animation: kb-pulse 3.2s ease-in-out infinite; }
+@keyframes kb-pulse {
+  0%, 100% { opacity: .55; transform: scale(1); }
+  50%      { opacity: .9;  transform: scale(1.04); }
+}
+
+/* ---- Controls bar ----------------------------------------------------- */
+.kb-controls {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-radius: var(--kb-radius-pill);
+  background: rgba(8, 12, 26, 0.82);
+  border: 1px solid var(--kb-line);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--kb-shadow-soft);
+  font-family: var(--kb-font-body);
+  transition: opacity 0.35s ease;
+  user-select: none;
+}
+.kb-btn-ctl {
+  display: grid; place-items: center;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--kb-line);
+  background: rgba(255,255,255,.04);
+  color: var(--kb-ink);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background .2s ease, transform .12s ease;
+}
+.kb-btn-ctl:hover { background: rgba(255,255,255,.12); }
+.kb-btn-ctl:active { transform: scale(.94); }
+
+.kb-counter {
+  font-size: 14px;
+  color: var(--kb-ink-dim);
+  min-width: 132px;
+  text-align: center;
+  line-height: 1.25;
+}
+.kb-counter b { color: var(--kb-ink); font-weight: var(--kb-fw-semibold); }
+
+.kb-progress {
+  position: relative;
+  width: 220px; height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  overflow: hidden;
+}
+.kb-progress > i {
+  position: absolute; inset: 0;
+  width: 0%;
+  background: var(--kb-grad-hero);
+  border-radius: 999px;
+}
+
+.kb-speed { display: flex; gap: 6px; align-items: center; }
+.kb-speed button {
+  font-size: 13px;
+  color: var(--kb-ink-dim);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.kb-speed button.is-active {
+  color: #fff;
+  background: rgba(79,26,243,.34);
+  border-color: rgba(124,77,255,.6);
+}
+
+.kb-hint {
+  position: fixed;
+  bottom: 84px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px; color: var(--kb-ink-faint);
+  z-index: 49;
+  transition: opacity .35s ease;
+}
+
+/* ---- Clean capture mode ---------------------------------------------- */
+body.clean .kb-controls,
+body.clean .kb-hint { opacity: 0; pointer-events: none; }
+
+/* ---- Reduced motion --------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .kb-scene {
+    transition: opacity 0.2s linear;
+    transform: none;
+  }
+  .kb-scene.is-leaving { transform: none; }
+  .kb-scene [data-anim],
+  .kb-scene.is-active [data-anim] {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .kb-pulse { animation: none; opacity: .8; }
+}
+/* JS adds .reduced-motion as a fallback hook mirroring the media query */
+body.reduced-motion .kb-scene { transition: opacity 0.2s linear; transform: none; }
+body.reduced-motion .kb-scene [data-anim] { animation: none !important; opacity: 1; transform: none; }
+body.reduced-motion .kb-pulse { animation: none; opacity: .8; }

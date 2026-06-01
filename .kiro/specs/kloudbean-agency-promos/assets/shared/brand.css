@@ -1,0 +1,92 @@
+/* =============================================================================
+   KloudBean Promo — Brand Tokens
+   -----------------------------------------------------------------------------
+   SINGLE SOURCE OF TRUTH for colors, gradients, typography and spacing.
+   To rebrand every promo at once, edit only this file.
+
+   ✅ OFFICIAL KLOUDBEAN PALETTE — sourced from kloudbean.com/brand-kit/
+      Deep Navy #000f27 · Primary Purple #4F1AF3 · Success Green #40B75F
+      Warning Yellow #E4B32F · Error Red #ef4444 · White #ffffff
+   Typeface: Poppins (with a system fallback so promos still play offline if
+   Poppins isn't installed locally — self-host Poppins to guarantee it).
+   ============================================================================= */
+
+:root {
+  /* ---- Backgrounds (Deep Navy base) ---------------------------------- */
+  --kb-bg-0: #000f27;          /* official Deep Navy — deepest stage bg */
+  --kb-bg-1: #06173a;          /* panel / card background */
+  --kb-bg-2: #0d2150;          /* raised surface */
+  --kb-line: rgba(140, 130, 255, 0.18); /* hairline borders (purple-tinted) */
+
+  /* ---- Text ----------------------------------------------------------- */
+  --kb-ink: #ffffff;           /* official Pure White — primary text */
+  --kb-ink-dim: #b9c2dc;       /* secondary text */
+  --kb-ink-faint: #9ca3af;     /* official Dark Slate — tertiary/captions */
+
+  /* ---- Brand ---------------------------------------------------------- */
+  --kb-brand: #4F1AF3;         /* official Primary Purple */
+  --kb-brand-bright: #7C4DFF;  /* lighter purple for glow/gradient */
+  --kb-brand-2: #9a6bff;       /* soft violet accent */
+
+  /* ---- Semantic ------------------------------------------------------- */
+  --kb-accent: #E4B32F;        /* official Warning Yellow — money/commission */
+  --kb-accent-2: #f0c651;      /* money gradient end */
+  --kb-danger: #ef4444;        /* official Error Red — "pain"/problem state */
+  --kb-ok: #40B75F;            /* official Success Green — "with KloudBean" */
+
+  /* ---- Gradients ------------------------------------------------------ */
+  --kb-grad-hero: linear-gradient(135deg, #4F1AF3 0%, #9a6bff 100%);
+  --kb-grad-hero-soft: linear-gradient(135deg, rgba(79,26,243,.28), rgba(154,107,255,.18));
+  --kb-grad-money: linear-gradient(135deg, #E4B32F 0%, #f0c651 100%);
+  --kb-grad-danger: linear-gradient(135deg, #ef4444 0%, #b23a6b 100%);
+  --kb-grad-ok: linear-gradient(135deg, #40B75F 0%, #4F1AF3 100%);
+  --kb-glow-brand: 0 0 80px rgba(79,26,243,.5);
+
+  /* ---- Typography (Poppins) ------------------------------------------- */
+  --kb-font-display: "Poppins", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --kb-font-body: "Poppins", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --kb-font-mono: "SF Mono", "JetBrains Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
+
+  /* Type scale — authored against a fixed canvas, so sizes are in px.
+     (Promos scale as a whole via transform, see engine.css/engine.js.) */
+  --kb-fs-mega: 132px;         /* giant numbers / counters */
+  --kb-fs-display: 92px;       /* hero headline */
+  --kb-fs-h1: 64px;            /* scene headline */
+  --kb-fs-h2: 44px;            /* sub headline */
+  --kb-fs-lead: 32px;          /* lead paragraph */
+  --kb-fs-body: 24px;          /* body text */
+  --kb-fs-label: 18px;         /* labels / chips */
+  --kb-fs-micro: 15px;         /* captions / footnotes */
+
+  --kb-fw-black: 800;
+  --kb-fw-bold: 700;
+  --kb-fw-semibold: 600;
+  --kb-fw-medium: 500;
+  --kb-fw-regular: 400;
+
+  --kb-tracking-tight: -0.02em;
+  --kb-tracking-wide: 0.12em;
+  --kb-leading-tight: 1.04;
+  --kb-leading-snug: 1.18;
+  --kb-leading-normal: 1.45;
+
+  /* ---- Spacing / radius / shadow ------------------------------------- */
+  --kb-space-1: 8px;
+  --kb-space-2: 16px;
+  --kb-space-3: 24px;
+  --kb-space-4: 40px;
+  --kb-space-5: 64px;
+  --kb-space-6: 96px;
+
+  --kb-radius-sm: 12px;
+  --kb-radius: 20px;
+  --kb-radius-lg: 30px;
+  --kb-radius-pill: 999px;
+
+  --kb-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+  --kb-shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.35);
+
+  /* ---- Motion --------------------------------------------------------- */
+  --kb-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --kb-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

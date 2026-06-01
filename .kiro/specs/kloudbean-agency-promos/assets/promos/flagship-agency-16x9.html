@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KloudBean — For Agencies (Flagship Explainer)</title>
+  <!-- Poppins (official brand font) — progressive enhancement; degrades to system font offline -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../shared/brand.css" />
+  <link rel="stylesheet" href="../shared/engine.css" />
+  <style>
+    /* Promo-specific layout tweaks */
+    .kb-logo {
+      display: inline-flex; align-items: center; gap: 14px;
+      font-family: var(--kb-font-display); font-weight: var(--kb-fw-black);
+      font-size: 30px; letter-spacing: var(--kb-tracking-tight);
+    }
+    .kb-logo .mark {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--kb-grad-hero); box-shadow: var(--kb-glow-brand);
+      display: grid; place-items: center; font-size: 24px;
+    }
+    .pain-grid { grid-template-columns: repeat(3, 1fr); }
+    .value-grid { grid-template-columns: repeat(3, 1fr); }
+    .flow { display:flex; align-items:center; justify-content:center; gap: var(--kb-space-3); margin-top: var(--kb-space-4); flex-wrap: wrap;}
+    .flow .step {
+      padding: 22px 30px; border-radius: var(--kb-radius);
+      border: 1px solid var(--kb-line); background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+      font-size: 26px; font-weight: var(--kb-fw-bold);
+    }
+    .flow .arrow { color: var(--kb-brand-2); font-size: 34px; }
+    .counter-wrap { margin-top: var(--kb-space-3); }
+    .counter-big {
+      font-family: var(--kb-font-display); font-weight: var(--kb-fw-black);
+      font-size: var(--kb-fs-mega); line-height: 1; letter-spacing: var(--kb-tracking-tight);
+    }
+    .commission-line { font-size: 30px; color: var(--kb-ink-dim); margin-top: var(--kb-space-2); }
+    .commission-line b { color: var(--kb-ink); }
+    .nocap { display:inline-block; margin-top: var(--kb-space-3); font-size: 22px; color: var(--kb-ok); }
+    .trademark-note { position:absolute; bottom: 22px; left: 0; right: 0; font-size: 13px; color: var(--kb-ink-faint); }
+  </style>
+</head>
+<body class="ratio-16x9">
+  <div class="kb-viewport">
+    <div class="kb-stage">
+
+      <!-- Scene 1: Hook -->
+      <section class="kb-scene" data-scene="hook">
+        <div class="kb-scene-inner">
+          <div class="kb-logo" data-anim style="--d:0">
+            <span class="mark">☁</span> KloudBean
+          </div>
+          <h1 class="kb-title" data-anim style="--d:.15">
+            Run an agency?<br><span class="kb-grad-text">Your clients' sites shouldn't run your life.</span>
+          </h1>
+          <p class="kb-lead" data-anim style="--d:.4">
+            Deploy, secure, and manage every client app from one place — on the cloud you choose.
+          </p>
+        </div>
+      </section>
+
+      <!-- Scene 2: Agency pain -->
+      <section class="kb-scene" data-scene="pain">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">The reality</span>
+          <h2 class="kb-title kb-h1" data-anim style="--d:.1">
+            One client. <span class="kb-danger-text">Eight places to manage it.</span>
+          </h2>
+          <div class="kb-card-grid pain-grid">
+            <div class="kb-card" data-anim style="--d:.25"><span class="kb-ic">🔑</span><h3>SSH every deploy</h3><p>Find the IP, type the commands, hope nothing breaks.</p></div>
+            <div class="kb-card" data-anim style="--d:.35"><span class="kb-ic">🔒</span><h3>Manual SSL</h3><p>Certificates that expire silently — at the worst time.</p></div>
+            <div class="kb-card" data-anim style="--d:.45"><span class="kb-ic">🌙</span><h3>Midnight incidents</h3><p>Clients find the outage before you do.</p></div>
+          </div>
+          <p class="kb-lead" data-anim style="--d:.6; margin-top:var(--kb-space-3)">Consoles, DNS panels, database boxes, monitoring — stitched together by hand.</p>
+        </div>
+      </section>
+
+      <!-- Scene 3: One-platform solution -->
+      <section class="kb-scene" data-scene="solution">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">The fix</span>
+          <h2 class="kb-title" data-anim style="--d:.1">
+            One managed platform for <span class="kb-grad-text">every client app.</span>
+          </h2>
+          <div class="flow">
+            <div class="step" data-anim style="--d:.3">Pick your stack</div>
+            <span class="arrow" data-anim style="--d:.4">→</span>
+            <div class="step" data-anim style="--d:.5">Deploy to production</div>
+            <span class="arrow" data-anim style="--d:.6">→</span>
+            <div class="step" data-anim style="--d:.7">Scale with confidence</div>
+          </div>
+          <p class="kb-lead" data-anim style="--d:.85" >Apps, databases, SSL, monitoring & backups — fully managed.</p>
+        </div>
+      </section>
+
+      <!-- Scene 4: Any cloud -->
+      <section class="kb-scene" data-scene="providers">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">Any cloud. Fully managed.</span>
+          <h2 class="kb-title kb-h1" data-anim style="--d:.1">Your infrastructure, <span class="kb-grad-text">your choice of cloud.</span></h2>
+          <div class="kb-chip-row">
+            <span class="kb-chip" data-anim style="--d:.2">AWS</span>
+            <span class="kb-chip" data-anim style="--d:.28">Google Cloud</span>
+            <span class="kb-chip" data-anim style="--d:.36">DigitalOcean</span>
+            <span class="kb-chip" data-anim style="--d:.44">Linode / Akamai</span>
+            <span class="kb-chip" data-anim style="--d:.52">Vultr</span>
+            <span class="kb-chip" data-anim style="--d:.6">AWS Lightsail</span>
+            <span class="kb-chip" data-anim style="--d:.68">UpCloud</span>
+          </div>
+          <p class="kb-lead" data-anim style="--d:.8">Provisioned, secured, backed up & monitored for you — across 7 providers.</p>
+        </div>
+      </section>
+
+      <!-- Scene 5: Every stack -->
+      <section class="kb-scene" data-scene="stacks">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">Supported applications</span>
+          <h2 class="kb-title kb-h1" data-anim style="--d:.1">Every stack your clients ship.</h2>
+          <div class="kb-chip-row">
+            <span class="kb-chip" data-anim style="--d:.18">WordPress</span>
+            <span class="kb-chip" data-anim style="--d:.24">Laravel</span>
+            <span class="kb-chip" data-anim style="--d:.30">Next.js</span>
+            <span class="kb-chip" data-anim style="--d:.36">Node.js</span>
+            <span class="kb-chip" data-anim style="--d:.42">PHP</span>
+            <span class="kb-chip" data-anim style="--d:.48">Django</span>
+            <span class="kb-chip" data-anim style="--d:.54">React</span>
+            <span class="kb-chip" data-anim style="--d:.60">NestJS</span>
+            <span class="kb-chip" data-anim style="--d:.66">Python</span>
+            <span class="kb-chip" data-anim style="--d:.72">Vue.js</span>
+            <span class="kb-chip" data-anim style="--d:.78">n8n</span>
+            <span class="kb-chip" data-anim style="--d:.84">+15 more</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scene 6: Agency value props -->
+      <section class="kb-scene" data-scene="agency-value">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">Built for agencies</span>
+          <h2 class="kb-title kb-h1" data-anim style="--d:.1">Everything you need to <span class="kb-ok-text">serve more clients.</span></h2>
+          <div class="kb-card-grid value-grid">
+            <div class="kb-card" data-anim style="--d:.22"><span class="kb-ic">🗂️</span><h3>Whole portfolio, one dashboard</h3><p>Manage every client app and server from a single console.</p></div>
+            <div class="kb-card" data-anim style="--d:.30"><span class="kb-ic">🔄</span><h3>Free zero-downtime migrations</h3><p>Our team moves client sites over with no disruption.</p></div>
+            <div class="kb-card" data-anim style="--d:.38"><span class="kb-ic">🎧</span><h3>24/7 human support</h3><p>Real DevOps experts — they feel like your own team.</p></div>
+            <div class="kb-card" data-anim style="--d:.46"><span class="kb-ic">💳</span><h3>Predictable pricing</h3><p>Transparent plans you can confidently resell.</p></div>
+            <div class="kb-card" data-anim style="--d:.54"><span class="kb-ic">🛡️</span><h3>Enterprise security</h3><p>DDoS, BitNinja, WAF & bot protection on every app.</p></div>
+            <div class="kb-card" data-anim style="--d:.62"><span class="kb-ic">📊</span><h3>Real-time monitoring</h3><p>CPU, memory, logs & alerts — always on.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scene 7: Commission proof -->
+      <section class="kb-scene" data-scene="commission">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">Partner program</span>
+          <h2 class="kb-title kb-h1" data-anim style="--d:.1">
+            Earn <span class="kb-money-text">10% monthly recurring</span> commission — for life.
+          </h2>
+          <div class="counter-wrap" data-anim style="--d:.3">
+            <div class="counter-big kb-money-text" id="commCounter">$0</div>
+            <div class="commission-line">A <b>$1,000/mo</b> client pays you <b>$100/mo</b> → <b>$3,600</b> over 3 years.</div>
+          </div>
+          <span class="nocap" data-anim style="--d:.6">✓ No caps · ✓ Monthly payouts · ✓ Real-time dashboard</span>
+        </div>
+      </section>
+
+      <!-- Scene 8: Startup/Agency credits -->
+      <section class="kb-scene" data-scene="credits">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">Agency &amp; Startup Program</span>
+          <h2 class="kb-title kb-h1" data-anim style="--d:.1">
+            Just getting started? <span class="kb-ok-text">We back you.</span>
+          </h2>
+          <div class="kb-card-grid value-grid">
+            <div class="kb-card" data-anim style="--d:.25"><span class="kb-ic">💰</span><h3>Up to $10,000 credits</h3><p>Hosting credits over 12 months to fuel your growth.</p></div>
+            <div class="kb-card" data-anim style="--d:.35"><span class="kb-ic">🆓</span><h3>3 months free</h3><p>Full platform access — no setup fees while you build.</p></div>
+            <div class="kb-card" data-anim style="--d:.45"><span class="kb-ic">🚀</span><h3>Free migration &amp; onboarding</h3><p>Priority support and a team that moves at your speed.</p></div>
+          </div>
+          <p class="kb-lead" data-anim style="--d:.6">No equity required. Just pure acceleration.</p>
+        </div>
+      </section>
+
+      <!-- Scene 8: Trust -->
+      <section class="kb-scene" data-scene="trust">
+        <div class="kb-scene-inner">
+          <span class="kb-eyebrow" data-anim style="--d:0">Trusted worldwide</span>
+          <div class="kb-stat-row">
+            <div class="kb-stat" data-anim style="--d:.2"><div class="kb-stat-num kb-grad-text">1,000+</div><div class="kb-stat-label">businesses</div></div>
+            <div class="kb-stat" data-anim style="--d:.3"><div class="kb-stat-num kb-grad-text">30+</div><div class="kb-stat-label">countries</div></div>
+            <div class="kb-stat" data-anim style="--d:.4"><div class="kb-stat-num kb-grad-text">2 min</div><div class="kb-stat-label">avg human support</div></div>
+            <div class="kb-stat" data-anim style="--d:.5"><div class="kb-stat-num kb-grad-text">30-day</div><div class="kb-stat-label">money-back guarantee</div></div>
+          </div>
+          <p class="kb-lead" data-anim style="--d:.65">$5,000+/month in tools — DDoS, backups, caching, monitoring & SSL — included free.</p>
+        </div>
+      </section>
+
+      <!-- Scene 9: CTA (holds) -->
+      <section class="kb-scene" data-scene="cta">
+        <div class="kb-scene-inner">
+          <div class="kb-logo" data-anim style="--d:0"><span class="mark">☁</span> KloudBean</div>
+          <h2 class="kb-title" data-anim style="--d:.15">Start free. <span class="kb-grad-text">Or become a partner.</span></h2>
+          <p class="kb-lead" data-anim style="--d:.25">Build. Deploy. Scale — faster than ever.</p>
+          <div class="kb-cta-row">
+            <span class="kb-btn" data-anim style="--d:.35">Start Free Trial</span>
+            <span class="kb-btn kb-btn-ghost" data-anim style="--d:.45">Join Partner Program</span>
+          </div>
+          <p class="kb-url" data-anim style="--d:.6">
+            <strong>console.kloudbean.com</strong> · No credit card · Production-ready in minutes
+          </p>
+        </div>
+        <div class="trademark-note">Third-party names (AWS, Google Cloud, WordPress, etc.) are for identification only and imply no endorsement.</div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../shared/engine.js"></script>
+  <script>
+    // Single source of scene timing (seconds at 1×).
+    var TIMELINE = [
+      { id: "hook",         duration: 6,  label: "Intro" },
+      { id: "pain",         duration: 9,  label: "The problem" },
+      { id: "solution",     duration: 9,  label: "One platform" },
+      { id: "providers",    duration: 7,  label: "Any cloud" },
+      { id: "stacks",       duration: 7,  label: "Every stack" },
+      { id: "agency-value", duration: 10, label: "For agencies" },
+      { id: "commission",   duration: 12, label: "Earn for life" },
+      { id: "credits",      duration: 9,  label: "We back you" },
+      { id: "trust",        duration: 7,  label: "Trusted" },
+      { id: "cta",          duration: 8,  label: "Start free" }
+    ];
+
+    var engine = new SceneEngine(document.querySelector(".kb-stage"), {
+      timeline: TIMELINE,
+      autoplay: true,
+      holdOnEnd: true
+    });
+
+    // Animated commission counter: ramp $0 → $3,600 whenever the scene shows.
+    (function () {
+      var el = document.getElementById("commCounter");
+      var scene = document.querySelector('[data-scene="commission"]');
+      var raf = null;
+      function fmt(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      function run() {
+        cancelAnimationFrame(raf);
+        var target = 3600, dur = 2200, start = null;
+        function step(ts) {
+          if (!start) start = ts;
+          var t = Math.min((ts - start) / dur, 1);
+          var eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = fmt(target * eased);
+          if (t < 1) raf = requestAnimationFrame(step);
+        }
+        raf = requestAnimationFrame(step);
+      }
+      // Observe activation via class changes on the scene.
+      var mo = new MutationObserver(function () {
+        if (scene.classList.contains("is-active")) { el.textContent = "$0"; run(); }
+      });
+      mo.observe(scene, { attributes: true, attributeFilter: ["class"] });
+      if (scene.classList.contains("is-active")) run();
+    })();
+  </script>
+</body>
+</html>
