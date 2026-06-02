@@ -26,6 +26,7 @@ import HSTCalculator from "@/components/dashboard/HSTCalculator";
 import CommissionCalculator from "@/components/dashboard/CommissionCalculator";
 import PreconLibrary from "@/components/dashboard/PreconLibrary";
 import { useSectionLabels } from "@/hooks/useSectionLabels";
+import { useListingsPagination } from "@/hooks/useListingsPagination";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -154,6 +155,13 @@ export default function PreConSection({
   const { label } = useSectionLabels();
   const listingsLabel = label("listings", "Pre-construction listings", "Projects, pricing, and client registration");
   const assetsLabel = label("assets", "Pre-con assets", "Tools, documents, and marketing");
+  const { setting: pagination } = useListingsPagination();
+  const [visibleCount, setVisibleCount] = useState(6);
+
+  // Reset visible count when the page size setting or filters change
+  useEffect(() => {
+    setVisibleCount(pagination.page_size || 6);
+  }, [pagination.page_size, cityFilter, propertyFilter, statusFilter, searchQuery]);
 
   useEffect(() => {
     const load = async () => {
@@ -410,7 +418,7 @@ export default function PreConSection({
             })}
 
           {!PORTAL_SHOWCASE &&
-            filteredProjects.map((project) => (
+            (pagination.enabled ? filteredProjects.slice(0, visibleCount) : filteredProjects).map((project) => (
             <Card
               key={project.id}
               className="border-border hover:shadow-lg transition-all overflow-hidden group"
@@ -527,6 +535,36 @@ export default function PreConSection({
             </div>
           )}
         </div>
+
+        {/* Pagination — admin-controlled page size */}
+        {!PORTAL_SHOWCASE && pagination.enabled && filteredProjects.length > visibleCount && (
+          <div className="mt-6 flex flex-col items-center gap-2">
+            <p className="text-xs text-muted-foreground">
+              Showing {Math.min(visibleCount, filteredProjects.length)} of {filteredProjects.length} listings
+            </p>
+            <Button
+              variant="outline"
+              className="gap-2 rounded-full border-primary/30 px-6 hover:border-primary/60 hover:bg-primary/5"
+              onClick={() => setVisibleCount((c) => c + (pagination.page_size || 6))}
+            >
+              Show more listings
+              <ChevronRight className="h-4 w-4 rotate-90" />
+            </Button>
+          </div>
+        )}
+        {!PORTAL_SHOWCASE && pagination.enabled && visibleCount > (pagination.page_size || 6) && filteredProjects.length <= visibleCount && filteredProjects.length > (pagination.page_size || 6) && (
+          <div className="mt-6 flex justify-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1.5 text-muted-foreground"
+              onClick={() => setVisibleCount(pagination.page_size || 6)}
+            >
+              Show less
+              <ChevronRight className="h-4 w-4 -rotate-90" />
+            </Button>
+          </div>
+        )}
 
         <div className="mt-12">
           <BuyerPresentationKit />

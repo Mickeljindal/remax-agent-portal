@@ -61,6 +61,7 @@ import {
   BookOpen,
   Briefcase,
   Type,
+  LayoutGrid,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import AdminHelpBot from "@/components/admin/AdminHelpBot";
@@ -82,6 +83,7 @@ const ADMIN_CARDS = [
   { key: "analytics", route: "/admin/analytics", title: "Analytics Dashboard", description: "Track agent engagement and content views", icon: <BarChart3 className="h-6 w-6 text-primary" />, iconWrapClass: "bg-primary/10" },
   { key: "vendors", route: "/admin/vendors", title: "Approved vendors", description: "Trades and services shown on the agent dashboard", icon: <Store className="h-6 w-6 text-primary" />, iconWrapClass: "bg-primary/10" },
   { key: "section-titles", route: "/admin/section-titles", title: "Agent portal titles", description: "Rename the section headings agents see", icon: <Type className="h-6 w-6 text-accent" />, iconWrapClass: "bg-accent/20" },
+  { key: "display-settings", route: "/admin/display-settings", title: "Display settings", description: "Listings per page & pagination", icon: <LayoutGrid className="h-6 w-6 text-slate-600" />, iconWrapClass: "bg-slate-500/15" },
   { key: "listings", route: "/admin/listings", title: "Listings & categories", description: "Pre-con projects, cities, tags, types, statuses", icon: <MapPin className="h-6 w-6 text-sky-700" />, iconWrapClass: "bg-sky-600/15" },
   { key: "worksheets", route: "/admin/worksheets", title: "Pre-con worksheets", description: "View & manage worksheet submissions", icon: <LinkIcon className="h-6 w-6 text-blue-700" />, iconWrapClass: "bg-blue-600/15" },
   { key: "precon-library", route: "/admin/precon-library", title: "Pre-con document library", description: "Shared forms: showing instructions, clauses, etc.", icon: <LinkIcon className="h-6 w-6 text-fuchsia-700" />, iconWrapClass: "bg-fuchsia-600/15" },
