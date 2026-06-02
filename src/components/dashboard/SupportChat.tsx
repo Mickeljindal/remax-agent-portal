@@ -13,6 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { PORTAL_SHOWCASE } from "@/config/portalShowcase";
 import SupportChatShowcase from "@/components/dashboard/SupportChatShowcase";
 import SupportResourceCards from "@/components/dashboard/SupportResourceCards";
+import { useSectionLabels } from "@/hooks/useSectionLabels";
 
 interface Ticket {
   id: string;
@@ -44,6 +45,8 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
   }
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const { label } = useSectionLabels();
+  const supportLabel = label("support", "Marketing & Tech Support", "Get help from our support team");
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -191,8 +194,8 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
         <div className="flex items-center gap-3">
           <Headphones className="h-6 w-6 text-accent" />
           <div>
-            <h2 className="font-display text-2xl font-bold text-foreground">Marketing & Tech Support</h2>
-            <p className="text-sm text-muted-foreground">Get help from our support team</p>
+            <h2 className="font-display text-2xl font-bold text-foreground">{supportLabel.title}</h2>
+            <p className="text-sm text-muted-foreground">{supportLabel.subtitle}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">

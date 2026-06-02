@@ -33,6 +33,7 @@ import AdminWorksheets from "./pages/AdminWorksheets";
 import AdminPreconLibrary from "./pages/AdminPreconLibrary";
 import AdminHelp from "./pages/AdminHelp";
 import AdminBuyerKit from "./pages/AdminBuyerKit";
+import AdminSectionTitles from "./pages/AdminSectionTitles";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,7 @@ const App = () => (
           <Route path="/admin/precon-library" element={<AdminPreconLibrary />} />
           <Route path="/admin/help" element={<AdminHelp />} />
           <Route path="/admin/buyer-kit" element={<AdminBuyerKit />} />
+          <Route path="/admin/section-titles" element={<AdminSectionTitles />} />
           <Route path="/pending" element={<PendingActivation />} />
           <Route path="/quote" element={<Quote />} />
           <Route path="/directory" element={<AgentDirectory />} />

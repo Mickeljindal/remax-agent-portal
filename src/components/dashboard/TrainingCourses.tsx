@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useTrainingCoursesData, type Course } from "@/hooks/useTrainingCoursesData";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useSectionLabels } from "@/hooks/useSectionLabels";
 import { toast } from "@/hooks/use-toast";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import CertificateShareActions from "@/components/dashboard/CertificateShareActions";
@@ -54,6 +55,8 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
   } = useTrainingCoursesData(agentId);
 
   const { notifyCourseCompleted } = useNotifications();
+  const { label } = useSectionLabels();
+  const coursesLabel = label("courses", "Training & courses", "Video modules, quizzes, and certificates");
 
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
@@ -217,8 +220,8 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
       <div className="flex items-center gap-3">
         <GraduationCap className="h-7 w-7 text-accent" />
         <div>
-          <h2 className="font-display text-2xl font-bold text-foreground">Training &amp; courses</h2>
-          <p className="text-sm text-muted-foreground">Video modules, quizzes, and certificates</p>
+          <h2 className="font-display text-2xl font-bold text-foreground">{coursesLabel.title}</h2>
+          <p className="text-sm text-muted-foreground">{coursesLabel.subtitle}</p>
         </div>
       </div>
 

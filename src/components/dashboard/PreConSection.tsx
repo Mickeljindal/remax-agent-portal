@@ -25,6 +25,7 @@ import { parseISO, differenceInDays } from "date-fns";
 import HSTCalculator from "@/components/dashboard/HSTCalculator";
 import CommissionCalculator from "@/components/dashboard/CommissionCalculator";
 import PreconLibrary from "@/components/dashboard/PreconLibrary";
+import { useSectionLabels } from "@/hooks/useSectionLabels";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -150,6 +151,9 @@ export default function PreConSection({
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [worksheetOpen, setWorksheetOpen] = useState(false);
+  const { label } = useSectionLabels();
+  const listingsLabel = label("listings", "Pre-construction listings", "Projects, pricing, and client registration");
+  const assetsLabel = label("assets", "Pre-con assets", "Tools, documents, and marketing");
 
   useEffect(() => {
     const load = async () => {
@@ -266,8 +270,8 @@ export default function PreConSection({
         <div className="flex items-center gap-3">
           <Building2 className="h-7 w-7 text-accent" />
           <div>
-            <h2 className="font-display text-2xl font-bold text-foreground">Pre-construction listings</h2>
-            <p className="text-sm text-muted-foreground">Projects, pricing, and client registration</p>
+            <h2 className="font-display text-2xl font-bold text-foreground">{listingsLabel.title}</h2>
+            <p className="text-sm text-muted-foreground">{listingsLabel.subtitle}</p>
           </div>
         </div>
 
@@ -533,8 +537,8 @@ export default function PreConSection({
         <div className="flex items-center gap-3">
           <LayoutGrid className="h-7 w-7 text-accent" />
           <div>
-            <h2 className="font-display text-2xl font-bold text-foreground">Pre-con assets</h2>
-            <p className="text-sm text-muted-foreground">Tools, documents, and marketing</p>
+            <h2 className="font-display text-2xl font-bold text-foreground">{assetsLabel.title}</h2>
+            <p className="text-sm text-muted-foreground">{assetsLabel.subtitle}</p>
           </div>
         </div>
 
@@ -614,30 +618,6 @@ export default function PreConSection({
         ) : (
           <>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <a
-                href="#listings"
-                className="group flex min-h-[140px] flex-col justify-between rounded-xl border-2 border-border bg-gradient-to-br from-sky-500/15 to-sky-600/5 p-6 transition-all hover:shadow-md"
-              >
-                <Building2 className="h-8 w-8 text-sky-600" />
-                <div>
-                  <p className="font-display text-lg font-semibold">Pre-con projects</p>
-                  <p className="mt-1 text-xs text-muted-foreground">Jump to listings above</p>
-                </div>
-                <ChevronRight className="h-5 w-5 self-end text-muted-foreground transition-transform group-hover:translate-x-1" />
-              </a>
-
-              <div className="grid min-h-[140px] gap-4 sm:col-span-2 sm:grid-cols-2">
-                <div className="rounded-xl border-2 border-border bg-gradient-to-br from-primary/15 to-primary/5 p-2">
-                  <HSTCalculator />
-                </div>
-              </div>
-
-              <div className="flex min-h-[140px] flex-col justify-center rounded-xl border-2 border-border bg-gradient-to-br from-destructive/15 to-destructive/5 p-6">
-                <FolderOpen className="mb-2 h-8 w-8 text-destructive" />
-                <p className="font-display text-lg font-semibold">Pre-con documents</p>
-                <p className="mt-1 text-xs text-muted-foreground">Download templates below</p>
-              </div>
-
               <button
                 type="button"
                 className="group relative flex min-h-[140px] flex-col justify-between rounded-xl border-2 border-primary/35 bg-gradient-to-br from-primary/20 to-primary/5 p-6 text-left transition-all hover:border-primary/60 hover:shadow-md"
@@ -656,6 +636,21 @@ export default function PreConSection({
                   <ChevronRight className="h-5 w-5 text-primary" />
                 </div>
               </button>
+
+              <div className="flex min-h-[140px] flex-col justify-center rounded-xl border-2 border-border bg-gradient-to-br from-destructive/15 to-destructive/5 p-6">
+                <FolderOpen className="mb-2 h-8 w-8 text-destructive" />
+                <p className="font-display text-lg font-semibold">Pre-con documents</p>
+                <p className="mt-1 text-xs text-muted-foreground">Download templates below</p>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div id="hst-calculator-anchor" className="scroll-mt-28">
+                <HSTCalculator />
+              </div>
+              <div id="commission-calculator-anchor" className="scroll-mt-28">
+                <CommissionCalculator />
+              </div>
             </div>
 
             <PreconLibrary />

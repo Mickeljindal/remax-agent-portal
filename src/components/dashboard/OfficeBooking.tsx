@@ -13,6 +13,7 @@ import {
 import { format, addDays, isSameDay, startOfDay } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useSectionLabels } from "@/hooks/useSectionLabels";
 
 interface Location { id: string; name: string; address: string | null; phone: string | null; }
 interface Room { id: string; location_id: string; name: string; capacity: number | null; amenities: string | null; is_virtual: boolean; }
@@ -30,6 +31,8 @@ const SLOTS = Array.from({ length: 9 }, (_, i) => {
 
 export default function OfficeBooking({ agentId }: OfficeBookingProps) {
   const [locations, setLocations] = useState<Location[]>([]);
+  const { label } = useSectionLabels();
+  const officeLabel = label("offices", "Office Locations & Booking", "Reserve a meeting room — pick a location, day, and time");
   const [rooms, setRooms] = useState<Room[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [activeLocationId, setActiveLocationId] = useState<string>("");
@@ -146,8 +149,8 @@ export default function OfficeBooking({ agentId }: OfficeBookingProps) {
           <DoorOpen className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h2 className="font-display text-2xl font-bold text-foreground">Office Locations &amp; Booking</h2>
-          <p className="text-sm text-muted-foreground">Reserve a meeting room — pick a location, day, and time</p>
+          <h2 className="font-display text-2xl font-bold text-foreground">{officeLabel.title}</h2>
+          <p className="text-sm text-muted-foreground">{officeLabel.subtitle}</p>
         </div>
       </div>
 

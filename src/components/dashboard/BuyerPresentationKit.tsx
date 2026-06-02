@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, ImageIcon, Mic, Presentation, Download, ExternalLink, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useSectionLabels } from "@/hooks/useSectionLabels";
 
 interface KitItem {
   id: string;
@@ -25,6 +26,8 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
 export default function BuyerPresentationKit() {
   const [items, setItems] = useState<KitItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { label } = useSectionLabels();
+  const kitLabel = label("buyer-kit", "Buyer presentation kit", "Templates and talking points for buyer meetings.");
 
   useEffect(() => {
     (async () => {
@@ -54,9 +57,9 @@ export default function BuyerPresentationKit() {
         <Briefcase className="h-7 w-7 text-accent" />
         <div>
           <div className="mb-1 h-1 w-8 rounded-sm bg-[hsl(4_80%_56%)]" aria-hidden />
-          <h2 className="font-display text-2xl font-bold text-foreground">Buyer presentation kit</h2>
+          <h2 className="font-display text-2xl font-bold text-foreground">{kitLabel.title}</h2>
           <p className="text-sm text-muted-foreground">
-            Templates and talking points for buyer meetings.
+            {kitLabel.subtitle}
           </p>
         </div>
       </div>

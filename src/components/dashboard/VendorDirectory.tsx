@@ -5,10 +5,13 @@ import { toast } from "@/hooks/use-toast";
 import { PORTAL_SHOWCASE } from "@/config/portalShowcase";
 import VendorDirectoryShowcase from "@/components/dashboard/VendorDirectoryShowcase";
 import { VendorDirectoryInner, type VendorListItem } from "@/components/dashboard/VendorDirectoryList";
+import { useSectionLabels } from "@/hooks/useSectionLabels";
 
 const VendorDirectory = () => {
   const [vendors, setVendors] = useState<VendorListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { label } = useSectionLabels();
+  const vendorsLabel = label("vendors", "Approved vendors", "Brokerage-approved trades and services — contact details for your deals");
 
   useEffect(() => {
     if (PORTAL_SHOWCASE) {
@@ -54,10 +57,10 @@ const VendorDirectory = () => {
         <div>
           <div className="mb-2 flex h-1 w-12 rounded-sm bg-gradient-to-r from-[#003865] to-[#c41e3a]" aria-hidden />
           <h2 className="font-display text-2xl font-bold tracking-tight text-[#0f2744] dark:text-foreground md:text-3xl">
-            Approved vendors
+            {vendorsLabel.title}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Brokerage-approved trades and services — contact details for your deals
+            {vendorsLabel.subtitle}
           </p>
         </div>
       </div>
