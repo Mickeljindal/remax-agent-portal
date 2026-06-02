@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { uploadFileToServer } from "@/hooks/useVideoUpload";
+import UploadHint, { UPLOAD_PRESETS } from "@/components/admin/UploadHint";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -677,10 +678,12 @@ export default function AdminListings() {
                   <span className="text-xs text-muted-foreground">or paste URL:</span>
                   <Input className="flex-1" value={projectForm.thumbnail_url} onChange={(e) => setProjectForm({ ...projectForm, thumbnail_url: e.target.value })} placeholder="https://..." />
                 </div>
+                <UploadHint {...UPLOAD_PRESETS.listingThumbnail} />
               </div>
               <div>
                 <Label>Gallery Image URLs (one per line)</Label>
                 <Textarea value={projectForm.gallery_urls_input} onChange={(e) => setProjectForm({ ...projectForm, gallery_urls_input: e.target.value })} rows={3} placeholder="https://image1.jpg&#10;https://image2.jpg" />
+                <UploadHint {...UPLOAD_PRESETS.listingGallery} />
               </div>
             </div>
 
@@ -739,6 +742,7 @@ export default function AdminListings() {
                 <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,image/*" className="hidden" disabled={uploadingDoc}
                   onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadDocument(f); }} />
               </label>
+              <UploadHint {...UPLOAD_PRESETS.documentPdf} />
             </div>
 
             {/* Document list */}

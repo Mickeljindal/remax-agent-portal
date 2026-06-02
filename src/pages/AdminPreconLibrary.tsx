@@ -21,6 +21,7 @@ import {
   ArrowLeft, Loader2, Plus, Pencil, Trash2, FileText, Upload, Link as LinkIcon, ExternalLink,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import UploadHint, { UPLOAD_PRESETS } from "@/components/admin/UploadHint";
 
 interface LibraryDoc {
   id: string;
@@ -230,6 +231,7 @@ export default function AdminPreconLibrary() {
                 <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,image/*" className="hidden" disabled={uploading}
                   onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }} />
               </label>
+              <UploadHint {...UPLOAD_PRESETS.documentPdf} />
               {form.file_url && <p className="text-xs text-green-600">✓ File attached: {form.file_name}</p>}
               <div className="relative">
                 <div className="absolute inset-x-0 top-1/2 border-t border-muted" />

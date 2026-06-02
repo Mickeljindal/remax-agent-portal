@@ -62,6 +62,8 @@ import {
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import AdminHelpBot from "@/components/admin/AdminHelpBot";
+import EditableAdminCard from "@/components/admin/EditableAdminCard";
+import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
 
 interface Agent {
   id: string;
@@ -74,9 +76,29 @@ interface Agent {
   created_at: string;
 }
 
+const ADMIN_CARDS = [
+  { key: "analytics", route: "/admin/analytics", title: "Analytics Dashboard", description: "Track agent engagement and content views", icon: <BarChart3 className="h-6 w-6 text-primary" />, iconWrapClass: "bg-primary/10" },
+  { key: "vendors", route: "/admin/vendors", title: "Approved vendors", description: "Trades and services shown on the agent dashboard", icon: <Store className="h-6 w-6 text-primary" />, iconWrapClass: "bg-primary/10" },
+  { key: "links", route: "/admin/links", title: "Manage Links", description: "Update Google Drive URLs for resources", icon: <LinkIcon className="h-6 w-6 text-accent" />, iconWrapClass: "bg-accent/20" },
+  { key: "precon", route: "/admin/precon", title: "Pre-con cities & projects", description: "Cities, filters, commission %, listings", icon: <MapPin className="h-6 w-6 text-sky-600" />, iconWrapClass: "bg-sky-500/15" },
+  { key: "listings", route: "/admin/listings", title: "Listings & categories", description: "Tags, types, statuses, full CRUD", icon: <MapPin className="h-6 w-6 text-sky-700" />, iconWrapClass: "bg-sky-600/15" },
+  { key: "worksheets", route: "/admin/worksheets", title: "Pre-con worksheets", description: "View & manage worksheet submissions", icon: <LinkIcon className="h-6 w-6 text-blue-700" />, iconWrapClass: "bg-blue-600/15" },
+  { key: "precon-library", route: "/admin/precon-library", title: "Pre-con document library", description: "Shared forms: showing instructions, clauses, etc.", icon: <LinkIcon className="h-6 w-6 text-fuchsia-700" />, iconWrapClass: "bg-fuchsia-600/15" },
+  { key: "course-assignments", route: "/admin/course-assignments", title: "Course assignments", description: "Assign training to agents", icon: <GraduationCap className="h-6 w-6 text-violet-600" />, iconWrapClass: "bg-violet-500/15" },
+  { key: "courses", route: "/admin/courses", title: "Course management", description: "Create courses, add video modules", icon: <GraduationCap className="h-6 w-6 text-indigo-600" />, iconWrapClass: "bg-indigo-500/15" },
+  { key: "course-analytics", route: "/admin/course-analytics", title: "Course analytics", description: "Watch time, completions, per-agent stats", icon: <BarChart3 className="h-6 w-6 text-rose-600" />, iconWrapClass: "bg-rose-500/15" },
+  { key: "reminders", route: "/admin/reminders", title: "Agent reminders", description: "Nudges for courses, pre-con, vendors", icon: <Bell className="h-6 w-6 text-amber-700" />, iconWrapClass: "bg-amber-500/15" },
+  { key: "properties", route: "/admin/properties", title: "Property management", description: "Add/edit listings, assign to agents", icon: <Store className="h-6 w-6 text-teal-600" />, iconWrapClass: "bg-teal-500/15" },
+  { key: "events", route: "/admin/events", title: "Events management", description: "Create events, notify agents, track RSVPs", icon: <Bell className="h-6 w-6 text-cyan-600" />, iconWrapClass: "bg-cyan-500/15" },
+  { key: "support", route: "/admin/support", title: "Support inbox", description: "Chat with agents, manage tickets", icon: <Bell className="h-6 w-6 text-orange-600" />, iconWrapClass: "bg-orange-500/15" },
+  { key: "social-share", route: "/admin/social-share", title: "Social share icons", description: "WhatsApp, Facebook, LinkedIn, X, email, copy", icon: <Share2 className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />, iconWrapClass: "bg-emerald-500/15" },
+  { key: "help", route: "/admin/help", title: "Documentation & Help", description: "Guides + assistant for \"where do I find…\"", icon: <BookOpen className="h-6 w-6 text-[#e2231a]" />, iconWrapClass: "bg-gradient-to-br from-[#e2231a]/15 to-[#1a4d8f]/15" },
+];
+
 const AdminPanel = () => {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { label, saveLabel } = useAdminCardLabels();
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loadingAgents, setLoadingAgents] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -317,236 +339,26 @@ const AdminPanel = () => {
 
       {/* Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Quick Actions */}
+        {/* Quick Actions — admin-editable cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          <Card
-            className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate("/admin/analytics")}
-          >
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <BarChart3 className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Analytics Dashboard</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Track agent engagement and content views
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate("/admin/vendors")}
-          >
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Store className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Approved vendors</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Trades and services shown on the agent dashboard
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate("/admin/links")}
-          >
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-accent/20 flex items-center justify-center">
-                  <LinkIcon className="h-6 w-6 text-accent" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Manage Links</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Update Google Drive URLs for resources
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/precon")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-sky-500/15 flex items-center justify-center">
-                  <MapPin className="h-6 w-6 text-sky-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Pre-con cities &amp; projects</h3>
-                  <p className="text-sm text-muted-foreground">Cities, filters, commission %, listings</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/listings")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-sky-600/15 flex items-center justify-center">
-                  <MapPin className="h-6 w-6 text-sky-700" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Listings & categories</h3>
-                  <p className="text-sm text-muted-foreground">Tags, types, statuses, full CRUD</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/worksheets")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-blue-600/15 flex items-center justify-center">
-                  <LinkIcon className="h-6 w-6 text-blue-700" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Pre-con worksheets</h3>
-                  <p className="text-sm text-muted-foreground">View &amp; manage worksheet submissions</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/precon-library")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-fuchsia-600/15 flex items-center justify-center">
-                  <LinkIcon className="h-6 w-6 text-fuchsia-700" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Pre-con document library</h3>
-                  <p className="text-sm text-muted-foreground">Shared forms: showing instructions, clauses, etc.</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/course-assignments")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-violet-500/15 flex items-center justify-center">
-                  <GraduationCap className="h-6 w-6 text-violet-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Course assignments</h3>
-                  <p className="text-sm text-muted-foreground">Assign training to agents</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/courses")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-indigo-500/15 flex items-center justify-center">
-                  <GraduationCap className="h-6 w-6 text-indigo-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Course management</h3>
-                  <p className="text-sm text-muted-foreground">Create courses, add video modules</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/course-analytics")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-rose-500/15 flex items-center justify-center">
-                  <BarChart3 className="h-6 w-6 text-rose-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Course analytics</h3>
-                  <p className="text-sm text-muted-foreground">Watch time, completions, per-agent stats</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/reminders")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-amber-500/15 flex items-center justify-center">
-                  <Bell className="h-6 w-6 text-amber-700" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Agent reminders</h3>
-                  <p className="text-sm text-muted-foreground">Nudges for courses, pre-con, vendors</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/properties")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-teal-500/15 flex items-center justify-center">
-                  <Store className="h-6 w-6 text-teal-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Property management</h3>
-                  <p className="text-sm text-muted-foreground">Add/edit listings, assign to agents</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/events")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-cyan-500/15 flex items-center justify-center">
-                  <Bell className="h-6 w-6 text-cyan-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Events management</h3>
-                  <p className="text-sm text-muted-foreground">Create events, notify agents, track RSVPs</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/support")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-orange-500/15 flex items-center justify-center">
-                  <Bell className="h-6 w-6 text-orange-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Support inbox</h3>
-                  <p className="text-sm text-muted-foreground">Chat with agents, manage tickets</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/admin/social-share")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-emerald-500/15 flex items-center justify-center">
-                  <Share2 className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Social share icons</h3>
-                  <p className="text-sm text-muted-foreground">WhatsApp, Facebook, LinkedIn, X, email, copy</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-[#e2231a]/30" onClick={() => navigate("/admin/help")}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#e2231a]/15 to-[#1a4d8f]/15 flex items-center justify-center">
-                  <BookOpen className="h-6 w-6 text-[#e2231a]" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Documentation &amp; Help</h3>
-                  <p className="text-sm text-muted-foreground">Guides + assistant for "where do I find…"</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {ADMIN_CARDS.map((c) => {
+            const lbl = label(c.key, c.title, c.description);
+            return (
+              <EditableAdminCard
+                key={c.key}
+                cardKey={c.key}
+                title={lbl.title}
+                description={lbl.description}
+                defaultTitle={c.title}
+                defaultDescription={c.description}
+                icon={c.icon}
+                iconWrapClass={c.iconWrapClass}
+                onClick={() => navigate(c.route)}
+                onSave={(t, d) => saveLabel(c.key, t, d)}
+                editable={isAdmin}
+              />
+            );
+          })}
         </div>
 
         <Card>

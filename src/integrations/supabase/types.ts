@@ -1376,6 +1376,12 @@ export type Database = {
         Update: { id?: string; title?: string; description?: string | null; icon?: string; file_url?: string | null; link_url?: string | null; file_name?: string | null; sort_order?: number; is_active?: boolean; created_by?: string | null; created_at?: string; updated_at?: string }
         Relationships: []
       }
+      admin_card_overrides: {
+        Row: { card_key: string; title: string | null; description: string | null; updated_at: string }
+        Insert: { card_key: string; title?: string | null; description?: string | null; updated_at?: string }
+        Update: { card_key?: string; title?: string | null; description?: string | null; updated_at?: string }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

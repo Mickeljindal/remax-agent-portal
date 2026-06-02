@@ -46,6 +46,7 @@ import {
   MapPin,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import UploadHint, { UPLOAD_PRESETS } from "@/components/admin/UploadHint";
 
 interface Property {
   id: string;
@@ -449,6 +450,7 @@ export default function AdminProperties() {
                     <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "thumbnail")} disabled={uploading} />
                   </label>
                 </div>
+                <UploadHint {...UPLOAD_PRESETS.propertyImage} />
               </div>
               <div>
                 <Label>Gallery Images</Label>
@@ -469,6 +471,7 @@ export default function AdminProperties() {
                     <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "gallery")} disabled={uploading} />
                   </label>
                 </div>
+                <UploadHint {...UPLOAD_PRESETS.propertyImage} />
               </div>
             </div>
 

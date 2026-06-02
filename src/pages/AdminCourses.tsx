@@ -47,6 +47,7 @@ import {
   Video,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import UploadHint, { UPLOAD_PRESETS } from "@/components/admin/UploadHint";
 
 interface Course {
   id: string;
@@ -545,6 +546,7 @@ export default function AdminCourses() {
                   onChange={(e) => setCourseForm({ ...courseForm, thumbnail_url: e.target.value })}
                   placeholder="https://..."
                 />
+                <UploadHint {...UPLOAD_PRESETS.courseThumbnail} />
               </div>
             </div>
             <div className="flex items-center gap-6">
@@ -650,6 +652,7 @@ export default function AdminCourses() {
                         }}
                       />
                     </label>
+                    <UploadHint {...UPLOAD_PRESETS.courseVideo} />
                     {progress.status === "uploading" && (
                       <div className="mt-3 space-y-1.5">
                         <Progress value={progress.percent} className="h-2.5" />
