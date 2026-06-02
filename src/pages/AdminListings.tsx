@@ -111,7 +111,7 @@ export default function AdminListings() {
       supabase.from("precon_tags").select("*").order("sort_order"),
       supabase.from("precon_property_types").select("*").order("sort_order"),
       supabase.from("precon_statuses").select("*").order("sort_order"),
-      supabase.from("precon_cities").select("*").order("sort_order"),
+      supabase.from("precon_cities").select("*").order("name"),
       supabase.from("precon_projects").select("*, precon_cities(name)").order("sort_order"),
       supabase.from("precon_project_tags").select("*"),
     ]);

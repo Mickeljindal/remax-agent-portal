@@ -46,10 +46,14 @@ export function useAdminCardLabels() {
       { card_key: key, title, description, updated_at: new Date().toISOString() },
       { onConflict: "card_key" }
     );
-    if (!error) {
-      setOverrides((prev) => ({ ...prev, [key]: { title, description } }));
+    if (error) {
+      console.error("Failed to save card label:", error);
+      return false;
     }
-    return !error;
+    // Update local state immediately AND refetch to stay in sync
+    setOverrides((prev) => ({ ...prev, [key]: { title, description } }));
+    fetchOverrides();
+    return true;
   };
 
   return { overrides, loading, label, saveLabel, refetch: fetchOverrides };

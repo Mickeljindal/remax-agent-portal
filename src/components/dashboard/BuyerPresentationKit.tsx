@@ -1,37 +1,53 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Briefcase, FileText, ImageIcon, Mic, Presentation } from "lucide-react";
+import { Briefcase, FileText, ImageIcon, Mic, Presentation, Download, ExternalLink, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { PORTAL_SHOWCASE } from "@/config/portalShowcase";
 
-const showcaseItems = [
-  {
-    icon: Presentation,
-    title: "Buyer consultation deck",
-    desc: "Slide outline: needs, financing, search criteria, offer process.",
-    action: "demo" as const,
-  },
-  {
-    icon: FileText,
-    title: "Buyer agency & forms",
-    desc: "RECO-compliant buyer rep checklist and signable PDFs.",
-    action: "demo" as const,
-  },
-  {
-    icon: ImageIcon,
-    title: "Neighbourhood one-pagers",
-    desc: "Schools, transit, and amenities templates per district.",
-    action: "demo" as const,
-  },
-  {
-    icon: Mic,
-    title: "Objection handlers",
-    desc: "Scripts for price, timing, and competing offers.",
-    action: "demo" as const,
-  },
-];
+interface KitItem {
+  id: string;
+  title: string;
+  description: string | null;
+  icon: string;
+  file_url: string | null;
+  link_url: string | null;
+}
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  file: FileText,
+  presentation: Presentation,
+  image: ImageIcon,
+  mic: Mic,
+  briefcase: Briefcase,
+};
 
 export default function BuyerPresentationKit() {
+  const [items, setItems] = useState<KitItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const { data } = await supabase
+        .from("buyer_kit_items")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order");
+      setItems((data as KitItem[]) || []);
+      setLoading(false);
+    })();
+  }, []);
+
+  const open = (item: KitItem) => {
+    const url = item.file_url || item.link_url;
+    if (!url) {
+      toast({ title: item.title, description: "No file attached yet — an admin can add it." });
+      return;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <section id="buyer-kit" className="scroll-mt-28 space-y-4">
       <div className="flex items-center gap-3">
@@ -40,42 +56,50 @@ export default function BuyerPresentationKit() {
           <div className="mb-1 h-1 w-8 rounded-sm bg-[hsl(4_80%_56%)]" aria-hidden />
           <h2 className="font-display text-2xl font-bold text-foreground">Buyer presentation kit</h2>
           <p className="text-sm text-muted-foreground">
-            Templates and talking points for buyer meetings — wire to Drive or your document library in admin.
+            Templates and talking points for buyer meetings.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {showcaseItems.map(({ icon: Icon, title, desc, action }) => (
-          <Card key={title} className="border-border/80 bg-card/90 shadow-sm transition hover:border-primary/20">
-            <CardContent className="flex flex-col gap-3 p-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted">
-                <Icon className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="font-display text-sm font-semibold text-foreground">{title}</p>
-                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{desc}</p>
-              </div>
-              <Button
-                size="sm"
-                variant="outline"
-                className="mt-auto w-full"
-                onClick={() =>
-                  toast({
-                    title: title,
-                    description:
-                      action === "demo" && PORTAL_SHOWCASE
-                        ? "Sample tile — link each resource to Google Drive or PDFs in production."
-                        : "Connect resource_links or shared_documents in admin.",
-                  })
-                }
-              >
-                Open resource
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      ) : items.length === 0 ? (
+        <p className="text-sm text-muted-foreground py-6 text-center">No buyer kit resources yet.</p>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((item) => {
+            const Icon = ICON_MAP[item.icon] || FileText;
+            const hasFile = !!(item.file_url || item.link_url);
+            return (
+              <Card key={item.id} className="border-border/80 bg-card/90 shadow-sm transition hover:border-[#1a4d8f]/30">
+                <CardContent className="flex flex-col gap-3 p-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1a4d8f]/10">
+                    <Icon className="h-5 w-5 text-[#1a4d8f]" />
+                  </div>
+                  <div>
+                    <p className="font-display text-sm font-semibold text-foreground">{item.title}</p>
+                    {item.description && (
+                      <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{item.description}</p>
+                    )}
+                  </div>
+                  <Button
+                    size="sm"
+                    variant={hasFile ? "default" : "outline"}
+                    className="mt-auto w-full gap-1.5"
+                    onClick={() => open(item)}
+                  >
+                    {hasFile ? (
+                      item.file_url ? <><Download className="h-3.5 w-3.5" /> Download</> : <><ExternalLink className="h-3.5 w-3.5" /> Open</>
+                    ) : "Coming soon"}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

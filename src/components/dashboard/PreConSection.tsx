@@ -504,7 +504,7 @@ export default function PreConSection({
                 {project.external_url && (
                   <Button variant="outline" size="sm" className="mt-3 w-full" asChild>
                     <a href={project.external_url} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="h-3 w-3 mr-2" /> View details
+                      <ExternalLink className="h-3 w-3 mr-2" /> View project details
                     </a>
                   </Button>
                 )}

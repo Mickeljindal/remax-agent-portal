@@ -59,6 +59,7 @@ import {
   Bell,
   Share2,
   BookOpen,
+  Briefcase,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import AdminHelpBot from "@/components/admin/AdminHelpBot";
@@ -80,10 +81,10 @@ const ADMIN_CARDS = [
   { key: "analytics", route: "/admin/analytics", title: "Analytics Dashboard", description: "Track agent engagement and content views", icon: <BarChart3 className="h-6 w-6 text-primary" />, iconWrapClass: "bg-primary/10" },
   { key: "vendors", route: "/admin/vendors", title: "Approved vendors", description: "Trades and services shown on the agent dashboard", icon: <Store className="h-6 w-6 text-primary" />, iconWrapClass: "bg-primary/10" },
   { key: "links", route: "/admin/links", title: "Manage Links", description: "Update Google Drive URLs for resources", icon: <LinkIcon className="h-6 w-6 text-accent" />, iconWrapClass: "bg-accent/20" },
-  { key: "precon", route: "/admin/precon", title: "Pre-con cities & projects", description: "Cities, filters, commission %, listings", icon: <MapPin className="h-6 w-6 text-sky-600" />, iconWrapClass: "bg-sky-500/15" },
-  { key: "listings", route: "/admin/listings", title: "Listings & categories", description: "Tags, types, statuses, full CRUD", icon: <MapPin className="h-6 w-6 text-sky-700" />, iconWrapClass: "bg-sky-600/15" },
+  { key: "listings", route: "/admin/listings", title: "Listings & categories", description: "Pre-con projects, cities, tags, types, statuses", icon: <MapPin className="h-6 w-6 text-sky-700" />, iconWrapClass: "bg-sky-600/15" },
   { key: "worksheets", route: "/admin/worksheets", title: "Pre-con worksheets", description: "View & manage worksheet submissions", icon: <LinkIcon className="h-6 w-6 text-blue-700" />, iconWrapClass: "bg-blue-600/15" },
   { key: "precon-library", route: "/admin/precon-library", title: "Pre-con document library", description: "Shared forms: showing instructions, clauses, etc.", icon: <LinkIcon className="h-6 w-6 text-fuchsia-700" />, iconWrapClass: "bg-fuchsia-600/15" },
+  { key: "buyer-kit", route: "/admin/buyer-kit", title: "Buyer presentation kit", description: "Templates & talking points for buyer meetings", icon: <Briefcase className="h-6 w-6 text-pink-600" />, iconWrapClass: "bg-pink-500/15" },
   { key: "course-assignments", route: "/admin/course-assignments", title: "Course assignments", description: "Assign training to agents", icon: <GraduationCap className="h-6 w-6 text-violet-600" />, iconWrapClass: "bg-violet-500/15" },
   { key: "courses", route: "/admin/courses", title: "Course management", description: "Create courses, add video modules", icon: <GraduationCap className="h-6 w-6 text-indigo-600" />, iconWrapClass: "bg-indigo-500/15" },
   { key: "course-analytics", route: "/admin/course-analytics", title: "Course analytics", description: "Watch time, completions, per-agent stats", icon: <BarChart3 className="h-6 w-6 text-rose-600" />, iconWrapClass: "bg-rose-500/15" },

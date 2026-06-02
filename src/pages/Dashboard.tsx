@@ -16,6 +16,8 @@ import SupportChat from "@/components/dashboard/SupportChat";
 import OfficeBooking from "@/components/dashboard/OfficeBooking";
 import AgentHelpBot from "@/components/dashboard/AgentHelpBot";
 import PortalFooter from "@/components/dashboard/PortalFooter";
+import { SectionLabelsProvider } from "@/hooks/useSectionLabels";
+import EditableHeading from "@/components/dashboard/EditableHeading";
 import { useAuth } from "@/hooks/useAuth";
 import { useAgentPortalSettings } from "@/hooks/useAgentPortalSettings";
 import { useAgentReminders } from "@/hooks/useAgentReminders";
@@ -59,6 +61,7 @@ const Dashboard = () => {
 
   return (
     <div id="top" className="min-h-screen bg-background flex flex-col">
+    <SectionLabelsProvider>
       <DashboardHeader
         agentName={agentName}
         fullName={agent?.full_name || null}
@@ -112,10 +115,14 @@ const Dashboard = () => {
           id="dashboard"
           className="scroll-mt-28 space-y-6 rounded-3xl border border-border/50 bg-card/40 p-5 shadow-sm backdrop-blur-sm md:p-8"
         >
-          <div className="flex flex-col gap-1">
-            <h2 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">Dashboard</h2>
-            <p className="text-sm text-muted-foreground">Calendar and training at a glance</p>
-          </div>
+          <EditableHeading sectionKey="dashboard" defaultTitle="Dashboard" defaultSubtitle="Calendar and training at a glance" isAdmin={isAdmin}>
+            {(lbl) => (
+              <div className="flex flex-col gap-1">
+                <h2 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">{lbl.title}</h2>
+                <p className="text-sm text-muted-foreground">{lbl.subtitle}</p>
+              </div>
+            )}
+          </EditableHeading>
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
             <DashboardCalendar agentId={agent?.id} isAdmin={isAdmin} />
             <TrainingProgressSummary agentId={agent?.id} />
@@ -202,6 +209,7 @@ const Dashboard = () => {
           </div>
         </SheetContent>
       </Sheet>
+    </SectionLabelsProvider>
     </div>
   );
 };

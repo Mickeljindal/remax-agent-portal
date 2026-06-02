@@ -106,7 +106,7 @@ export default function AdminPreCon() {
     if (!isAdmin) return;
     setBusy(true);
     const [c, p] = await Promise.all([
-      supabase.from("precon_cities").select("*").order("sort_order").order("name"),
+      supabase.from("precon_cities").select("*").order("name"),
       supabase.from("precon_projects").select("*, precon_cities ( id, name )").order("name"),
     ]);
     setCities((c.data as City[]) || []);
