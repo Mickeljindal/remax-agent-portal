@@ -67,6 +67,7 @@ import remaxLogo from "@/assets/remax-excellence-logo.png";
 import AdminHelpBot from "@/components/admin/AdminHelpBot";
 import EditableAdminCard from "@/components/admin/EditableAdminCard";
 import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
+import { callServerApi } from "@/lib/serverApi";
 
 interface Agent {
   id: string;
@@ -232,14 +233,12 @@ const AdminPanel = () => {
 
     setProcessingAction(true);
     try {
-      const { data, error } = await supabase.functions.invoke("admin-reset-password", {
-        body: {
-          targetUserId: agent.user_id,
-          newPassword: newPassword,
-        },
+      const { error } = await callServerApi("admin-reset-password", {
+        targetUserId: agent.user_id,
+        newPassword: newPassword,
       });
 
-      if (error) throw error;
+      if (error) throw new Error(error);
 
       toast({
         title: "Password Reset",

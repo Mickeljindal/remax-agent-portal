@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
 import { KeyRound, User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import { callServerApi } from "@/lib/serverApi";
 import { z } from "zod";
 
 const loginRecoSchema = z.object({
@@ -159,58 +160,36 @@ const Auth = () => {
     }
 
     setLoading(true);
-    
-    const email = `${signupRecoNumber.toLowerCase().replace(/\s+/g, '')}@agent.portal`;
-    const redirectUrl = `${window.location.origin}/dashboard`;
-    
-    const { data, error } = await supabase.auth.signUp({
-      email,
+
+    // Create the account via the Node backend (auto-confirms the RECO-derived
+    // email, creates the agent profile, and assigns the agent role — pending
+    // admin activation). Runs on KloudBean, no Supabase edge deploy needed.
+    const { error: fnError } = await callServerApi("register-agent", {
+      recoNumber: signupRecoNumber,
+      fullName: signupFullName,
+      email: signupEmail,
       password: signupPassword,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          full_name: signupFullName,
-          reco_number: signupRecoNumber,
-          contact_email: signupEmail,
-        },
-      },
     });
 
-    if (error) {
-      if (error.message.includes("already registered")) {
-        toast({
-          variant: "destructive",
-          title: "Registration Failed",
-          description: "This RECO Number is already registered. Please login instead.",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Registration Failed",
-          description: error.message,
-        });
-      }
-    } else if (data.user) {
-      // Create agent profile using edge function (bypasses RLS)
-      const { error: profileError } = await supabase.functions.invoke("create-agent-profile", {
-        body: {
-          userId: data.user.id,
-          recoNumber: signupRecoNumber,
-          fullName: signupFullName,
-          email: signupEmail,
-        },
+    if (fnError) {
+      toast({
+        variant: "destructive",
+        title: "Registration Failed",
+        description: fnError,
       });
-
-      if (profileError) {
-        console.error("Profile creation error:", profileError);
-      }
-
+    } else {
       toast({
         title: "Registration Successful",
         description: "Your account has been created. An administrator will activate your account shortly.",
       });
+      // Clear the form
+      setSignupFullName("");
+      setSignupEmail("");
+      setSignupRecoNumber("");
+      setSignupPassword("");
+      setSignupConfirmPassword("");
     }
-    
+
     setLoading(false);
   };
 

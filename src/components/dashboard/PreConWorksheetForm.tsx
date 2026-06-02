@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { callServerApi } from "@/lib/serverApi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -136,38 +136,36 @@ export default function PreConWorksheetForm({
     try {
       const contentBase64 = await fileToBase64(idAttachment);
 
-      const { error } = await supabase.functions.invoke("submit-precon-worksheet", {
-        body: {
-          projectName,
-          modelName,
-          floorType,
-          directionExposure,
-          choices: [choice1, choice2, choice3, choice4].filter(Boolean),
-          needParking: needParking === "yes",
-          needLocker: needLocker === "yes",
-          date,
-          additionalComments,
-          cooperatingBroker: {
-            brokerageName,
-            agentName: agentName || "",
-            agentEmail: agentEmail || "",
-            officePhone,
-            cellPhone: agentCellPhone,
-            recoNumber: recoNumber || "",
-          },
-          purchasers: [purchaser1, purchaser2],
-          idAttachment: {
-            filename: idAttachment.name,
-            mimeType: idAttachment.type,
-            contentBase64,
-          },
-          metadata: {
-            agentId: agentId || null,
-          },
+      const { error } = await callServerApi("submit-precon-worksheet", {
+        projectName,
+        modelName,
+        floorType,
+        directionExposure,
+        choices: [choice1, choice2, choice3, choice4].filter(Boolean),
+        needParking: needParking === "yes",
+        needLocker: needLocker === "yes",
+        date,
+        additionalComments,
+        cooperatingBroker: {
+          brokerageName,
+          agentName: agentName || "",
+          agentEmail: agentEmail || "",
+          officePhone,
+          cellPhone: agentCellPhone,
+          recoNumber: recoNumber || "",
+        },
+        purchasers: [purchaser1, purchaser2],
+        idAttachment: {
+          filename: idAttachment.name,
+          mimeType: idAttachment.type,
+          contentBase64,
+        },
+        metadata: {
+          agentId: agentId || null,
         },
       });
 
-      if (error) throw error;
+      if (error) throw new Error(error);
 
       toast({
         title: "Worksheet submitted",

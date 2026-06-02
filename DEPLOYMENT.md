@@ -1,113 +1,98 @@
 # Deployment Guide — KloudBean
 
-This portal has **3 parts**, all of which can run on KloudBean:
+The portal runs as **one single-process Node app** on KloudBean. `server.js`
+serves the React build **and** handles all backend work (file uploads, agent
+registration, admin password reset, email notifications, pre-con worksheets).
 
-1. **Frontend** — React app (static build)
-2. **Upload server** — Node.js app that stores videos/files on the server disk (`/server`)
-3. **Database + Auth** — Supabase (Cloud now, or self-hosted on KloudBean)
+The only external service is **Supabase** (database + auth). There are **no
+Supabase Edge Functions to deploy** — that logic now lives in `server.js`, so a
+plain `git push` + KloudBean "Pull & Deploy" ships the whole backend.
 
 ```
-┌──────────────────────── KloudBean Server ────────────────────────┐
+┌──────────────────── KloudBean (single Node app) ─────────────────┐
 │                                                                   │
-│  Frontend (React build)        Upload Server (Node.js)            │
-│  portal.yourdomain.com   ───►  files.yourdomain.com               │
-│         │                              │                          │
-│         └──────────────┬───────────────┘                          │
-│                        ▼                                          │
-│                   Supabase (DB + Auth + Edge Functions)           │
-│                   (Supabase Cloud OR self-hosted on KloudBean)    │
+│   server.js                                                       │
+│   ├─ serves dist/ (React app)                                     │
+│   ├─ /api/upload/:bucket   → stores videos/PDFs/images on disk    │
+│   ├─ /api/register-agent   → creates auth user + agent profile    │
+│   ├─ /api/admin-reset-password                                    │
+│   ├─ /api/send-notification → Resend email                        │
+│   └─ /api/submit-precon-worksheet → Resend email + DB             │
+│                          │                                        │
+│                          ▼                                        │
+│                  Supabase (DB + Auth)                             │
 └───────────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## STEP 1 — Deploy the Upload Server (Node.js)
-
-This stores course videos, listing PDFs, and images on the KloudBean disk.
-
-1. KloudBean Console → **Applications → Add Application → Node.js**
-2. Connect your Git repo, set **App Directory** to `server`
-3. Runtime config:
-   - Install command: `npm install`
-   - Start command: `node index.js`
-   - Node version: 20.x
-4. Environment variables:
-   ```
-   PORT=<assigned by KloudBean>
-   UPLOAD_DIR=/home/admin/portal-uploads
-   PUBLIC_BASE_URL=https://files.yourdomain.com
-   SUPABASE_JWT_SECRET=<Supabase → Project Settings → API → JWT Secret>
-   ALLOWED_ORIGINS=https://portal.yourdomain.com
-   ```
-5. Add domain `files.yourdomain.com` + install SSL
-6. **Pull & Deploy**, then verify `https://files.yourdomain.com/health` returns `{"ok":true}`
+All on one domain: `agentportal.joinremaxex.com`.
 
 ---
 
-## STEP 2 — Database (Supabase)
+## KloudBean app configuration
 
-You're currently on Supabase Cloud (`yqonfzflbabzjvztbffn`). Two options:
-
-**Option A — keep Supabase Cloud (simplest).** Nothing to do; it's already set up with all tables.
-
-**Option B — self-host Supabase on KloudBean (full data ownership).**
-1. KloudBean → Add Application → **Supabase** (one-click)
-2. After it provisions, copy the new API URL + anon key + service key + JWT secret
-3. Run all SQL migrations against it (the `RUN_THIS_IN_SUPABASE.sql` file)
-4. Update the frontend `.env` and upload server env to point at the new instance
-
-Either way, make sure all migrations in `supabase/migrations/` have been applied.
-
----
-
-## STEP 3 — Deploy Edge Functions (for email)
-
-Email (worksheets, notifications, reminders) runs through Supabase Edge Functions + Resend.
-
-```sh
-# Install Supabase CLI, then:
-supabase link --project-ref <your-project-ref>
-supabase functions deploy send-notification
-supabase functions deploy create-agent-profile
-supabase functions deploy admin-reset-password
-supabase functions deploy submit-precon-worksheet
-
-# Set secrets
-supabase secrets set RESEND_API_KEY=re_your_key_here
-supabase secrets set NOTIFICATION_FROM_EMAIL=noreply@yourdomain.com
-supabase secrets set PRECON_WORKSHEET_ADMIN_EMAIL=admin@yourdomain.com
-supabase secrets set PRECON_WORKSHEET_FROM_EMAIL=noreply@yourdomain.com
-supabase secrets set PORTAL_NAME="RE/MAX Excellence Portal"
-```
-
-In Resend: verify your sending domain so emails deliver.
-
----
-
-## STEP 4 — Deploy the Frontend
-
-1. KloudBean → Add Application → **React / Node.js** (same server is fine)
-2. Connect the Git repo (root directory)
+1. KloudBean Console → **Applications → Add Application → Node.js** (single process)
+2. Connect the Git repo (root directory — **not** `/server`)
 3. Runtime config:
    - Install command: `npm install`
    - Build command: `npm run build`
-   - Start command: `npm run start`  (serves the `dist/` folder)
-   - Node version: 20.x
-4. Environment variables:
-   ```
-   VITE_SUPABASE_URL=https://<your-project>.supabase.co
-   VITE_SUPABASE_PUBLISHABLE_KEY=<anon key>
-   VITE_PORTAL_SHOWCASE=false
-   VITE_UPLOAD_SERVER_URL=https://files.yourdomain.com
-   ```
-5. Add domain `portal.yourdomain.com` + install SSL
-6. **Pull & Deploy**
+   - Start command: `npm start`  (runs `node server.js`)
+   - Node version: 22.x
+4. Add domain `agentportal.joinremaxex.com` + install SSL
+5. **Pull & Deploy**, then verify `https://agentportal.joinremaxex.com/health`
+   returns `{"ok":true}`
 
 ---
 
-## STEP 5 — Create the First Admin
+## Environment variables (set these in KloudBean)
 
-After deploy, sign up through the portal, then in Supabase SQL editor:
+```
+# Frontend (baked into the build — must be present at BUILD time)
+VITE_SUPABASE_URL=https://yqonfzflbabzjvztbffn.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<anon key>
+VITE_PORTAL_SHOWCASE=false
+VITE_UPLOAD_SERVER_URL=            # leave empty — same domain
+
+# Backend / server.js (kept private, NOT prefixed with VITE_)
+SUPABASE_URL=https://yqonfzflbabzjvztbffn.supabase.co
+SUPABASE_ANON_KEY=<anon key>
+SUPABASE_SERVICE_ROLE_KEY=<service_role secret>   # REQUIRED
+PUBLIC_BASE_URL=https://agentportal.joinremaxex.com
+UPLOAD_DIR=/home/<kloudbean-user>/portal-uploads  # persistent disk path
+
+# Email (Resend) — sender must use your Resend-verified domain
+RESEND_API_KEY=re_xxxxxxxxxxxxx
+NOTIFICATION_FROM_EMAIL=noreply@joinremaxex.com
+PRECON_WORKSHEET_FROM_EMAIL=noreply@joinremaxex.com
+PRECON_WORKSHEET_ADMIN_EMAIL=admin@joinremaxex.com
+PORTAL_NAME=RE/MAX Excellence Portal
+```
+
+> **Important:** `SUPABASE_SERVICE_ROLE_KEY` is mandatory. Without it, agent
+> registration, admin password reset, and email all return a 503 "not
+> configured" error. Find it in Supabase → Project Settings → API →
+> `service_role` secret.
+
+> Set `UPLOAD_DIR` to a path on persistent storage so uploaded videos/files
+> survive redeploys. If omitted, files are stored under the app's `uploads/`
+> folder (wiped on each fresh clone).
+
+---
+
+## Database (Supabase)
+
+The project uses Supabase Cloud (`yqonfzflbabzjvztbffn`). Make sure every
+migration in `supabase/migrations/` has been applied. Migrations can be run
+directly with `scripts/run-migration.mjs` (uses the DB password) or pasted into
+the Supabase SQL editor.
+
+Email is configured via **Resend** — verify your sending domain there so mail
+delivers, and use that verified domain in the `*_FROM_EMAIL` vars above.
+
+---
+
+## Create the first admin
+
+After deploy, register through the portal, then in the Supabase SQL editor:
 
 ```sql
 SELECT id, user_id, full_name, reco_number FROM agents;
@@ -118,45 +103,18 @@ ON CONFLICT (user_id, role) DO NOTHING;
 UPDATE agents SET is_active = true WHERE user_id = '<your-user-id>';
 ```
 
+The admin panel lives at **`/admin`** (sign in as an admin user to access it).
+
 ---
 
-## Post-Deploy Checklist
+## Post-deploy checklist
 
-- [ ] Upload server `/health` returns ok
-- [ ] Frontend loads at portal domain with SSL
+- [ ] `/health` returns ok
+- [ ] App loads at the portal domain with SSL
 - [ ] All migrations applied
-- [ ] Edge functions deployed + Resend key set
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` + Resend vars set in KloudBean
 - [ ] First admin created
+- [ ] Test: register a new agent → can log in immediately (pending activation)
 - [ ] Test: admin uploads a course video → agent watches it
-- [ ] Test: agent submits a worksheet → both get email
-- [ ] Test: admin creates an event → agents get notified
-
----
-
-## Environment Variable Reference
-
-**Frontend `.env`**
-```
-VITE_SUPABASE_URL
-VITE_SUPABASE_PUBLISHABLE_KEY
-VITE_PORTAL_SHOWCASE=false
-VITE_UPLOAD_SERVER_URL
-```
-
-**Upload server `server/.env`**
-```
-PORT
-UPLOAD_DIR
-PUBLIC_BASE_URL
-SUPABASE_JWT_SECRET
-ALLOWED_ORIGINS
-```
-
-**Supabase secrets (edge functions)**
-```
-RESEND_API_KEY
-NOTIFICATION_FROM_EMAIL
-PRECON_WORKSHEET_ADMIN_EMAIL
-PRECON_WORKSHEET_FROM_EMAIL
-PORTAL_NAME
-```
+- [ ] Test: agent submits a worksheet → both admin and agent get email
+- [ ] Test: admin creates an event/reminder → agents get notified

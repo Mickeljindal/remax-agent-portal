@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { callServerApi } from "@/lib/serverApi";
 
 interface SendNotificationParams {
   type: "course_assigned" | "course_completed" | "course_reminder" | "agent_signup" | "agent_activated";
@@ -14,26 +14,17 @@ interface SendNotificationParams {
 }
 
 /**
- * Hook to send email notifications via the send-notification edge function.
+ * Hook to send email notifications via the Node backend (/api/send-notification).
  * Handles both agent and admin notifications.
  */
 export function useNotifications() {
   const sendNotification = async (params: SendNotificationParams) => {
-    try {
-      const { data, error } = await supabase.functions.invoke("send-notification", {
-        body: params,
-      });
-
-      if (error) {
-        console.error("Notification error:", error);
-        return { success: false, error: error.message };
-      }
-
-      return { success: true, data };
-    } catch (err: any) {
-      console.error("Notification error:", err);
-      return { success: false, error: err.message };
+    const { data, error } = await callServerApi("send-notification", params);
+    if (error) {
+      console.error("Notification error:", error);
+      return { success: false, error };
     }
+    return { success: true, data };
   };
 
   // Pre-built notification templates

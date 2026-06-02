@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { callServerApi } from "@/lib/serverApi";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -110,15 +111,13 @@ export default function AdminAgentReminders() {
       .eq("id", agentId)
       .single();
     if (agentData?.email) {
-      supabase.functions.invoke("send-notification", {
-        body: {
-          type: "course_reminder",
-          recipientEmail: agentData.email,
-          recipientName: agentData.full_name || "Agent",
-          recipientAgentId: agentId,
-          subject: `Reminder: ${title.trim()}`,
-          body: `Hi ${agentData.full_name || "Agent"},\n\n${title.trim()}\n${body.trim() ? `\n${body.trim()}` : ""}\n\nDue: ${new Date(remindAtIso).toLocaleString()}\n\nLog in to the portal for details.`,
-        },
+      callServerApi("send-notification", {
+        type: "course_reminder",
+        recipientEmail: agentData.email,
+        recipientName: agentData.full_name || "Agent",
+        recipientAgentId: agentId,
+        subject: `Reminder: ${title.trim()}`,
+        body: `Hi ${agentData.full_name || "Agent"},\n\n${title.trim()}\n${body.trim() ? `\n${body.trim()}` : ""}\n\nDue: ${new Date(remindAtIso).toLocaleString()}\n\nLog in to the portal for details.`,
       }).catch(() => {});
     }
 
