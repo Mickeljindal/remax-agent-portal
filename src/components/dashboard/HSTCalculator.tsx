@@ -103,15 +103,15 @@ export default function HSTCalculator() {
             <p className="font-semibold">{fmt(result.hstPortion)}</p>
           </div>
         </div>
-        <div className="rounded-xl border border-[#1a4d8f]/40 bg-gradient-to-br from-[#1a4d8f]/15 to-[#1a4d8f]/5 p-4 text-center shadow-sm">
-          <p className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-[#1a4d8f] dark:text-[#7fb1db]">
-            <Sparkles className="h-3 w-3 text-[#1a4d8f] dark:text-[#7fb1db]" />
+        <div className="rounded-xl bg-gradient-to-br from-blue-700 to-blue-900 p-4 text-center shadow-md">
+          <p className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-white/80">
+            <Sparkles className="h-3 w-3 text-white/80" />
             Commission payout @ {result.commissionPct || 0}%
           </p>
-          <p className="mt-1 font-display text-2xl font-bold tabular-nums text-[#1a4d8f] dark:text-[#7fb1db]">
+          <p className="mt-1 font-display text-2xl font-bold tabular-nums text-white">
             {fmt(result.commissionPayout)}
           </p>
-          <p className="mt-1 text-[11px] text-muted-foreground">
+          <p className="mt-1 text-[11px] text-white/70">
             Formula: Net before HST × Commission %
           </p>
         </div>

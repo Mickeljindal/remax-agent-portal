@@ -65,12 +65,12 @@ export default function CommissionCalculator() {
             onChange={(e) => setCoopPct(e.target.value)}
           />
         </div>
-        <div className="rounded-lg border border-[hsl(4_80%_56%)]/30 bg-[hsl(4_80%_56%)]/5 p-3 text-center">
-          <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+        <div className="rounded-lg bg-gradient-to-br from-blue-700 to-blue-900 p-3 text-center shadow-md">
+          <p className="text-[10px] font-medium uppercase tracking-wide text-white/70">
             Net before HST: {fmt(result.baseBeforeHst)}
           </p>
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Estimated co-op dollars</p>
-          <p className="mt-1 font-display text-lg font-bold tabular-nums text-foreground">{fmt(result.payout)}</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-white/80">Estimated co-op dollars</p>
+          <p className="mt-1 font-display text-lg font-bold tabular-nums text-white">{fmt(result.payout)}</p>
         </div>
       </CardContent>
     </Card>
