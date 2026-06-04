@@ -21,6 +21,7 @@ import EditableHeading from "@/components/dashboard/EditableHeading";
 import { useAuth } from "@/hooks/useAuth";
 import { useAgentPortalSettings } from "@/hooks/useAgentPortalSettings";
 import { useAgentReminders } from "@/hooks/useAgentReminders";
+import { useSectionOrder, type SectionKey } from "@/hooks/useSectionOrder";
 import { toast } from "@/hooks/use-toast";
 import { PORTAL_SHOWCASE } from "@/config/portalShowcase";
 
@@ -29,6 +30,7 @@ const Dashboard = () => {
   const { user, agent, loading, isAdmin, isActive, signOut } = useAuth();
   const { hideCommissionRates, setHideCommission } = useAgentPortalSettings(agent?.id);
   const { reminders, dismiss } = useAgentReminders(agent?.id);
+  const { order } = useSectionOrder();
   const [remindersOpen, setRemindersOpen] = useState(false);
 
   useEffect(() => {
@@ -58,6 +60,70 @@ const Dashboard = () => {
   if (!user) return null;
 
   const agentName = agent?.full_name || `Agent ${agent?.reco_number || ""}`;
+
+  const sectionNodes: Record<SectionKey, React.ReactNode> = {
+    dashboard: (
+      <section
+        id="dashboard"
+        className="scroll-mt-28 space-y-6 rounded-3xl border border-border/50 bg-card/40 p-5 shadow-sm backdrop-blur-sm md:p-8"
+      >
+        <EditableHeading sectionKey="dashboard" defaultTitle="Dashboard" defaultSubtitle="Calendar and training at a glance" isAdmin={isAdmin}>
+          {(lbl) => (
+            <div className="flex flex-col gap-1">
+              <h2 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">{lbl.title}</h2>
+              <p className="text-sm text-muted-foreground">{lbl.subtitle}</p>
+            </div>
+          )}
+        </EditableHeading>
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+          <DashboardCalendar agentId={agent?.id} isAdmin={isAdmin} />
+          <TrainingProgressSummary agentId={agent?.id} />
+        </div>
+      </section>
+    ),
+    courses: (
+      <section
+        id="courses"
+        className="scroll-mt-28 rounded-3xl border border-border/40 bg-muted/15 p-5 md:p-8"
+      >
+        <TrainingCourses
+          agentId={agent?.id}
+          agentName={agent?.full_name}
+          recoNumber={agent?.reco_number}
+        />
+      </section>
+    ),
+    precon: (
+      <div className="rounded-3xl border border-border/40 bg-card/30 p-5 md:p-8">
+        <PreConSection
+          agentId={agent?.id}
+          agentName={agent?.full_name || null}
+          agentEmail={agent?.email || user?.email || null}
+          recoNumber={agent?.reco_number || null}
+          hideCommissionRates={hideCommissionRates}
+        />
+      </div>
+    ),
+    vendors: (
+      <section id="vendors" className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/30 p-5 md:p-8">
+        <VendorDirectory />
+      </section>
+    ),
+    support: (
+      <section id="support" className="scroll-mt-28 rounded-3xl border border-border/50 bg-muted/10 p-5 md:p-8">
+        <SupportChat agentId={agent?.id} userId={user?.id} isAdmin={isAdmin} />
+      </section>
+    ),
+    offices: (
+      <section id="offices" className="scroll-mt-28 rounded-3xl border border-border/40 bg-card/40 p-5 md:p-8">
+        <OfficeBooking
+          agentId={agent?.id}
+          agentName={agent?.full_name || null}
+          agentEmail={agent?.email || user?.email || null}
+        />
+      </section>
+    ),
+  };
 
   return (
     <div id="top" className="min-h-screen bg-background flex flex-col">
@@ -111,66 +177,12 @@ const Dashboard = () => {
           joinedAt={agent?.created_at || null}
         />
 
-        <section
-          id="dashboard"
-          className="scroll-mt-28 space-y-6 rounded-3xl border border-border/50 bg-card/40 p-5 shadow-sm backdrop-blur-sm md:p-8"
-        >
-          <EditableHeading sectionKey="dashboard" defaultTitle="Dashboard" defaultSubtitle="Calendar and training at a glance" isAdmin={isAdmin}>
-            {(lbl) => (
-              <div className="flex flex-col gap-1">
-                <h2 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">{lbl.title}</h2>
-                <p className="text-sm text-muted-foreground">{lbl.subtitle}</p>
-              </div>
-            )}
-          </EditableHeading>
-          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-            <DashboardCalendar agentId={agent?.id} isAdmin={isAdmin} />
-            <TrainingProgressSummary agentId={agent?.id} />
+        {order.map((key, i) => (
+          <div key={key}>
+            {i > 0 && <Separator className="mb-16 opacity-60" />}
+            {sectionNodes[key]}
           </div>
-        </section>
-
-        <Separator className="opacity-60" />
-
-        <section
-          id="courses"
-          className="scroll-mt-28 rounded-3xl border border-border/40 bg-muted/15 p-5 md:p-8"
-        >
-          <TrainingCourses
-            agentId={agent?.id}
-            agentName={agent?.full_name}
-            recoNumber={agent?.reco_number}
-          />
-        </section>
-
-        <Separator className="opacity-60" />
-
-        <div className="rounded-3xl border border-border/40 bg-card/30 p-5 md:p-8">
-          <PreConSection
-            agentId={agent?.id}
-            agentName={agent?.full_name || null}
-            agentEmail={agent?.email || user?.email || null}
-            recoNumber={agent?.reco_number || null}
-            hideCommissionRates={hideCommissionRates}
-          />
-        </div>
-
-        <Separator className="opacity-60" />
-
-        <section id="vendors" className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/30 p-5 md:p-8">
-          <VendorDirectory />
-        </section>
-
-        <Separator className="opacity-60" />
-
-        <section id="support" className="scroll-mt-28 rounded-3xl border border-border/50 bg-muted/10 p-5 md:p-8">
-          <SupportChat agentId={agent?.id} userId={user?.id} isAdmin={isAdmin} />
-        </section>
-
-        <Separator className="opacity-60" />
-
-        <section id="offices" className="scroll-mt-28 rounded-3xl border border-border/40 bg-card/40 p-5 md:p-8">
-          <OfficeBooking agentId={agent?.id} />
-        </section>
+        ))}
       </main>
 
       <PortalFooter />

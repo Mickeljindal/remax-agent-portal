@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useSupportCategories } from "@/hooks/useSupportCategories";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -75,6 +76,7 @@ export default function AdminSupport() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
   const { sendNotification } = useNotifications();
+  const { categories } = useSupportCategories();
   const [agents, setAgents] = useState<Agent[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -82,6 +84,7 @@ export default function AdminSupport() {
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [loadingData, setLoadingData] = useState(true);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -329,7 +332,8 @@ export default function AdminSupport() {
       agent?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       agent?.reco_number.includes(searchQuery);
     const matchesStatus = statusFilter === "all" || t.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesCategory = categoryFilter === "all" || t.category === categoryFilter;
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
   if (loading || (!isAdmin && user)) {
@@ -379,6 +383,17 @@ export default function AdminSupport() {
                 <SelectItem value="in-progress">In Progress</SelectItem>
                 <SelectItem value="resolved">Resolved</SelectItem>
                 <SelectItem value="closed">Closed</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="h-8 text-xs">
+                <SelectValue placeholder="All categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All categories</SelectItem>
+                {categories.map((c) => (
+                  <SelectItem key={c.key} value={c.key}>{c.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -603,11 +618,9 @@ export default function AdminSupport() {
               <Select value={newConvoCategory} onValueChange={setNewConvoCategory}>
                 <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="general">General</SelectItem>
-                  <SelectItem value="marketing">Marketing</SelectItem>
-                  <SelectItem value="tech">Tech Support</SelectItem>
-                  <SelectItem value="billing">Billing</SelectItem>
-                  <SelectItem value="training">Training</SelectItem>
+                  {categories.map((c) => (
+                    <SelectItem key={c.key} value={c.key}>{c.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Percent } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import EditableHeading from "@/components/dashboard/EditableHeading";
 
 const HST_RATE = 0.13;
 
@@ -14,6 +16,7 @@ function parseAmount(value: string): number {
 
 /** Illustrative co-op payout from price including HST — not a commission statement. */
 export default function CommissionCalculator() {
+  const { isAdmin } = useAuth();
   const [price, setPrice] = useState("");
   const [coopPct, setCoopPct] = useState("2.5");
 
@@ -36,13 +39,22 @@ export default function CommissionCalculator() {
   return (
     <Card className="border-border">
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 font-display text-base">
-          <Percent className="h-5 w-5 text-[hsl(4_80%_52%)]" />
-          Co-op commission estimate (net of HST)
-        </CardTitle>
-        <p className="text-xs text-muted-foreground">
-          Commission is calculated from the net price before HST.
-        </p>
+        <EditableHeading
+          sectionKey="calc-coop"
+          defaultTitle="Co-op commission estimate (net of HST)"
+          defaultSubtitle="Commission is calculated from the net price before HST."
+          isAdmin={isAdmin}
+        >
+          {(lbl) => (
+            <div>
+              <CardTitle className="flex items-center gap-2 font-display text-base">
+                <Percent className="h-5 w-5 text-[hsl(4_80%_52%)]" />
+                {lbl.title}
+              </CardTitle>
+              <p className="mt-1 text-xs text-muted-foreground">{lbl.subtitle}</p>
+            </div>
+          )}
+        </EditableHeading>
       </CardHeader>
       <CardContent className="space-y-3">
         <div>

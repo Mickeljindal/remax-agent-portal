@@ -35,6 +35,9 @@ import AdminHelp from "./pages/AdminHelp";
 import AdminBuyerKit from "./pages/AdminBuyerKit";
 import AdminSectionTitles from "./pages/AdminSectionTitles";
 import AdminDisplaySettings from "./pages/AdminDisplaySettings";
+import AdminSectionOrder from "./pages/AdminSectionOrder";
+import AdminSupportCategories from "./pages/AdminSupportCategories";
+import AdminOffices from "./pages/AdminOffices";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +76,9 @@ const App = () => (
           <Route path="/admin/buyer-kit" element={<AdminBuyerKit />} />
           <Route path="/admin/section-titles" element={<AdminSectionTitles />} />
           <Route path="/admin/display-settings" element={<AdminDisplaySettings />} />
+          <Route path="/admin/section-order" element={<AdminSectionOrder />} />
+          <Route path="/admin/support-categories" element={<AdminSupportCategories />} />
+          <Route path="/admin/offices" element={<AdminOffices />} />
           <Route path="/pending" element={<PendingActivation />} />
           <Route path="/quote" element={<Quote />} />
           <Route path="/directory" element={<AgentDirectory />} />

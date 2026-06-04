@@ -14,6 +14,7 @@ import { PORTAL_SHOWCASE } from "@/config/portalShowcase";
 import SupportChatShowcase from "@/components/dashboard/SupportChatShowcase";
 import SupportResourceCards from "@/components/dashboard/SupportResourceCards";
 import { useSectionLabels } from "@/hooks/useSectionLabels";
+import { useSupportCategories } from "@/hooks/useSupportCategories";
 
 interface Ticket {
   id: string;
@@ -46,6 +47,7 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const { label } = useSectionLabels();
+  const { categories } = useSupportCategories();
   const supportLabel = label("support", "Marketing & Tech Support", "Get help from our support team");
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -202,7 +204,7 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
           <Button variant="outline" onClick={() => setBookOpen(true)} className="gap-2">
             <Calendar className="h-4 w-4" /> Book a meeting
           </Button>
-          <Button onClick={() => setShowNewTicket(true)} className="gap-2">
+          <Button onClick={() => { setNewCategory(categories[0]?.key || "general"); setShowNewTicket(true); }} className="gap-2">
             <Plus className="h-4 w-4" /> New Ticket
           </Button>
         </div>
@@ -304,10 +306,9 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
             <Select value={newCategory} onValueChange={setNewCategory}>
               <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="general">General</SelectItem>
-                <SelectItem value="marketing">Marketing</SelectItem>
-                <SelectItem value="tech">Tech Support</SelectItem>
-                <SelectItem value="billing">Billing</SelectItem>
+                {categories.map((c) => (
+                  <SelectItem key={c.key} value={c.key}>{c.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <Select value={newPriority} onValueChange={setNewPriority}>

@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calculator, Sparkles } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import EditableHeading from "@/components/dashboard/EditableHeading";
 
 const HST_RATE = 0.13;
 
@@ -14,6 +16,7 @@ function parseAmount(value: string): number {
 
 /** Illustrative Ontario net-of-HST and commission estimate — not tax advice. */
 export default function HSTCalculator() {
+  const { isAdmin } = useAuth();
   const [salePriceInclHst, setSalePriceInclHst] = useState("");
   const [commissionPct, setCommissionPct] = useState("2.5");
 
@@ -50,15 +53,24 @@ export default function HSTCalculator() {
   return (
     <Card className="overflow-hidden border border-[#003865]/20 bg-gradient-to-br from-card via-card to-[#0f2744]/[0.03] shadow-sm dark:border-[#003865]/35">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-display flex items-center gap-2">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[hsl(4_80%_56%)]/10 text-[hsl(4_80%_56%)]">
-            <Calculator className="h-4 w-4" />
-          </span>
-          HST & commission payout calculator
-        </CardTitle>
-        <p className="text-xs text-muted-foreground">
-          Commission is calculated on the net-of-HST base only (not on the HST amount).
-        </p>
+        <EditableHeading
+          sectionKey="calc-hst"
+          defaultTitle="HST & commission payout calculator"
+          defaultSubtitle="Commission is calculated on the net-of-HST base only (not on the HST amount)."
+          isAdmin={isAdmin}
+        >
+          {(lbl) => (
+            <div>
+              <CardTitle className="text-base font-display flex items-center gap-2">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[hsl(4_80%_56%)]/10 text-[hsl(4_80%_56%)]">
+                  <Calculator className="h-4 w-4" />
+                </span>
+                {lbl.title}
+              </CardTitle>
+              <p className="mt-1 text-xs text-muted-foreground">{lbl.subtitle}</p>
+            </div>
+          )}
+        </EditableHeading>
       </CardHeader>
       <CardContent className="space-y-5">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

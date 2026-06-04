@@ -20,6 +20,8 @@ const SECTIONS = [
   { key: "vendors", defaultTitle: "Approved vendors", defaultSubtitle: "Brokerage-approved trades and services — contact details for your deals" },
   { key: "support", defaultTitle: "Marketing & Tech Support", defaultSubtitle: "Get help from our support team" },
   { key: "offices", defaultTitle: "Office Locations & Booking", defaultSubtitle: "Reserve a meeting room — pick a location, day, and time" },
+  { key: "calc-hst", defaultTitle: "HST & commission payout calculator", defaultSubtitle: "Commission is calculated on the net-of-HST base only (not on the HST amount)." },
+  { key: "calc-coop", defaultTitle: "Co-op commission estimate (net of HST)", defaultSubtitle: "Commission is calculated from the net price before HST." },
 ];
 
 interface Row { title: string; subtitle: string; }

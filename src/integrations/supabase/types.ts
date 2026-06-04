@@ -508,6 +508,7 @@ export type Database = {
           id: string
           is_active: boolean
           name: string
+          notification_email: string | null
           phone: string | null
           sort_order: number
         }
@@ -517,6 +518,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           name: string
+          notification_email?: string | null
           phone?: string | null
           sort_order?: number
         }
@@ -526,10 +528,44 @@ export type Database = {
           id?: string
           is_active?: boolean
           name?: string
+          notification_email?: string | null
           phone?: string | null
           sort_order?: number
         }
         Relationships: [        ]
+      }
+      support_categories: {
+        Row: {
+          id: string
+          key: string
+          label: string
+          description: string | null
+          is_active: boolean
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          label: string
+          description?: string | null
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          label?: string
+          description?: string | null
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       portal_social_share_settings: {
         Row: {

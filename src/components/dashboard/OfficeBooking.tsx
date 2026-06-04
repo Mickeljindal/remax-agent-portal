@@ -14,13 +14,16 @@ import { format, addDays, isSameDay, startOfDay } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useSectionLabels } from "@/hooks/useSectionLabels";
+import { callServerApi } from "@/lib/serverApi";
 
-interface Location { id: string; name: string; address: string | null; phone: string | null; }
+interface Location { id: string; name: string; address: string | null; phone: string | null; notification_email: string | null; }
 interface Room { id: string; location_id: string; name: string; capacity: number | null; amenities: string | null; is_virtual: boolean; }
 interface Booking { id: string; room_id: string; agent_id: string; title: string; start_time: string; end_time: string; is_virtual: boolean; status: string; }
 
 interface OfficeBookingProps {
   agentId: string | undefined;
+  agentName?: string | null;
+  agentEmail?: string | null;
 }
 
 // 9 AM - 6 PM hourly slots
@@ -29,7 +32,7 @@ const SLOTS = Array.from({ length: 9 }, (_, i) => {
   return { value: `${h.toString().padStart(2, "0")}:00`, label: `${h > 12 ? h - 12 : h}:00 ${h >= 12 ? "PM" : "AM"}` };
 });
 
-export default function OfficeBooking({ agentId }: OfficeBookingProps) {
+export default function OfficeBooking({ agentId, agentName, agentEmail }: OfficeBookingProps) {
   const [locations, setLocations] = useState<Location[]>([]);
   const { label } = useSectionLabels();
   const officeLabel = label("offices", "Office Locations & Booking", "Reserve a meeting room — pick a location, day, and time");
@@ -125,6 +128,40 @@ export default function OfficeBooking({ agentId }: OfficeBookingProps) {
       type: "info",
       link: "/dashboard",
     });
+
+    // Email the office's front desk so the right person gets the inquiry.
+    // Mississauga → shizu@remaxex.com, Brampton → info@remaxex.com (configurable per office).
+    const office = locations.find((l) => l.id === bookingRoom.location_id);
+    const officeEmail = office?.notification_email?.trim();
+    const when = `${format(start, "EEEE, MMM d")} · ${format(start, "h:mm a")}–${format(end, "h:mm a")}`;
+    if (officeEmail) {
+      const lines = [
+        `A meeting room has been booked at ${office?.name || "the office"}.`,
+        "",
+        `Room: ${bookingRoom.name}`,
+        `Date & time: ${when}`,
+        `Meeting: ${bookTitle.trim()}`,
+        `Booked by: ${agentName || "An agent"}${agentEmail ? ` (${agentEmail})` : ""}`,
+      ];
+      callServerApi("send-notification", {
+        type: "agent_signup",
+        recipientEmail: officeEmail,
+        recipientName: office?.name || "Front desk",
+        subject: `New room booking — ${bookingRoom.name} (${office?.name || "Office"})`,
+        body: lines.join("\n"),
+      }).catch(() => {});
+    }
+
+    // Confirmation copy to the agent (best-effort).
+    if (agentEmail) {
+      callServerApi("send-notification", {
+        type: "agent_signup",
+        recipientEmail: agentEmail,
+        recipientName: agentName || "Agent",
+        subject: `Booking confirmed — ${bookingRoom.name}`,
+        body: `Your booking is confirmed.\n\nOffice: ${office?.name || ""}\nRoom: ${bookingRoom.name}\nDate & time: ${when}\nMeeting: ${bookTitle.trim()}`,
+      }).catch(() => {});
+    }
 
     toast({ title: "Booking confirmed!", description: `${bookingRoom.name} · ${format(start, "MMM d, h:mm a")}` });
     setBookingRoom(null);

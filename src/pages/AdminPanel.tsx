@@ -62,6 +62,9 @@ import {
   Briefcase,
   Type,
   LayoutGrid,
+  ArrowUpDown,
+  LifeBuoy,
+  Building2,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import AdminHelpBot from "@/components/admin/AdminHelpBot";
@@ -84,6 +87,7 @@ const ADMIN_CARDS = [
   { key: "analytics", route: "/admin/analytics", title: "Analytics Dashboard", description: "Track agent engagement and content views", icon: <BarChart3 className="h-6 w-6 text-primary" />, iconWrapClass: "bg-primary/10" },
   { key: "vendors", route: "/admin/vendors", title: "Approved vendors", description: "Trades and services shown on the agent dashboard", icon: <Store className="h-6 w-6 text-primary" />, iconWrapClass: "bg-primary/10" },
   { key: "section-titles", route: "/admin/section-titles", title: "Agent portal titles", description: "Rename the section headings agents see", icon: <Type className="h-6 w-6 text-accent" />, iconWrapClass: "bg-accent/20" },
+  { key: "section-order", route: "/admin/section-order", title: "Section order", description: "Reorder the sections on the agent dashboard", icon: <ArrowUpDown className="h-6 w-6 text-purple-600" />, iconWrapClass: "bg-purple-500/15" },
   { key: "display-settings", route: "/admin/display-settings", title: "Display settings", description: "Listings per page & pagination", icon: <LayoutGrid className="h-6 w-6 text-slate-600" />, iconWrapClass: "bg-slate-500/15" },
   { key: "listings", route: "/admin/listings", title: "Listings & categories", description: "Pre-con projects, cities, tags, types, statuses", icon: <MapPin className="h-6 w-6 text-sky-700" />, iconWrapClass: "bg-sky-600/15" },
   { key: "worksheets", route: "/admin/worksheets", title: "Pre-con worksheets", description: "View & manage worksheet submissions", icon: <LinkIcon className="h-6 w-6 text-blue-700" />, iconWrapClass: "bg-blue-600/15" },
@@ -96,6 +100,8 @@ const ADMIN_CARDS = [
   { key: "properties", route: "/admin/properties", title: "Property management", description: "Add/edit listings, assign to agents", icon: <Store className="h-6 w-6 text-teal-600" />, iconWrapClass: "bg-teal-500/15" },
   { key: "events", route: "/admin/events", title: "Events management", description: "Create events, notify agents, track RSVPs", icon: <Bell className="h-6 w-6 text-cyan-600" />, iconWrapClass: "bg-cyan-500/15" },
   { key: "support", route: "/admin/support", title: "Support inbox", description: "Chat with agents, manage tickets", icon: <Bell className="h-6 w-6 text-orange-600" />, iconWrapClass: "bg-orange-500/15" },
+  { key: "support-categories", route: "/admin/support-categories", title: "Support categories", description: "Marketing, vendors, tech & more support topics", icon: <LifeBuoy className="h-6 w-6 text-orange-700" />, iconWrapClass: "bg-orange-600/15" },
+  { key: "offices", route: "/admin/offices", title: "Offices & booking emails", description: "Locations + who gets room-booking inquiries", icon: <Building2 className="h-6 w-6 text-blue-700" />, iconWrapClass: "bg-blue-600/15" },
   { key: "social-share", route: "/admin/social-share", title: "Social share icons", description: "WhatsApp, Facebook, LinkedIn, X, email, copy", icon: <Share2 className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />, iconWrapClass: "bg-emerald-500/15" },
   { key: "help", route: "/admin/help", title: "Documentation & Help", description: "Guides + assistant for \"where do I find…\"", icon: <BookOpen className="h-6 w-6 text-[#e2231a]" />, iconWrapClass: "bg-gradient-to-br from-[#e2231a]/15 to-[#1a4d8f]/15" },
 ];

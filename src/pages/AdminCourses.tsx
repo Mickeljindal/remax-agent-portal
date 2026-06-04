@@ -544,7 +544,7 @@ export default function AdminCourses() {
                 <Input
                   value={courseForm.thumbnail_url}
                   onChange={(e) => setCourseForm({ ...courseForm, thumbnail_url: e.target.value })}
-                  placeholder="https://..."
+                  placeholder="https://…  (recommended 1280 × 720 px, 16:9)"
                 />
                 <UploadHint {...UPLOAD_PRESETS.courseThumbnail} />
               </div>
