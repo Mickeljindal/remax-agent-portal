@@ -14,7 +14,6 @@ import PreConSection from "@/components/dashboard/PreConSection";
 import VendorDirectory from "@/components/dashboard/VendorDirectory";
 import SupportChat from "@/components/dashboard/SupportChat";
 import OfficeBooking from "@/components/dashboard/OfficeBooking";
-import VastuSection from "@/components/dashboard/vastu/VastuSection";
 import AgentHelpBot from "@/components/dashboard/AgentHelpBot";
 import PortalFooter from "@/components/dashboard/PortalFooter";
 import { SectionLabelsProvider } from "@/hooks/useSectionLabels";
@@ -108,11 +107,6 @@ const Dashboard = () => {
     vendors: (
       <section id="vendors" className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/30 p-5 md:p-8">
         <VendorDirectory />
-      </section>
-    ),
-    vastu: (
-      <section id="vastu" className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/40 p-5 md:p-8">
-        <VastuSection isAdmin={isAdmin} />
       </section>
     ),
     support: (

@@ -18,7 +18,6 @@ const SECTIONS = [
   { key: "assets", defaultTitle: "Pre-con assets", defaultSubtitle: "Tools, documents, and marketing" },
   { key: "buyer-kit", defaultTitle: "Buyer presentation kit", defaultSubtitle: "Templates and talking points for buyer meetings." },
   { key: "vendors", defaultTitle: "Approved vendors", defaultSubtitle: "Brokerage-approved trades and services — contact details for your deals" },
-  { key: "vastu", defaultTitle: "Vastu Chakra", defaultSubtitle: "Overlay the Vastu compass on a client's floor plan and explain each zone" },
   { key: "support", defaultTitle: "Marketing & Tech Support", defaultSubtitle: "Get help from our support team" },
   { key: "offices", defaultTitle: "Office Locations & Booking", defaultSubtitle: "Reserve a meeting room — pick a location, day, and time" },
   { key: "calc-hst", defaultTitle: "HST & commission payout calculator", defaultSubtitle: "Commission is calculated on the net-of-HST base only (not on the HST amount)." },

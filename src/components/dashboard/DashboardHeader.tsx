@@ -33,7 +33,6 @@ const nav = [
   { label: "Listings", href: "#listings" },
   { label: "Assets", href: "#assets" },
   { label: "Vendors", href: "#vendors" },
-  { label: "Vastu", href: "#vastu" },
   { label: "Buyer kit", href: "#buyer-kit" },
 ];
 
