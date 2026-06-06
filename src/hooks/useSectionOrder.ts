@@ -10,6 +10,7 @@ export const DEFAULT_SECTION_ORDER = [
   "courses",
   "precon",
   "vendors",
+  "vastu",
   "support",
   "offices",
 ] as const;
@@ -21,6 +22,7 @@ export const SECTION_META: Record<SectionKey, { label: string }> = {
   courses: { label: "Training & courses" },
   precon: { label: "Pre-construction (listings, assets, buyer kit, documents)" },
   vendors: { label: "Approved vendors" },
+  vastu: { label: "Vastu Chakra (floor-plan tool)" },
   support: { label: "Support" },
   offices: { label: "Office locations & booking" },
 };
