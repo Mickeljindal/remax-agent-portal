@@ -18,6 +18,7 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
+    phone: "",
   });
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
@@ -32,6 +33,7 @@ const Profile = () => {
       setFormData({
         full_name: agent.full_name || "",
         email: agent.email || "",
+        phone: (agent as any).phone || "",
       });
       setAvatarUrl(agent.avatar_url);
     }
@@ -47,6 +49,7 @@ const Profile = () => {
         .update({
           full_name: formData.full_name,
           email: formData.email,
+          phone: formData.phone || null,
         })
         .eq("user_id", user.id);
 
@@ -133,7 +136,7 @@ const Profile = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="reco">RECO Number</Label>
+              <Label htmlFor="reco">RECO Number (optional)</Label>
               <Input
                 id="reco"
                 value={agent?.reco_number || ""}
@@ -141,7 +144,7 @@ const Profile = () => {
                 className="bg-muted"
               />
               <p className="text-xs text-muted-foreground">
-                RECO number cannot be changed
+                For reference only — not used for login
               </p>
             </div>
 
@@ -168,6 +171,22 @@ const Profile = () => {
                 }
                 placeholder="Enter your contact email"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, phone: e.target.value }))
+                }
+                placeholder="Enter your phone number"
+              />
+              <p className="text-xs text-muted-foreground">
+                Required — used for booking confirmations and urgent notifications.
+              </p>
             </div>
 
             <Button

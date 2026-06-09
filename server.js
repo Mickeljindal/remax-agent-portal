@@ -263,15 +263,15 @@ async function sendResendEmail({ from, to, subject, html, attachments }) {
 app.post("/api/register-agent", async (req, res) => {
   if (!adminClient) return res.status(503).json({ error: "Registration is not configured on the server." });
   try {
-    const { recoNumber, fullName, email, password } = req.body || {};
-    if (!recoNumber?.trim() || !password) {
-      return res.status(400).json({ error: "RECO number and password are required." });
+    const { fullName, email, phone, password } = req.body || {};
+    if (!email?.trim() || !password) {
+      return res.status(400).json({ error: "Email and password are required." });
     }
     if (password.length < 6) {
       return res.status(400).json({ error: "Password must be at least 6 characters." });
     }
 
-    const loginEmail = `${recoNumber.toLowerCase().replace(/\s+/g, "")}@agent.portal`;
+    const loginEmail = email.trim().toLowerCase();
 
     // Create the auth user with email auto-confirmed (no confirmation email needed).
     const { data: created, error: createErr } = await adminClient.auth.admin.createUser({
@@ -280,15 +280,14 @@ app.post("/api/register-agent", async (req, res) => {
       email_confirm: true,
       user_metadata: {
         full_name: fullName || null,
-        reco_number: recoNumber,
-        contact_email: email || null,
+        phone: phone || null,
       },
     });
 
     if (createErr) {
       const msg = (createErr.message || "").toLowerCase();
       if (msg.includes("already") || createErr.code === "email_exists") {
-        return res.status(400).json({ error: "This RECO number is already registered. Please log in instead." });
+        return res.status(400).json({ error: "This email is already registered. Please log in instead." });
       }
       return res.status(400).json({ error: createErr.message });
     }
@@ -299,15 +298,16 @@ app.post("/api/register-agent", async (req, res) => {
     // Create the agent profile (inactive — requires admin activation).
     const { error: insertError } = await adminClient.from("agents").insert({
       user_id: userId,
-      reco_number: recoNumber,
+      reco_number: null,
       full_name: fullName || null,
-      email: email || null,
+      email: loginEmail,
+      phone: phone || null,
       is_active: false,
     });
     if (insertError) {
       await adminClient.auth.admin.deleteUser(userId); // roll back
       if (insertError.message?.includes("duplicate") || insertError.code === "23505") {
-        return res.status(400).json({ error: "This RECO number is already registered. Please log in instead." });
+        return res.status(400).json({ error: "This email is already registered. Please log in instead." });
       }
       return res.status(400).json({ error: `Failed to create profile: ${insertError.message}` });
     }
@@ -323,8 +323,8 @@ app.post("/api/register-agent", async (req, res) => {
         if (adminAgent) {
           await adminClient.from("in_app_notifications").insert({
             agent_id: adminAgent.id,
-            title: `New agent signup: ${fullName || recoNumber}`,
-            body: `RECO ${recoNumber} is pending activation.`,
+            title: `New agent signup: ${fullName || loginEmail}`,
+            body: `${loginEmail} is pending activation.`,
             type: "system",
             link: "/admin",
           });

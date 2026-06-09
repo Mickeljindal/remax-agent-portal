@@ -7,20 +7,20 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
-import { KeyRound, User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, Phone } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import { callServerApi } from "@/lib/serverApi";
 import { z } from "zod";
 
-const loginRecoSchema = z.object({
-  recoNumber: z.string().min(1, "RECO Number is required"),
+const loginSchema = z.object({
+  email: z.string().email("Enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const signupSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
   email: z.string().email("Invalid email address"),
-  recoNumber: z.string().min(1, "RECO Number is required"),
+  phone: z.string().min(7, "Phone number is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -34,8 +34,8 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
-  // Login form state (RECO-derived email only)
-  const [loginRecoNumber, setLoginRecoNumber] = useState("");
+  // Login form state
+  const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginErrors, setLoginErrors] = useState<Record<string, string>>({});
   const [forgotOpen, setForgotOpen] = useState(false);
@@ -44,7 +44,7 @@ const Auth = () => {
   // Signup form state
   const [signupFullName, setSignupFullName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
-  const [signupRecoNumber, setSignupRecoNumber] = useState("");
+  const [signupPhone, setSignupPhone] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [signupErrors, setSignupErrors] = useState<Record<string, string>>({});
@@ -76,7 +76,7 @@ const Auth = () => {
     setLoginErrors({});
 
     try {
-      loginRecoSchema.parse({ recoNumber: loginRecoNumber, password: loginPassword });
+      loginSchema.parse({ email: loginEmail, password: loginPassword });
     } catch (error) {
       if (error instanceof z.ZodError) {
         const errors: Record<string, string> = {};
@@ -90,10 +90,8 @@ const Auth = () => {
 
     setLoading(true);
 
-    const email = `${loginRecoNumber.toLowerCase().replace(/\s+/g, "")}@agent.portal`;
-
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: loginEmail.trim().toLowerCase(),
       password: loginPassword,
     });
 
@@ -103,7 +101,7 @@ const Auth = () => {
         title: "Login failed",
         description:
           error.message === "Invalid login credentials"
-            ? "Invalid RECO number or password. Please try again."
+            ? "Invalid email or password. Please try again."
             : error.message,
       });
     }
@@ -142,7 +140,7 @@ const Auth = () => {
       signupSchema.parse({
         fullName: signupFullName,
         email: signupEmail,
-        recoNumber: signupRecoNumber,
+        phone: signupPhone,
         password: signupPassword,
         confirmPassword: signupConfirmPassword,
       });
@@ -161,13 +159,10 @@ const Auth = () => {
 
     setLoading(true);
 
-    // Create the account via the Node backend (auto-confirms the RECO-derived
-    // email, creates the agent profile, and assigns the agent role — pending
-    // admin activation). Runs on KloudBean, no Supabase edge deploy needed.
     const { error: fnError } = await callServerApi("register-agent", {
-      recoNumber: signupRecoNumber,
       fullName: signupFullName,
       email: signupEmail,
+      phone: signupPhone,
       password: signupPassword,
     });
 
@@ -182,10 +177,9 @@ const Auth = () => {
         title: "Registration Successful",
         description: "Your account has been created. An administrator will activate your account shortly.",
       });
-      // Clear the form
       setSignupFullName("");
       setSignupEmail("");
-      setSignupRecoNumber("");
+      setSignupPhone("");
       setSignupPassword("");
       setSignupConfirmPassword("");
     }
@@ -245,24 +239,24 @@ const Auth = () => {
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-reco" className="font-medium text-foreground">
-                    RECO number
+                  <Label htmlFor="login-email" className="font-medium text-foreground">
+                    Email address
                   </Label>
                   <div className="relative">
-                    <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
-                      id="login-reco"
-                      type="text"
-                      autoComplete="username"
-                      placeholder="Enter your RECO number"
-                      value={loginRecoNumber}
-                      onChange={(e) => setLoginRecoNumber(e.target.value)}
+                      id="login-email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="Enter your email"
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
                       className="pl-10"
                       disabled={loading}
                     />
                   </div>
-                  {loginErrors.recoNumber && (
-                    <p className="text-sm text-destructive">{loginErrors.recoNumber}</p>
+                  {loginErrors.email && (
+                    <p className="text-sm text-destructive">{loginErrors.email}</p>
                   )}
                 </div>
 
@@ -375,23 +369,23 @@ const Auth = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-reco" className="font-medium text-foreground">
-                    RECO Number
+                  <Label htmlFor="signup-phone" className="font-medium text-foreground">
+                    Phone Number
                   </Label>
                   <div className="relative">
-                    <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
-                      id="signup-reco"
-                      type="text"
-                      placeholder="Enter your RECO number"
-                      value={signupRecoNumber}
-                      onChange={(e) => setSignupRecoNumber(e.target.value)}
+                      id="signup-phone"
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      value={signupPhone}
+                      onChange={(e) => setSignupPhone(e.target.value)}
                       className="pl-10"
                       disabled={loading}
                     />
                   </div>
-                  {signupErrors.recoNumber && (
-                    <p className="text-sm text-destructive">{signupErrors.recoNumber}</p>
+                  {signupErrors.phone && (
+                    <p className="text-sm text-destructive">{signupErrors.phone}</p>
                   )}
                 </div>
                 
