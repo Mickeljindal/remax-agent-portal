@@ -2,13 +2,15 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * The reorderable top-level agent-dashboard sections. "precon" is a single
- * block that internally renders listings, assets, buyer-kit, and the library.
+ * The reorderable top-level agent-dashboard sections.
+ * Each maps to a distinct visual block on the dashboard.
  */
 export const DEFAULT_SECTION_ORDER = [
   "dashboard",
   "courses",
-  "precon",
+  "listings",
+  "assets",
+  "buyer-kit",
   "vendors",
   "support",
   "offices",
@@ -19,7 +21,9 @@ export type SectionKey = (typeof DEFAULT_SECTION_ORDER)[number];
 export const SECTION_META: Record<SectionKey, { label: string }> = {
   dashboard: { label: "Dashboard (calendar & training)" },
   courses: { label: "Training & courses" },
-  precon: { label: "Pre-construction (listings, assets, buyer kit, documents)" },
+  listings: { label: "Pre-construction listings" },
+  assets: { label: "Pre-con assets & calculators" },
+  "buyer-kit": { label: "Buyer presentation kit" },
   vendors: { label: "Approved vendors" },
   support: { label: "Support" },
   offices: { label: "Office locations & booking" },

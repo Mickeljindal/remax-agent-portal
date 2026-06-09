@@ -17,6 +17,7 @@ export default function AdminDisplaySettings() {
   const { setting, loading: loadingSetting, save } = useListingsPagination();
   const [pageSize, setPageSize] = useState(6);
   const [enabled, setEnabled] = useState(true);
+  const [gridCols, setGridCols] = useState(3);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -27,14 +28,15 @@ export default function AdminDisplaySettings() {
   useEffect(() => {
     setPageSize(setting.page_size);
     setEnabled(setting.enabled);
+    setGridCols(setting.grid_cols);
   }, [setting]);
 
   const handleSave = async () => {
     const size = Math.max(1, Math.min(48, Number(pageSize) || 6));
     setSaving(true);
-    const ok = await save({ page_size: size, enabled });
+    const ok = await save({ page_size: size, enabled, grid_cols: gridCols });
     setSaving(false);
-    if (ok) toast({ title: "Saved", description: "Listing pagination updated for all agents." });
+    if (ok) toast({ title: "Saved", description: "Listing display settings updated for all agents." });
     else toast({ variant: "destructive", title: "Could not save" });
   };
 
@@ -85,6 +87,29 @@ export default function AdminDisplaySettings() {
               <p className="mt-1 text-xs text-muted-foreground">
                 Default is 6. Agents see this many first, then click "Show more listings" to load another {pageSize || 6}.
               </p>
+            </div>
+
+            <div className="border-t pt-5">
+              <Label className="font-medium">Listing grid columns</Label>
+              <p className="text-xs text-muted-foreground mb-2">
+                How many project cards appear per row on larger screens. Smaller cards = more per row.
+              </p>
+              <div className="flex gap-3">
+                {[3, 4].map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setGridCols(n)}
+                    className={`flex-1 rounded-lg border py-3 text-center font-semibold transition-all ${
+                      gridCols === n
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border hover:bg-muted"
+                    }`}
+                  >
+                    {n} columns
+                    <span className="mt-0.5 block text-[11px] font-normal text-muted-foreground">{n === 3 ? "3 × rows (larger cards)" : "4 × rows (compact)"}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             <Button onClick={handleSave} disabled={saving} className="gap-2">

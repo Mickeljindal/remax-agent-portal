@@ -1,6 +1,7 @@
 // Production server for the RE/MAX Agent Portal.
 // Serves the React SPA build (dist/) AND handles file uploads to the server disk,
 // all under ONE domain. KloudBean runs this file as the single-process entry point.
+import "dotenv/config"; // loads .env in dev; harmless in production where env is set at OS level
 import express from "express";
 import multer from "multer";
 import path from "path";

@@ -11,6 +11,7 @@ import DashboardCalendar from "@/components/dashboard/DashboardCalendar";
 import TrainingProgressSummary from "@/components/dashboard/TrainingProgressSummary";
 import TrainingCourses from "@/components/dashboard/TrainingCourses";
 import PreConSection from "@/components/dashboard/PreConSection";
+import BuyerPresentationKit from "@/components/dashboard/BuyerPresentationKit";
 import VendorDirectory from "@/components/dashboard/VendorDirectory";
 import SupportChat from "@/components/dashboard/SupportChat";
 import OfficeBooking from "@/components/dashboard/OfficeBooking";
@@ -61,7 +62,7 @@ const Dashboard = () => {
 
   const agentName = agent?.full_name || `Agent ${agent?.reco_number || ""}`;
 
-  const sectionNodes: Record<SectionKey, React.ReactNode> = {
+  const sectionNodes: Partial<Record<SectionKey, React.ReactNode>> = {
     dashboard: (
       <section
         id="dashboard"
@@ -93,7 +94,7 @@ const Dashboard = () => {
         />
       </section>
     ),
-    precon: (
+    listings: (
       <div className="rounded-3xl border border-border/40 bg-card/30 p-5 md:p-8">
         <PreConSection
           agentId={agent?.id}
@@ -101,8 +102,26 @@ const Dashboard = () => {
           agentEmail={agent?.email || user?.email || null}
           recoNumber={agent?.reco_number || null}
           hideCommissionRates={hideCommissionRates}
+          section="listings"
         />
       </div>
+    ),
+    assets: (
+      <div className="rounded-3xl border border-border/40 bg-card/30 p-5 md:p-8">
+        <PreConSection
+          agentId={agent?.id}
+          agentName={agent?.full_name || null}
+          agentEmail={agent?.email || user?.email || null}
+          recoNumber={agent?.reco_number || null}
+          hideCommissionRates={hideCommissionRates}
+          section="assets"
+        />
+      </div>
+    ),
+    "buyer-kit": (
+      <section id="buyer-kit" className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/30 p-5 md:p-8">
+        <BuyerPresentationKit />
+      </section>
     ),
     vendors: (
       <section id="vendors" className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/30 p-5 md:p-8">
@@ -177,12 +196,16 @@ const Dashboard = () => {
           joinedAt={agent?.created_at || null}
         />
 
-        {order.map((key, i) => (
-          <div key={key}>
-            {i > 0 && <Separator className="mb-16 opacity-60" />}
-            {sectionNodes[key]}
-          </div>
-        ))}
+        {order.map((key, i) => {
+          const node = sectionNodes[key];
+          if (!node) return null;
+          return (
+            <div key={key}>
+              {i > 0 && <Separator className="mb-16 opacity-60" />}
+              {node}
+            </div>
+          );
+        })}
       </main>
 
       <PortalFooter />

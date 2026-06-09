@@ -85,6 +85,8 @@ interface PreConSectionProps {
   recoNumber?: string | null;
   /** When true, co-op % badges are hidden (e.g. showing portal to a buyer). */
   hideCommissionRates?: boolean;
+  /** Which part to render: "listings" = filter + project grid; "assets" = tools, calculators, documents. Default = both. */
+  section?: "listings" | "assets" | "all";
 }
 
 function saleBucket(status: string): "selling" | "coming_soon" {
@@ -142,6 +144,7 @@ export default function PreConSection({
   agentEmail,
   recoNumber,
   hideCommissionRates = false,
+  section = "all",
 }: PreConSectionProps) {
   const [projects, setProjects] = useState<PreconProject[]>([]);
   const [assets, setAssets] = useState<PreconAsset[]>([]);
@@ -274,6 +277,7 @@ export default function PreConSection({
 
   return (
     <>
+      {(section === "all" || section === "listings") && (
       <section id="listings" className="scroll-mt-24 space-y-4">
         <div className="flex items-center gap-3">
           <Building2 className="h-7 w-7 text-accent" />
@@ -349,7 +353,7 @@ export default function PreConSection({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className={`grid grid-cols-1 gap-4 md:grid-cols-2 ${pagination.grid_cols === 4 ? "xl:grid-cols-4" : "xl:grid-cols-3"}`}>
           {PORTAL_SHOWCASE &&
             filteredDemoListings.map((l) => {
               const demoProj = demoListingToProject(l);
@@ -570,7 +574,9 @@ export default function PreConSection({
           <BuyerPresentationKit />
         </div>
       </section>
+      )}
 
+      {(section === "all" || section === "assets") && (
       <section id="assets" className="scroll-mt-24 space-y-10 pt-16 border-t border-border">
         <div className="flex items-center gap-3">
           <LayoutGrid className="h-7 w-7 text-accent" />
@@ -746,6 +752,7 @@ export default function PreConSection({
           </div>
         )}
       </section>
+      )}
 
       <PreConListingDetailSheet
         project={detail}

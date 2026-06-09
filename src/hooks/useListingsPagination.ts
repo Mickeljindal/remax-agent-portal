@@ -4,9 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 export interface ListingsPaginationSetting {
   page_size: number;
   enabled: boolean;
+  grid_cols: number; // 3 or 4 columns on large screens
 }
 
-const DEFAULTS: ListingsPaginationSetting = { page_size: 6, enabled: true };
+const DEFAULTS: ListingsPaginationSetting = { page_size: 6, enabled: true, grid_cols: 3 };
 const KEY = "listings_pagination";
 
 /**
@@ -24,6 +25,7 @@ export function useListingsPagination() {
       setSetting({
         page_size: typeof v.page_size === "number" && v.page_size > 0 ? v.page_size : DEFAULTS.page_size,
         enabled: v.enabled !== false,
+        grid_cols: v.grid_cols === 4 ? 4 : DEFAULTS.grid_cols,
       });
     }
     setLoading(false);
