@@ -65,6 +65,7 @@ import {
   ArrowUpDown,
   LifeBuoy,
   Building2,
+  Mail,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import AdminHelpBot from "@/components/admin/AdminHelpBot";
@@ -102,6 +103,7 @@ const ADMIN_CARDS = [
   { key: "support", route: "/admin/support", title: "Support inbox", description: "Chat with agents, manage tickets", icon: <Bell className="h-6 w-6 text-orange-600" />, iconWrapClass: "bg-orange-500/15" },
   { key: "support-categories", route: "/admin/support-categories", title: "Support categories", description: "Marketing, vendors, tech & more support topics", icon: <LifeBuoy className="h-6 w-6 text-orange-700" />, iconWrapClass: "bg-orange-600/15" },
   { key: "offices", route: "/admin/offices", title: "Offices & booking emails", description: "Locations + who gets room-booking inquiries", icon: <Building2 className="h-6 w-6 text-blue-700" />, iconWrapClass: "bg-blue-600/15" },
+  { key: "email-settings", route: "/admin/email-settings", title: "Email settings", description: "Sender address, worksheet recipient, portal name", icon: <Mail className="h-6 w-6 text-rose-600" />, iconWrapClass: "bg-rose-500/15" },
   { key: "social-share", route: "/admin/social-share", title: "Social share icons", description: "WhatsApp, Facebook, LinkedIn, X, email, copy", icon: <Share2 className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />, iconWrapClass: "bg-emerald-500/15" },
   { key: "help", route: "/admin/help", title: "Documentation & Help", description: "Guides + assistant for \"where do I find…\"", icon: <BookOpen className="h-6 w-6 text-[#e2231a]" />, iconWrapClass: "bg-gradient-to-br from-[#e2231a]/15 to-[#1a4d8f]/15" },
 ];

@@ -34,11 +34,41 @@ const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPA
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 // Email + portal config (used by the notification / worksheet endpoints).
+// These are fallbacks — the server reads portal_settings.email_settings from the DB
+// on each request so admins can update addresses from the admin panel without redeploying.
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
-const NOTIFICATION_FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || "onboarding@resend.dev";
-const PRECON_WORKSHEET_FROM_EMAIL = process.env.PRECON_WORKSHEET_FROM_EMAIL || NOTIFICATION_FROM_EMAIL;
-const PRECON_WORKSHEET_ADMIN_EMAIL = process.env.PRECON_WORKSHEET_ADMIN_EMAIL || "";
-const PORTAL_NAME = process.env.PORTAL_NAME || "RE/MAX Excellence Portal";
+const ENV_NOTIFICATION_FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || "onboarding@resend.dev";
+const ENV_PRECON_WORKSHEET_FROM_EMAIL = process.env.PRECON_WORKSHEET_FROM_EMAIL || ENV_NOTIFICATION_FROM_EMAIL;
+const ENV_PRECON_WORKSHEET_ADMIN_EMAIL = process.env.PRECON_WORKSHEET_ADMIN_EMAIL || "";
+const ENV_PORTAL_NAME = process.env.PORTAL_NAME || "RE/MAX Excellence Portal";
+
+// Cached email settings from DB (refreshed every 60s).
+let emailSettingsCache = null;
+let emailSettingsCacheTime = 0;
+const EMAIL_CACHE_TTL = 60_000; // 1 minute
+
+async function getEmailSettings() {
+  const now = Date.now();
+  if (emailSettingsCache && now - emailSettingsCacheTime < EMAIL_CACHE_TTL) return emailSettingsCache;
+  if (!adminClient) return null;
+  try {
+    const { data } = await adminClient.from("portal_settings").select("value").eq("key", "email_settings").maybeSingle();
+    emailSettingsCache = data?.value || null;
+    emailSettingsCacheTime = now;
+    return emailSettingsCache;
+  } catch { return emailSettingsCache; }
+}
+
+/** Resolve the effective email config: DB settings > env vars > hardcoded defaults. */
+async function resolveEmailConfig() {
+  const db = await getEmailSettings();
+  return {
+    fromEmail: db?.from_email || ENV_NOTIFICATION_FROM_EMAIL,
+    portalName: db?.portal_name || ENV_PORTAL_NAME,
+    worksheetFromEmail: db?.worksheet_from_email || ENV_PRECON_WORKSHEET_FROM_EMAIL,
+    worksheetAdminEmail: db?.worksheet_admin_email || ENV_PRECON_WORKSHEET_ADMIN_EMAIL,
+  };
+}
 
 // Service-role Supabase client (admin). Null if the key isn't configured.
 const adminClient =
@@ -342,6 +372,8 @@ app.post("/api/send-notification", async (req, res) => {
 
     if (!recipientEmail || !subject) return res.status(400).json({ error: "recipientEmail and subject are required." });
 
+    const emailCfg = await resolveEmailConfig();
+
     // Log the notification.
     let notifId = null;
     const { data: notifRecord } = await adminClient
@@ -361,10 +393,10 @@ app.post("/api/send-notification", async (req, res) => {
     notifId = notifRecord?.id || null;
 
     const result = await sendResendEmail({
-      from: `${PORTAL_NAME} <${NOTIFICATION_FROM_EMAIL}>`,
+      from: `${emailCfg.portalName} <${emailCfg.fromEmail}>`,
       to: recipientEmail,
       subject,
-      html: buildHtmlEmail(subject, body, PORTAL_NAME),
+      html: buildHtmlEmail(subject, body, emailCfg.portalName),
     });
 
     if (notifId) {
@@ -401,10 +433,10 @@ app.post("/api/send-notification", async (req, res) => {
             status: "pending",
           });
           await sendResendEmail({
-            from: `${PORTAL_NAME} <${NOTIFICATION_FROM_EMAIL}>`,
+            from: `${emailCfg.portalName} <${emailCfg.fromEmail}>`,
             to: admin.email,
             subject: aSubject,
-            html: buildHtmlEmail(aSubject, aBody, PORTAL_NAME),
+            html: buildHtmlEmail(aSubject, aBody, emailCfg.portalName),
           });
         }
       }
@@ -425,7 +457,9 @@ app.post("/api/submit-precon-worksheet", async (req, res) => {
     if (!caller?.id) return res.status(401).json({ error: "Unauthorized." });
 
     if (!RESEND_API_KEY) return res.status(400).json({ error: "Email is not configured (missing RESEND_API_KEY)." });
-    if (!PRECON_WORKSHEET_ADMIN_EMAIL) return res.status(400).json({ error: "Admin email is not configured." });
+
+    const emailCfg = await resolveEmailConfig();
+    if (!emailCfg.worksheetAdminEmail) return res.status(400).json({ error: "Admin email is not configured. Set it in Admin → Email settings." });
 
     const payload = req.body || {};
     if (!payload.projectName?.trim()) return res.status(400).json({ error: "Project name is required." });
@@ -479,13 +513,13 @@ app.post("/api/submit-precon-worksheet", async (req, res) => {
     }];
 
     const adminSend = await sendResendEmail({
-      from: PRECON_WORKSHEET_FROM_EMAIL, to: PRECON_WORKSHEET_ADMIN_EMAIL,
+      from: emailCfg.worksheetFromEmail, to: emailCfg.worksheetAdminEmail,
       subject: `${subject} (Admin Copy)`, html, attachments,
     });
     if (!adminSend.ok) return res.status(400).json({ error: `Email send failed: ${adminSend.error}` });
 
     await sendResendEmail({
-      from: PRECON_WORKSHEET_FROM_EMAIL, to: agentEmail,
+      from: emailCfg.worksheetFromEmail, to: agentEmail,
       subject: `${subject} (Agent Copy)`, html, attachments,
     });
 
