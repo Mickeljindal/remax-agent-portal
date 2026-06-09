@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import UploadHint, { UPLOAD_PRESETS } from "@/components/admin/UploadHint";
+import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
 
 interface LibraryDoc {
   id: string;
@@ -40,6 +41,8 @@ const ICONS = ["📄", "📘", "📕", "📑", "📋", "📊", "📝", "📁", "
 export default function AdminPreconLibrary() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { label: cardLabel } = useAdminCardLabels();
+  const pageLabel = cardLabel("precon-library", "Pre-con document library", "Shared forms: showing instructions, clauses, etc.");
   const [docs, setDocs] = useState<LibraryDoc[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -136,15 +139,15 @@ export default function AdminPreconLibrary() {
             </Button>
             <img src={remaxLogo} alt="" className="h-10 w-auto brightness-0 invert object-contain" />
           </div>
-          <h1 className="font-display text-xl font-semibold">Pre-Con Document Library</h1>
+          <h1 className="font-display text-xl font-semibold">{pageLabel.title}</h1>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold flex items-center gap-2"><FileText className="h-6 w-6 text-primary" /> Document Library</h2>
-            <p className="text-sm text-muted-foreground mt-1">Shared templates &amp; forms agents can download (Showing Instructions, Clauses, Schedule B, etc.)</p>
+            <h2 className="text-2xl font-bold flex items-center gap-2"><FileText className="h-6 w-6 text-primary" /> {pageLabel.title}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{pageLabel.description}</p>
           </div>
           <Button onClick={openNew} className="gap-2"><Plus className="h-4 w-4" /> Add Document</Button>
         </div>

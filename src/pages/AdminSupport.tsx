@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
 
 interface Agent {
   id: string;
@@ -75,6 +76,8 @@ const STATUS_OPTIONS = ["open", "in-progress", "resolved", "closed"];
 export default function AdminSupport() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { label: cardLabel } = useAdminCardLabels();
+  const pageLabel = cardLabel("support", "Support inbox", "Chat with agents, manage tickets");
   const { sendNotification } = useNotifications();
   const { categories } = useSupportCategories();
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -351,7 +354,7 @@ export default function AdminSupport() {
             </Button>
             <img src={remaxLogo} alt="" className="h-10 w-auto brightness-0 invert object-contain" />
           </div>
-          <h1 className="font-display text-xl font-semibold">Support Inbox</h1>
+          <h1 className="font-display text-xl font-semibold">{pageLabel.title}</h1>
           <Button onClick={() => setNewConvoOpen(true)} className="gap-2 bg-white/10 hover:bg-white/20 text-primary-foreground">
             <Plus className="h-4 w-4" /> New Conversation
           </Button>

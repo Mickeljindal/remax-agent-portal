@@ -27,6 +27,7 @@ import {
   Upload, Image as ImageIcon, MapPin, SlidersHorizontal, FileText, Download,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
 
 interface TagItem { id: string; name: string; color: string; sort_order: number; is_active: boolean; }
 interface PropertyType { id: string; name: string; sort_order: number; is_active: boolean; }
@@ -51,6 +52,8 @@ const TAG_COLORS = ["red", "blue", "green", "amber", "orange", "purple", "indigo
 export default function AdminListings() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { label: cardLabel } = useAdminCardLabels();
+  const pageLabel = cardLabel("listings", "Listings & categories", "Pre-con projects, cities, tags, types, statuses");
   const [tags, setTags] = useState<TagItem[]>([]);
   const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
   const [statuses, setStatuses] = useState<StatusItem[]>([]);
@@ -355,7 +358,7 @@ export default function AdminListings() {
             </Button>
             <img src={remaxLogo} alt="" className="h-10 w-auto brightness-0 invert object-contain" />
           </div>
-          <h1 className="font-display text-xl font-semibold">Listings & Categories</h1>
+          <h1 className="font-display text-xl font-semibold">{pageLabel.title}</h1>
         </div>
       </header>
 

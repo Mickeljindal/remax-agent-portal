@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
 
 interface Worksheet {
   id: string;
@@ -59,6 +60,8 @@ const statusColors: Record<string, string> = {
 export default function AdminWorksheets() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { label: cardLabel } = useAdminCardLabels();
+  const pageLabel = cardLabel("worksheets", "Pre-con worksheets", "View & manage worksheet submissions");
   const [worksheets, setWorksheets] = useState<Worksheet[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [search, setSearch] = useState("");
@@ -125,14 +128,14 @@ export default function AdminWorksheets() {
             </Button>
             <img src={remaxLogo} alt="" className="h-10 w-auto brightness-0 invert object-contain" />
           </div>
-          <h1 className="font-display text-xl font-semibold">Pre-Con Worksheets</h1>
+          <h1 className="font-display text-xl font-semibold">{pageLabel.title}</h1>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-6">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2"><FileText className="h-6 w-6 text-primary" /> Worksheet Submissions</h2>
-          <p className="text-sm text-muted-foreground mt-1">All pre-construction worksheet submissions from agents</p>
+          <h2 className="text-2xl font-bold flex items-center gap-2"><FileText className="h-6 w-6 text-primary" /> {pageLabel.title}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{pageLabel.description}</p>
         </div>
 
         <div className="flex flex-wrap gap-3">

@@ -48,6 +48,7 @@ import {
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import UploadHint, { UPLOAD_PRESETS } from "@/components/admin/UploadHint";
+import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
 
 interface Course {
   id: string;
@@ -95,6 +96,8 @@ function fmtBytes(bytes: number): string {
 export default function AdminCourses() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { label: cardLabel } = useAdminCardLabels();
+  const pageLabel = cardLabel("courses", "Course management", "Create courses, add video modules");
   const [courses, setCourses] = useState<Course[]>([]);
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -364,7 +367,7 @@ export default function AdminCourses() {
             </Button>
             <img src={remaxLogo} alt="" className="h-10 w-auto brightness-0 invert object-contain" />
           </div>
-          <h1 className="font-display text-xl font-semibold">Course Management</h1>
+          <h1 className="font-display text-xl font-semibold">{pageLabel.title}</h1>
         </div>
       </header>
 
@@ -374,10 +377,10 @@ export default function AdminCourses() {
           <div>
             <h2 className="text-2xl font-bold flex items-center gap-2">
               <GraduationCap className="h-6 w-6 text-primary" />
-              Courses & Modules
+              {pageLabel.title}
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Create courses, add video modules, and manage your training library.
+              {pageLabel.description}
             </p>
           </div>
           <Button onClick={openNewCourse} className="gap-2">

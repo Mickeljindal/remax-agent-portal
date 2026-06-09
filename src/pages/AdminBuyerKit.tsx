@@ -17,6 +17,7 @@ import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Plus, Pencil, Trash2, Briefcase, Upload, Link as LinkIcon, ExternalLink } from "lucide-react";
 import UploadHint, { UPLOAD_PRESETS } from "@/components/admin/UploadHint";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
 
 interface KitItem {
   id: string; title: string; description: string | null; icon: string;
@@ -29,6 +30,8 @@ const ICONS = ["file", "presentation", "image", "mic", "briefcase"];
 export default function AdminBuyerKit() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { label: cardLabel } = useAdminCardLabels();
+  const pageLabel = cardLabel("buyer-kit", "Buyer presentation kit", "Templates & talking points for buyer meetings");
   const [items, setItems] = useState<KitItem[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -106,15 +109,15 @@ export default function AdminBuyerKit() {
             </Button>
             <img src={remaxLogo} alt="" className="h-10 w-auto brightness-0 invert object-contain" />
           </div>
-          <h1 className="font-display text-xl font-semibold">Buyer Presentation Kit</h1>
+          <h1 className="font-display text-xl font-semibold">{pageLabel.title}</h1>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold flex items-center gap-2"><Briefcase className="h-6 w-6 text-primary" /> Buyer Kit Resources</h2>
-            <p className="text-sm text-muted-foreground mt-1">Templates &amp; talking points agents use in buyer meetings</p>
+            <h2 className="text-2xl font-bold flex items-center gap-2"><Briefcase className="h-6 w-6 text-primary" /> {pageLabel.title}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{pageLabel.description}</p>
           </div>
           <Button onClick={openNew} className="gap-2"><Plus className="h-4 w-4" /> Add Resource</Button>
         </div>

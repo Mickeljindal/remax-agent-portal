@@ -47,6 +47,7 @@ import {
   Save,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
+import { useAdminCardLabels } from "@/hooks/useAdminCardLabels";
 
 interface VendorRow {
   id: string;
@@ -79,6 +80,8 @@ const emptyForm = () => ({
 const AdminVendors = () => {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
+  const { label: cardLabel } = useAdminCardLabels();
+  const pageLabel = cardLabel("vendors", "Approved vendors", "Trades and services shown on the agent dashboard");
   const [vendors, setVendors] = useState<VendorRow[]>([]);
   const [loadingList, setLoadingList] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -248,7 +251,7 @@ const AdminVendors = () => {
               className="h-10 w-auto object-contain brightness-0 invert"
             />
           </div>
-          <h1 className="font-display text-xl font-semibold">Approved vendors</h1>
+          <h1 className="font-display text-xl font-semibold">{pageLabel.title}</h1>
         </div>
       </header>
 
@@ -258,10 +261,10 @@ const AdminVendors = () => {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Store className="h-5 w-5 text-primary" />
-                Vendor directory
+                {pageLabel.title}
               </CardTitle>
               <CardDescription>
-                Categories (e.g. Plumber, Electrician) group the list on the agent dashboard. Inactive vendors are hidden from agents.
+                {pageLabel.description}
               </CardDescription>
             </div>
             <Button onClick={openCreate} className="gap-2 shrink-0">
