@@ -572,7 +572,7 @@ export default function PreConSection({
       )}
 
       {(section === "all" || section === "assets") && (
-      <section id="assets" className="scroll-mt-24 space-y-8 pt-8 border-t border-border">
+      <section id="assets" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
           <LayoutGrid className="h-7 w-7 text-accent" />
           <div>

@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Loader2 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import HeroBanner from "@/components/dashboard/HeroBanner";
 import DashboardCalendar from "@/components/dashboard/DashboardCalendar";
@@ -177,7 +176,7 @@ const Dashboard = () => {
         }}
       />
 
-      <main className="flex-1 container mx-auto px-4 py-6 space-y-8">
+      <main className="flex-1 container mx-auto px-4 py-6 space-y-5">
         {!isActive && (
           <Card className="border-amber-500 bg-amber-50 dark:bg-amber-950/30">
             <CardContent className="pt-6">
@@ -196,15 +195,10 @@ const Dashboard = () => {
           joinedAt={agent?.created_at || null}
         />
 
-        {order.map((key, i) => {
+        {order.map((key) => {
           const node = sectionNodes[key];
           if (!node) return null;
-          return (
-            <div key={key}>
-              {i > 0 && <Separator className="mb-8 opacity-60" />}
-              {node}
-            </div>
-          );
+          return <div key={key}>{node}</div>;
         })}
       </main>
 
