@@ -75,7 +75,7 @@ interface Property {
 interface Agent {
   id: string;
   full_name: string | null;
-  reco_number: string;
+  reco_number: string | null;
 }
 
 const PROPERTY_TYPES = ["Residential", "Condo", "Townhouse", "Commercial", "Land", "Multi-Family"];
@@ -426,11 +426,14 @@ export default function AdminProperties() {
               </div>
               <div className="col-span-2">
                 <Label>Assigned Agent</Label>
-                <Select value={form.assigned_agent_id} onValueChange={(v) => setForm({ ...form, assigned_agent_id: v })}>
+                <Select
+                  value={form.assigned_agent_id || "unassigned"}
+                  onValueChange={(v) => setForm({ ...form, assigned_agent_id: v === "unassigned" ? "" : v })}
+                >
                   <SelectTrigger><SelectValue placeholder="Select agent (optional)" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Unassigned</SelectItem>
-                    {agents.map((a) => <SelectItem key={a.id} value={a.id}>{a.full_name || a.reco_number}</SelectItem>)}
+                    <SelectItem value="unassigned">Unassigned</SelectItem>
+                    {agents.map((a) => <SelectItem key={a.id} value={a.id}>{a.full_name || a.reco_number || "Unnamed"}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
