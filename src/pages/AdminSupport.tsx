@@ -333,7 +333,7 @@ export default function AdminSupport() {
       !searchQuery ||
       t.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
       agent?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      agent?.reco_number.includes(searchQuery);
+      agent?.reco_number?.includes(searchQuery);
     const matchesStatus = statusFilter === "all" || t.status === statusFilter;
     const matchesCategory = categoryFilter === "all" || t.category === categoryFilter;
     return matchesSearch && matchesStatus && matchesCategory;

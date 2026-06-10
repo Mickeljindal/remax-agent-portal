@@ -50,7 +50,7 @@ const AgentDirectory = () => {
     return (
       a.full_name?.toLowerCase().includes(q) ||
       a.email?.toLowerCase().includes(q) ||
-      a.reco_number.toLowerCase().includes(q)
+      a.reco_number?.toLowerCase().includes(q)
     );
   });
 

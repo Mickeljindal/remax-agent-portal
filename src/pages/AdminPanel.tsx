@@ -78,7 +78,7 @@ interface Agent {
   user_id: string;
   full_name: string | null;
   email: string | null;
-  reco_number: string;
+  reco_number: string | null;
   is_active: boolean;
   avatar_url: string | null;
   created_at: string;
@@ -312,7 +312,7 @@ const AdminPanel = () => {
   const filteredAgents = agents.filter(
     (agent) =>
       agent.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      agent.reco_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      agent.reco_number?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       agent.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -431,7 +431,7 @@ const AdminPanel = () => {
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="font-mono">{agent.reco_number}</TableCell>
+                        <TableCell className="font-mono">{agent.reco_number || "—"}</TableCell>
                         <TableCell>{agent.email || "—"}</TableCell>
                         <TableCell>
                           <Badge variant={agent.is_active ? "default" : "secondary"}>
