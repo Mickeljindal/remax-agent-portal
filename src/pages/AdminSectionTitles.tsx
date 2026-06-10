@@ -16,6 +16,7 @@ const SECTIONS = [
   { key: "courses", defaultTitle: "Training & courses", defaultSubtitle: "Video modules, quizzes, and certificates" },
   { key: "listings", defaultTitle: "Pre-construction listings", defaultSubtitle: "Projects, pricing, and client registration" },
   { key: "assets", defaultTitle: "Pre-con assets", defaultSubtitle: "Tools, documents, and marketing" },
+  { key: "precon-library", defaultTitle: "Pre-con document library", defaultSubtitle: "Shared brokerage forms and templates" },
   { key: "buyer-kit", defaultTitle: "Buyer presentation kit", defaultSubtitle: "Templates and talking points for buyer meetings." },
   { key: "vendors", defaultTitle: "Approved vendors", defaultSubtitle: "Brokerage-approved trades and services — contact details for your deals" },
   { key: "support", defaultTitle: "Marketing & Tech Support", defaultSubtitle: "Get help from our support team" },

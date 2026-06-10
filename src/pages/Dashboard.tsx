@@ -177,7 +177,7 @@ const Dashboard = () => {
         }}
       />
 
-      <main className="flex-1 container mx-auto px-4 py-6 space-y-16">
+      <main className="flex-1 container mx-auto px-4 py-6 space-y-8">
         {!isActive && (
           <Card className="border-amber-500 bg-amber-50 dark:bg-amber-950/30">
             <CardContent className="pt-6">
@@ -201,7 +201,7 @@ const Dashboard = () => {
           if (!node) return null;
           return (
             <div key={key}>
-              {i > 0 && <Separator className="mb-16 opacity-60" />}
+              {i > 0 && <Separator className="mb-8 opacity-60" />}
               {node}
             </div>
           );

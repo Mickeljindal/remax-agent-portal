@@ -32,7 +32,6 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PORTAL_SHOWCASE } from "@/config/portalShowcase";
 import { demoListings, demoAssetTiles, demoDocuments, demoPreconAssetsByProject } from "@/data/demoPortalContent";
-import BuyerPresentationKit from "@/components/dashboard/BuyerPresentationKit";
 import { buildListingShareUrl, buildListingSharePayloadForPrecon } from "@/lib/shareLandingPayload";
 import SocialShareIconRow from "@/components/share/SocialShareIconRow";
 import { PreConCoopInline } from "@/components/dashboard/PreConCoopDisplay";
@@ -569,15 +568,11 @@ export default function PreConSection({
             </Button>
           </div>
         )}
-
-        <div className="mt-12">
-          <BuyerPresentationKit />
-        </div>
       </section>
       )}
 
       {(section === "all" || section === "assets") && (
-      <section id="assets" className="scroll-mt-24 space-y-10 pt-16 border-t border-border">
+      <section id="assets" className="scroll-mt-24 space-y-8 pt-8 border-t border-border">
         <div className="flex items-center gap-3">
           <LayoutGrid className="h-7 w-7 text-accent" />
           <div>

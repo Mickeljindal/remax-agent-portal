@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { FileText, Download, ExternalLink, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useSectionLabels } from "@/hooks/useSectionLabels";
 
 interface LibraryDoc {
   id: string;
@@ -24,6 +25,8 @@ const TINTS = [
 export default function PreconLibrary() {
   const [docs, setDocs] = useState<LibraryDoc[]>([]);
   const [loading, setLoading] = useState(true);
+  const { label } = useSectionLabels();
+  const libLabel = label("precon-library", "Pre-con document library", "");
 
   useEffect(() => {
     (async () => {
@@ -59,7 +62,7 @@ export default function PreconLibrary() {
 
   return (
     <div>
-      <h3 className="mb-3 font-display text-lg font-semibold text-foreground">Pre-con document library</h3>
+      <h3 className="mb-3 font-display text-lg font-semibold text-foreground">{libLabel.title}</h3>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
         {docs.map((d, i) => {
           const hasFile = !!(d.file_url || d.link_url);
