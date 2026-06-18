@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useVideoUpload } from "@/hooks/useVideoUpload";
+import { useVideoUpload, uploadFileToServer } from "@/hooks/useVideoUpload";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -45,6 +45,7 @@ import {
   FileQuestion,
   GripVertical,
   Video,
+  FileText,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import UploadHint, { UPLOAD_PRESETS } from "@/components/admin/UploadHint";
@@ -131,6 +132,7 @@ export default function AdminCourses() {
 
   // Video upload
   const { progress, speed, uploadVideo } = useVideoUpload();
+  const [uploadingDoc, setUploadingDoc] = useState(false);
 
   // Expanded course for viewing modules
   const [expandedCourseId, setExpandedCourseId] = useState<string | null>(null);
@@ -615,6 +617,7 @@ export default function AdminCourses() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="video">Video</SelectItem>
+                    <SelectItem value="document">Document (PDF)</SelectItem>
                     <SelectItem value="quiz">Quiz</SelectItem>
                   </SelectContent>
                 </Select>
@@ -693,6 +696,50 @@ export default function AdminCourses() {
                   <p className="text-xs text-muted-foreground mt-1">
                     YouTube: youtube.com/embed/VIDEO_ID · Vimeo: player.vimeo.com/video/VIDEO_ID
                   </p>
+                </div>
+              </div>
+            )}
+            {moduleForm.module_type === "document" && (
+              <div className="space-y-3">
+                <div>
+                  <Label>Upload PDF / document (stored on your server)</Label>
+                  <div className="mt-1">
+                    <label className="cursor-pointer">
+                      <div className="flex items-center gap-2 px-3 py-2 border rounded-md text-sm hover:bg-muted w-fit">
+                        <FileText className="h-4 w-4" />
+                        {moduleForm.video_url ? "Replace document" : "Choose PDF / file"}
+                      </div>
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file || !selectedCourseId) return;
+                          setUploadingDoc(true);
+                          const result = await uploadFileToServer("precon-documents", file, `course-${selectedCourseId}`);
+                          setUploadingDoc(false);
+                          if (result) setModuleForm({ ...moduleForm, video_url: result.url });
+                          else toast({ variant: "destructive", title: "Upload failed" });
+                        }}
+                      />
+                    </label>
+                    <UploadHint {...UPLOAD_PRESETS.documentPdf} />
+                    {uploadingDoc && <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1"><Loader2 className="h-3 w-3 animate-spin" /> Uploading…</p>}
+                    {moduleForm.video_url && !uploadingDoc && <p className="text-xs text-green-600 mt-2 font-medium">✓ Document attached</p>}
+                  </div>
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-x-0 top-1/2 border-t border-muted" />
+                  <p className="relative bg-background px-2 text-xs text-muted-foreground w-fit mx-auto">or paste a document URL</p>
+                </div>
+                <div>
+                  <Label>Document URL (PDF / Drive link)</Label>
+                  <Input
+                    value={moduleForm.video_url}
+                    onChange={(e) => setModuleForm({ ...moduleForm, video_url: e.target.value })}
+                    placeholder="https://… .pdf"
+                  />
                 </div>
               </div>
             )}

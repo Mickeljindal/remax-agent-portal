@@ -18,6 +18,8 @@ const SECTIONS = [
   { key: "assets", defaultTitle: "Pre-con assets", defaultSubtitle: "Tools, documents, and marketing" },
   { key: "precon-library", defaultTitle: "Pre-con document library", defaultSubtitle: "Shared brokerage forms and templates" },
   { key: "buyer-kit", defaultTitle: "Buyer presentation kit", defaultSubtitle: "Templates and talking points for buyer meetings." },
+  { key: "listing-kit", defaultTitle: "Listing presentation kit", defaultSubtitle: "Everything you need to win the listing appointment" },
+  { key: "success-kit", defaultTitle: "Agent success kit", defaultSubtitle: "Scripts, social media designs, and the content bank" },
   { key: "vendors", defaultTitle: "Approved vendors", defaultSubtitle: "Brokerage-approved trades and services — contact details for your deals" },
   { key: "support", defaultTitle: "Marketing & Tech Support", defaultSubtitle: "Get help from our support team" },
   { key: "offices", defaultTitle: "Office Locations & Booking", defaultSubtitle: "Reserve a meeting room — pick a location, day, and time" },

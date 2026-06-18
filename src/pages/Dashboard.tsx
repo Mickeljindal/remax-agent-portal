@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Loader2 } from "lucide-react";
+import { Loader2, Presentation, Sparkles } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import HeroBanner from "@/components/dashboard/HeroBanner";
 import DashboardCalendar from "@/components/dashboard/DashboardCalendar";
@@ -11,6 +11,7 @@ import TrainingProgressSummary from "@/components/dashboard/TrainingProgressSumm
 import TrainingCourses from "@/components/dashboard/TrainingCourses";
 import PreConSection from "@/components/dashboard/PreConSection";
 import BuyerPresentationKit from "@/components/dashboard/BuyerPresentationKit";
+import ResourceKit from "@/components/dashboard/ResourceKit";
 import VendorDirectory from "@/components/dashboard/VendorDirectory";
 import SupportChat from "@/components/dashboard/SupportChat";
 import OfficeBooking from "@/components/dashboard/OfficeBooking";
@@ -120,6 +121,30 @@ const Dashboard = () => {
     "buyer-kit": (
       <section id="buyer-kit" className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/30 p-5 md:p-8">
         <BuyerPresentationKit />
+      </section>
+    ),
+    "listing-kit": (
+      <section className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/30 p-5 md:p-8">
+        <ResourceKit
+          kit="listing"
+          sectionKey="listing-kit"
+          sectionId="listing-kit"
+          defaultTitle="Listing presentation kit"
+          defaultSubtitle="Everything you need to win the listing appointment"
+          HeaderIcon={Presentation}
+        />
+      </section>
+    ),
+    "success-kit": (
+      <section className="scroll-mt-28 rounded-3xl border border-border/50 bg-card/30 p-5 md:p-8">
+        <ResourceKit
+          kit="success"
+          sectionKey="success-kit"
+          sectionId="success-kit"
+          defaultTitle="Agent success kit"
+          defaultSubtitle="Scripts, social media designs, and the content bank"
+          HeaderIcon={Sparkles}
+        />
       </section>
     ),
     vendors: (

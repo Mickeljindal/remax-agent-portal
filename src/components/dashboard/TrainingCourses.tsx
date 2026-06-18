@@ -18,6 +18,7 @@ import {
   GraduationCap,
   PlayCircle,
   FileQuestion,
+  FileText,
   CheckCircle2,
   Clock,
   AlertTriangle,
@@ -286,7 +287,33 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
                       ? progress.find((p) => p.module_id === activeModule.id)
                       : undefined;
 
-                    return activeModule?.video_url ? (
+                    return activeModule?.module_type === "document" && activeModule.video_url ? (
+                      <div className="space-y-3">
+                        <div className="aspect-video w-full overflow-hidden rounded-lg border bg-muted">
+                          <iframe
+                            key={activeModule.id}
+                            src={activeModule.video_url}
+                            title={activeModule.title}
+                            className="h-full w-full"
+                          />
+                        </div>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <a
+                            href={activeModule.video_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+                          >
+                            <FileText className="h-4 w-4" /> Open / download document
+                          </a>
+                          {!isModuleCompleted(activeModule.id) && (
+                            <Button size="sm" onClick={() => markComplete(activeModule.id)}>
+                              Mark as read
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ) : activeModule?.video_url ? (
                       <VideoPlayer
                         key={activeModule.id}
                         moduleId={activeModule.id}
@@ -302,7 +329,7 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
                     ) : (
                       <div className="aspect-video rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-sm border">
                         <PlayCircle className="h-10 w-10 mr-2 opacity-40" />
-                        Select a video module from the syllabus below.
+                        Select a module from the syllabus below.
                       </div>
                     );
                   })()}
@@ -361,6 +388,8 @@ export default function TrainingCourses({ agentId, agentName, recoNumber }: Trai
                         <div className="flex items-center gap-2">
                           {mod.module_type === "video" ? (
                             <PlayCircle className="h-4 w-4 text-accent shrink-0" />
+                          ) : mod.module_type === "document" ? (
+                            <FileText className="h-4 w-4 text-[#1a4d8f] shrink-0" />
                           ) : (
                             <FileQuestion className="h-4 w-4 text-blue-500 shrink-0" />
                           )}

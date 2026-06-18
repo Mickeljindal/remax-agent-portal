@@ -67,6 +67,8 @@ import {
   Building2,
   Mail,
   CalendarClock,
+  Presentation,
+  Sparkles,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import AdminHelpBot from "@/components/admin/AdminHelpBot";
@@ -95,6 +97,8 @@ const ADMIN_CARDS = [
   { key: "worksheets", route: "/admin/worksheets", title: "Pre-con worksheets", description: "View & manage worksheet submissions", icon: <LinkIcon className="h-6 w-6 text-blue-700" />, iconWrapClass: "bg-blue-600/15" },
   { key: "precon-library", route: "/admin/precon-library", title: "Pre-con document library", description: "Shared forms: showing instructions, clauses, etc.", icon: <LinkIcon className="h-6 w-6 text-fuchsia-700" />, iconWrapClass: "bg-fuchsia-600/15" },
   { key: "buyer-kit", route: "/admin/buyer-kit", title: "Buyer presentation kit", description: "Templates & talking points for buyer meetings", icon: <Briefcase className="h-6 w-6 text-pink-600" />, iconWrapClass: "bg-pink-500/15" },
+  { key: "listing-kit", route: "/admin/listing-kit", title: "Listing presentation kit", description: "Decks, CMA templates, seller scripts", icon: <Presentation className="h-6 w-6 text-fuchsia-600" />, iconWrapClass: "bg-fuchsia-500/15" },
+  { key: "success-kit", route: "/admin/success-kit", title: "Agent success kit", description: "Scripts, social designs, content bank links", icon: <Sparkles className="h-6 w-6 text-amber-600" />, iconWrapClass: "bg-amber-500/15" },
   { key: "course-assignments", route: "/admin/course-assignments", title: "Course assignments", description: "Assign training to agents", icon: <GraduationCap className="h-6 w-6 text-violet-600" />, iconWrapClass: "bg-violet-500/15" },
   { key: "courses", route: "/admin/courses", title: "Course management", description: "Create courses, add video modules", icon: <GraduationCap className="h-6 w-6 text-indigo-600" />, iconWrapClass: "bg-indigo-500/15" },
   { key: "course-analytics", route: "/admin/course-analytics", title: "Course analytics", description: "Watch time, completions, per-agent stats", icon: <BarChart3 className="h-6 w-6 text-rose-600" />, iconWrapClass: "bg-rose-500/15" },
