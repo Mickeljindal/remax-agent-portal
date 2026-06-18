@@ -19,6 +19,7 @@ interface NotificationRules {
   portal_name: string;
   worksheet_admin_email: string;
   worksheet_from_email: string;
+  support_inbox_email: string;
 
   // ─── Agent Notifications ───
   agent_booking_confirmation: boolean;   // Email agent when they book a room
@@ -52,6 +53,7 @@ const DEFAULTS: NotificationRules = {
   portal_name: "RE/MAX Excellence Portal",
   worksheet_admin_email: "",
   worksheet_from_email: "noreply@agents.updates.joinremaxex.com",
+  support_inbox_email: "shizu@remaxex.com",
 
   agent_booking_confirmation: true,
   agent_course_assigned: true,
@@ -180,6 +182,12 @@ export default function AdminEmailSettings() {
                 <Label>Worksheet sender</Label>
                 <Input type="email" value={form.worksheet_from_email} onChange={(e) => set("worksheet_from_email", e.target.value)} placeholder="noreply@..." className="mt-1" />
               </div>
+            </div>
+            <Separator />
+            <div>
+              <Label>Support ticket inbox</Label>
+              <Input type="email" value={form.support_inbox_email} onChange={(e) => set("support_inbox_email", e.target.value)} placeholder="shizu@remaxex.com" className="mt-1" />
+              <p className="mt-1 text-[11px] text-muted-foreground">New support tickets opened by agents are emailed here.</p>
             </div>
           </CardContent>
         </Card>

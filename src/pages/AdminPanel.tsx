@@ -66,6 +66,7 @@ import {
   LifeBuoy,
   Building2,
   Mail,
+  CalendarClock,
 } from "lucide-react";
 import remaxLogo from "@/assets/remax-excellence-logo.png";
 import AdminHelpBot from "@/components/admin/AdminHelpBot";
@@ -102,6 +103,7 @@ const ADMIN_CARDS = [
   { key: "events", route: "/admin/events", title: "Events management", description: "Create events, notify agents, track RSVPs", icon: <Bell className="h-6 w-6 text-cyan-600" />, iconWrapClass: "bg-cyan-500/15" },
   { key: "support", route: "/admin/support", title: "Support inbox", description: "Chat with agents, manage tickets", icon: <Bell className="h-6 w-6 text-orange-600" />, iconWrapClass: "bg-orange-500/15" },
   { key: "support-categories", route: "/admin/support-categories", title: "Support categories", description: "Marketing, vendors, tech & more support topics", icon: <LifeBuoy className="h-6 w-6 text-orange-700" />, iconWrapClass: "bg-orange-600/15" },
+  { key: "booking-links", route: "/admin/booking-links", title: "Booking links", description: "Calendly links shown under Support for agents to book", icon: <CalendarClock className="h-6 w-6 text-emerald-700" />, iconWrapClass: "bg-emerald-600/15" },
   { key: "offices", route: "/admin/offices", title: "Offices & booking emails", description: "Locations + who gets room-booking inquiries", icon: <Building2 className="h-6 w-6 text-blue-700" />, iconWrapClass: "bg-blue-600/15" },
   { key: "email-settings", route: "/admin/email-settings", title: "Email settings", description: "Sender address, worksheet recipient, portal name", icon: <Mail className="h-6 w-6 text-rose-600" />, iconWrapClass: "bg-rose-500/15" },
   { key: "social-share", route: "/admin/social-share", title: "Social share icons", description: "WhatsApp, Facebook, LinkedIn, X, email, copy", icon: <Share2 className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />, iconWrapClass: "bg-emerald-500/15" },

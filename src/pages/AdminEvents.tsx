@@ -89,6 +89,8 @@ export default function AdminEvents() {
     max_attendees: "",
     notify_agents: true,
     reminder_hours_before: "24",
+    recurrence: "none",
+    repeat_until: "",
   });
 
   useEffect(() => {
@@ -136,6 +138,8 @@ export default function AdminEvents() {
       max_attendees: "",
       notify_agents: true,
       reminder_hours_before: "24",
+      recurrence: "none",
+      repeat_until: "",
     });
     setDialogOpen(true);
   };
@@ -153,6 +157,8 @@ export default function AdminEvents() {
       max_attendees: event.max_attendees?.toString() || "",
       notify_agents: event.notify_agents ?? true,
       reminder_hours_before: event.reminder_hours_before?.toString() || "24",
+      recurrence: "none",
+      repeat_until: "",
     });
     setDialogOpen(true);
   };
@@ -183,14 +189,30 @@ export default function AdminEvents() {
       if (error) toast({ variant: "destructive", title: error.message });
       else { toast({ title: "Event updated" }); setDialogOpen(false); fetchData(); }
     } else {
-      const { error } = await supabase.from("events").insert({ ...payload, created_by: user!.id });
+      // Build the list of occurrence start dates (recurring series).
+      const starts = buildRecurrenceDates(form.event_date, form.recurrence, form.repeat_until);
+      const durationMs = form.end_date
+        ? new Date(form.end_date).getTime() - new Date(form.event_date).getTime()
+        : 0;
+
+      const rows = starts.map((startIso) => ({
+        ...payload,
+        event_date: startIso,
+        end_date: durationMs > 0 ? new Date(new Date(startIso).getTime() + durationMs).toISOString() : null,
+        created_by: user!.id,
+      }));
+
+      const { error } = await supabase.from("events").insert(rows);
       if (error) toast({ variant: "destructive", title: error.message });
       else {
-        toast({ title: "Event created" });
+        toast({
+          title: rows.length > 1 ? `${rows.length} sessions created` : "Event created",
+          description: rows.length > 1 ? `Repeating ${form.recurrence} until ${format(new Date(starts[starts.length - 1]), "MMM d, yyyy")}` : undefined,
+        });
         setDialogOpen(false);
         fetchData();
 
-        // Notify all agents about new event if enabled
+        // Notify all agents once about the new (series) if enabled
         if (form.notify_agents) {
           notifyAllAgents(form.title, form.event_date, form.location);
         }
@@ -198,6 +220,26 @@ export default function AdminEvents() {
     }
     setSaving(false);
   };
+
+  /** Returns ISO start times for a recurring series (capped at 104 occurrences). */
+  function buildRecurrenceDates(startLocal: string, recurrence: string, untilLocal: string): string[] {
+    const start = new Date(startLocal);
+    if (recurrence === "none" || !untilLocal) return [start.toISOString()];
+    const until = new Date(untilLocal);
+    until.setHours(23, 59, 59, 999);
+    const out: string[] = [];
+    const cursor = new Date(start);
+    let guard = 0;
+    while (cursor <= until && guard < 104) {
+      out.push(new Date(cursor).toISOString());
+      if (recurrence === "weekly") cursor.setDate(cursor.getDate() + 7);
+      else if (recurrence === "biweekly") cursor.setDate(cursor.getDate() + 14);
+      else if (recurrence === "monthly") cursor.setMonth(cursor.getMonth() + 1);
+      else break;
+      guard++;
+    }
+    return out.length ? out : [start.toISOString()];
+  }
 
   const notifyAllAgents = async (eventTitle: string, eventDate: string, location: string) => {
     setNotifying(true);
@@ -418,6 +460,40 @@ export default function AdminEvents() {
                 <Input type="number" value={form.reminder_hours_before} onChange={(e) => setForm({ ...form, reminder_hours_before: e.target.value })} placeholder="24" />
               </div>
             </div>
+
+            {!editing && (
+              <div className="rounded-lg border border-border bg-muted/30 p-3 space-y-3">
+                <Label className="text-sm font-semibold">Repeat (recurring sessions)</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs">Frequency</Label>
+                    <Select value={form.recurrence} onValueChange={(v) => setForm({ ...form, recurrence: v })}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Does not repeat</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="biweekly">Every 2 weeks</SelectItem>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-xs">Repeat until</Label>
+                    <Input
+                      type="date"
+                      value={form.repeat_until}
+                      onChange={(e) => setForm({ ...form, repeat_until: e.target.value })}
+                      disabled={form.recurrence === "none"}
+                    />
+                  </div>
+                </div>
+                {form.recurrence !== "none" && (
+                  <p className="text-[11px] text-muted-foreground">
+                    Creates a session on the calendar for each {form.recurrence === "weekly" ? "week" : form.recurrence === "biweekly" ? "2 weeks" : "month"} from the start date until the "repeat until" date.
+                  </p>
+                )}
+              </div>
+            )}
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <Switch checked={form.notify_agents} onCheckedChange={(v) => setForm({ ...form, notify_agents: v })} />

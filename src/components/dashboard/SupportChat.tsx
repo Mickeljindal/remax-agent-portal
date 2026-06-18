@@ -15,6 +15,8 @@ import SupportChatShowcase from "@/components/dashboard/SupportChatShowcase";
 import SupportResourceCards from "@/components/dashboard/SupportResourceCards";
 import { useSectionLabels } from "@/hooks/useSectionLabels";
 import { useSupportCategories } from "@/hooks/useSupportCategories";
+import { useBookingLinks } from "@/hooks/useBookingLinks";
+import { callServerApi } from "@/lib/serverApi";
 
 interface Ticket {
   id: string;
@@ -48,6 +50,7 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const { label } = useSectionLabels();
   const { categories } = useSupportCategories();
+  const { setting: booking } = useBookingLinks();
   const supportLabel = label("support", "Marketing & Tech Support", "Get help from our support team");
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -129,6 +132,22 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
       setNewSubject("");
       setNewDescription("");
       toast({ title: "Ticket created!" });
+
+      // Email the support inbox (admin-configured) about the new ticket — best-effort.
+      try {
+        const { data: cfg } = await supabase
+          .from("portal_settings").select("value").eq("key", "email_settings").maybeSingle();
+        const inbox = (cfg?.value as { support_inbox_email?: string } | null)?.support_inbox_email;
+        if (inbox) {
+          callServerApi("send-notification", {
+            type: "agent_signup",
+            recipientEmail: inbox,
+            recipientName: "Support",
+            subject: `New support ticket: ${t.subject}`,
+            body: `A new support ticket was opened.\n\nCategory: ${t.category}\nPriority: ${newPriority}\nSubject: ${t.subject}\n${newDescription.trim() ? `\nMessage:\n${newDescription.trim()}` : ""}\n\nOpen the admin support inbox to reply.`,
+          }).catch(() => {});
+        }
+      } catch { /* ignore */ }
     }
   };
 
@@ -201,14 +220,35 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => setBookOpen(true)} className="gap-2">
-            <Calendar className="h-4 w-4" /> Book a meeting
-          </Button>
           <Button onClick={() => { setNewCategory(categories[0]?.key || "general"); setShowNewTicket(true); }} className="gap-2">
             <Plus className="h-4 w-4" /> New Ticket
           </Button>
         </div>
       </div>
+
+      {/* Booking links (Calendly etc.) — admin-managed, shown right under support */}
+      {booking.links.length > 0 && (
+        <Card className="mb-4 border-border bg-gradient-to-br from-[#1a4d8f]/5 to-transparent">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Calendar className="h-5 w-5 text-[#1a4d8f]" />
+              <h3 className="font-display font-semibold text-foreground">{booking.title}</h3>
+            </div>
+            {booking.subtitle && <p className="text-sm text-muted-foreground mb-3">{booking.subtitle}</p>}
+            <div className="flex flex-wrap gap-2">
+              {booking.links.map((l, i) => (
+                <a key={i} href={l.url} target="_blank" rel="noopener noreferrer"
+                   className="inline-flex flex-col rounded-lg border border-[#1a4d8f]/30 bg-card px-4 py-2.5 text-left transition-all hover:border-[#1a4d8f] hover:shadow-sm">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-[#1a4d8f]">
+                    <Calendar className="h-4 w-4" /> {l.label}
+                  </span>
+                  {l.note && <span className="mt-0.5 text-[11px] text-muted-foreground">{l.note}</span>}
+                </a>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div id="support-tickets" className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Ticket List */}

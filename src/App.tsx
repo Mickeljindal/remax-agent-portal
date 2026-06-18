@@ -39,6 +39,7 @@ import AdminSectionOrder from "./pages/AdminSectionOrder";
 import AdminSupportCategories from "./pages/AdminSupportCategories";
 import AdminOffices from "./pages/AdminOffices";
 import AdminEmailSettings from "./pages/AdminEmailSettings";
+import AdminBookingLinks from "./pages/AdminBookingLinks";
 
 const queryClient = new QueryClient();
 
@@ -81,6 +82,7 @@ const App = () => (
           <Route path="/admin/support-categories" element={<AdminSupportCategories />} />
           <Route path="/admin/offices" element={<AdminOffices />} />
           <Route path="/admin/email-settings" element={<AdminEmailSettings />} />
+          <Route path="/admin/booking-links" element={<AdminBookingLinks />} />
           <Route path="/pending" element={<PendingActivation />} />
           <Route path="/quote" element={<Quote />} />
           <Route path="/directory" element={<AgentDirectory />} />

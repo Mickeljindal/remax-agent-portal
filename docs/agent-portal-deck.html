@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agent Portal — Sales Deck</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+    --brand:#1a4d8f; --accent:#e2231a; --bg:#f1f5f9; --card:#ffffff;
+    --grad: linear-gradient(135deg,#1a4d8f 0%,#0a2a52 100%);
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;
+  }
+  /* Deck layout */
+  .deck{max-width:1180px; margin:0 auto; padding:28px 20px 80px}
+  .slide{
+    position:relative; background:var(--card); border:1px solid var(--line);
+    border-radius:18px; padding:56px 60px; margin:0 auto 26px; min-height:600px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06); overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  .slide .num{position:absolute; top:22px; right:28px; font-size:12px; color:var(--muted); letter-spacing:.08em}
+  .kicker{display:inline-block; font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:14px}
+  h1{font-size:46px; line-height:1.08; letter-spacing:-.02em; margin-bottom:18px}
+  h2{font-size:32px; line-height:1.15; letter-spacing:-.01em; margin-bottom:10px}
+  h3{font-size:18px; margin-bottom:6px}
+  p{color:var(--muted); font-size:17px; line-height:1.6}
+  .lead{font-size:20px; color:#334155; max-width:760px}
+  .pill{display:inline-flex; align-items:center; gap:8px; background:#eef2f7; color:var(--brand);
+    font-weight:600; font-size:13px; padding:7px 13px; border-radius:999px}
+  .grid{display:grid; gap:18px; margin-top:26px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .feature{background:#f8fafc; border:1px solid var(--line); border-radius:14px; padding:20px}
+  .feature .ic{width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:20px; margin-bottom:12px; background:rgba(26,77,143,.1)}
+  .feature h3{font-size:16px; margin-bottom:5px}
+  .feature p{font-size:14px; line-height:1.5}
+  ul.clean{list-style:none; margin-top:18px; display:grid; gap:12px}
+  ul.clean li{display:flex; gap:12px; font-size:17px; color:#334155; line-height:1.5}
+  ul.clean li::before{content:"✓"; color:#16a34a; font-weight:800; flex:0 0 auto}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:42px; align-items:center; flex:1}
+  .center{display:flex; flex-direction:column; justify-content:center; flex:1}
+  .cover{background:var(--grad); color:#fff; border:none}
+  .cover h1{font-size:56px}
+  .cover p{color:rgba(255,255,255,.8)}
+  .cover .pill{background:rgba(255,255,255,.14); color:#fff}
+  .logo{width:52px;height:52px;border-radius:14px;background:#fff;color:var(--brand);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;margin-bottom:26px}
+  .stat{font-size:44px; font-weight:800; color:var(--brand); letter-spacing:-.02em}
+  .stat small{display:block; font-size:14px; font-weight:600; color:var(--muted); margin-top:4px}
+  table{width:100%; border-collapse:collapse; margin-top:22px; font-size:15px}
+  th,td{text-align:left; padding:13px 14px; border-bottom:1px solid var(--line)}
+  th{background:#f8fafc; font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  td.tier{font-weight:700; color:var(--brand)}
+  .price-row{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:26px}
+  .price{border:1px solid var(--line); border-radius:16px; padding:26px; background:#f8fafc}
+  .price.featured{border:2px solid var(--accent); background:#fff; box-shadow:0 12px 30px rgba(226,35,26,.08)}
+  .price h3{font-size:20px; color:var(--brand)}
+  .price .tag{font-size:12px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.1em}
+  .price ul{list-style:none; margin-top:14px; display:grid; gap:9px}
+  .price ul li{font-size:14px; color:#475569; display:flex; gap:8px}
+  .price ul li::before{content:"•"; color:var(--accent)}
+  .foot{margin-top:auto; padding-top:26px; color:var(--muted); font-size:13px; display:flex; justify-content:space-between}
+  .cta{display:inline-block; margin-top:26px; background:var(--accent); color:#fff; font-weight:700;
+    padding:15px 30px; border-radius:12px; font-size:17px; text-decoration:none}
+  .controls{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:50}
+  .controls button{background:var(--ink); color:#fff; border:none; border-radius:10px; padding:10px 16px;
+    font-size:14px; cursor:pointer; opacity:.85}
+  .controls button:hover{opacity:1}
+  .shot{width:100%; border-radius:12px; border:1px solid var(--line); box-shadow:0 10px 26px rgba(15,23,42,.12); margin-top:8px}
+  .shotwrap{flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden; max-height:430px}
+  .shotwrap img{max-height:430px; width:auto; max-width:100%; object-fit:contain; border-radius:12px; border:1px solid var(--line); box-shadow:0 10px 26px rgba(15,23,42,.12)}
+  .flow{display:flex; align-items:center; gap:14px; margin-top:30px; flex-wrap:wrap}
+  .flow .step{background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:16px 18px; flex:1; min-width:150px}
+  .flow .arrow{color:var(--accent); font-size:24px; font-weight:800}
+  .badge-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:22px}
+  .tech{background:#0f172a; color:#e2e8f0; font-size:13px; font-weight:600; padding:8px 14px; border-radius:8px}
+  @media print{
+    body{background:#fff}
+    .controls{display:none}
+    .deck{max-width:none; padding:0}
+    .slide{break-after:page; page-break-after:always; margin:0; border:none; border-radius:0;
+      box-shadow:none; min-height:100vh}
+  }
+  @media (max-width:760px){
+    .slide{padding:34px 24px}
+    .two,.g2,.g3,.g4,.price-row{grid-template-columns:1fr}
+    h1{font-size:34px}.cover h1{font-size:40px}h2{font-size:26px}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 1 — COVER -->
+  <section class="slide cover">
+    <span class="num">01</span>
+    <div class="center">
+      <div class="logo">A</div>
+      <span class="kicker" style="color:#fff">Brokerage Software · White-Label</span>
+      <h1>The Agent Portal</h1>
+      <p class="lead" style="color:rgba(255,255,255,.9)">One branded platform to onboard, train, equip, and support every agent in your brokerage — fully controlled by your team.</p>
+      <div class="badge-row">
+        <span class="pill">Training &amp; Certificates</span>
+        <span class="pill">Pre-Con Listings</span>
+        <span class="pill">Documents &amp; Tools</span>
+        <span class="pill">Support &amp; Booking</span>
+      </div>
+    </div>
+    <div class="foot" style="color:rgba(255,255,255,.7); border-top:1px solid rgba(255,255,255,.15)">
+      <span>Prepared by: [Your Company]</span><span>[Contact · Email · Phone]</span>
+    </div>
+  </section>
+
+  <!-- 2 — THE PROBLEM -->
+  <section class="slide">
+    <span class="num">02</span>
+    <span class="kicker">The Problem</span>
+    <h2>Brokerages run on scattered, unmanaged tools</h2>
+    <div class="grid g2">
+      <div class="feature"><div class="ic">📁</div><h3>Content chaos</h3><p>Forms, price lists, and marketing live across Google Drives, WhatsApp groups, and endless email threads.</p></div>
+      <div class="feature"><div class="ic">🎓</div><h3>Inconsistent onboarding</h3><p>New agents are trained ad-hoc. No tracking of who completed what.</p></div>
+      <div class="feature"><div class="ic">🏗️</div><h3>Pre-con disorganized</h3><p>Inventory, worksheets, and co-op details are hard to find and share.</p></div>
+      <div class="feature"><div class="ic">🛟</div><h3>Support overload</h3><p>Admins answer the same questions repeatedly across calls and chats.</p></div>
+    </div>
+    <p class="lead" style="margin-top:26px">The result: wasted admin time, slow onboarding, and an inconsistent brand experience.</p>
+  </section>
+
+  <!-- 3 — THE SOLUTION -->
+  <section class="slide">
+    <span class="num">03</span>
+    <div class="two">
+      <div>
+        <span class="kicker">The Solution</span>
+        <h2>One portal. Fully branded. Admin-controlled.</h2>
+        <ul class="clean">
+          <li>A single secure hub for every agent</li>
+          <li>Your logo, colors, name, and domain — no third-party branding</li>
+          <li>Non-technical admins control titles, ordering, content, and emails</li>
+          <li>Role-based access with an approval step</li>
+          <li>Works on desktop, tablet, and mobile · light &amp; dark mode</li>
+        </ul>
+      </div>
+      <div>
+        <div class="grid g2" style="margin-top:0">
+          <div class="feature" style="text-align:center"><div class="stat">1<small>Unified platform</small></div></div>
+          <div class="feature" style="text-align:center"><div class="stat">16+<small>Feature modules</small></div></div>
+          <div class="feature" style="text-align:center"><div class="stat">100%<small>White-label</small></div></div>
+          <div class="feature" style="text-align:center"><div class="stat">0<small>Dev needed daily</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 — FEATURE OVERVIEW -->
+  <section class="slide">
+    <span class="num">04</span>
+    <span class="kicker">Platform At A Glance</span>
+    <h2>Everything your agents need, in one place</h2>
+    <div class="grid g4">
+      <div class="feature"><div class="ic">🔐</div><h3>Secure Access</h3><p>Email login, approval workflow, roles.</p></div>
+      <div class="feature"><div class="ic">📊</div><h3>Dashboard</h3><p>Calendar, progress, reorderable sections.</p></div>
+      <div class="feature"><div class="ic">🎓</div><h3>Training / LMS</h3><p>Video courses, quizzes, certificates.</p></div>
+      <div class="feature"><div class="ic">🏗️</div><h3>Pre-Con Listings</h3><p>Search, filter, share, co-op display.</p></div>
+      <div class="feature"><div class="ic">📝</div><h3>Worksheets</h3><p>Digital client registration + email.</p></div>
+      <div class="feature"><div class="ic">📄</div><h3>Document Libraries</h3><p>Forms &amp; buyer presentation kits.</p></div>
+      <div class="feature"><div class="ic">🧮</div><h3>Calculators</h3><p>HST &amp; commission estimators.</p></div>
+      <div class="feature"><div class="ic">🤝</div><h3>Vendors</h3><p>Approved trades &amp; services directory.</p></div>
+      <div class="feature"><div class="ic">💬</div><h3>Support Center</h3><p>Ticket chat with categories.</p></div>
+      <div class="feature"><div class="ic">🚪</div><h3>Office Booking</h3><p>Meeting rooms, per-office routing.</p></div>
+      <div class="feature"><div class="ic">🔔</div><h3>Notifications</h3><p>Email + in-app, fully controllable.</p></div>
+      <div class="feature"><div class="ic">📣</div><h3>Events</h3><p>Announcements &amp; RSVPs.</p></div>
+    </div>
+  </section>
+
+  <!-- 5 — TRAINING -->
+  <section class="slide">
+    <span class="num">05</span>
+    <div class="two">
+      <div>
+        <span class="kicker">Module · Training</span>
+        <h2>A built-in learning platform</h2>
+        <ul class="clean">
+          <li>Courses with categories, thumbnails &amp; mandatory flags</li>
+          <li>Video modules — upload to your server or embed YouTube/Vimeo</li>
+          <li>Live upload progress bar (%, speed, size)</li>
+          <li>Watch-time tracking &amp; automatic completion</li>
+          <li>Auto-issued completion certificates</li>
+          <li>Assign courses to specific agents</li>
+          <li>Admin analytics: watch time, completions, per-agent stats</li>
+        </ul>
+      </div>
+      <div class="shotwrap"><img src="screenshots/03-courses.png" alt="Training & courses"/></div>
+    </div>
+  </section>
+
+  <!-- 5b — DASHBOARD TOUR -->
+  <section class="slide">
+    <span class="num">05·b</span>
+    <span class="kicker">Product Tour · Agent Dashboard</span>
+    <h2>What your agents see on day one</h2>
+    <div class="shotwrap" style="max-height:440px; margin-top:14px"><img src="screenshots/02-dashboard.png" alt="Agent dashboard" style="max-height:440px"/></div>
+  </section>
+
+  <!-- 6 — PRE-CON -->
+  <section class="slide">
+    <span class="num">06</span>
+    <span class="kicker">Module · Pre-Construction</span>
+    <h2>Manage and share pre-con inventory</h2>
+    <div class="grid g3">
+      <div class="feature"><div class="ic">🔎</div><h3>Search &amp; Filter</h3><p>By city, type, status, and keywords.</p></div>
+      <div class="feature"><div class="ic">💲</div><h3>Co-op Control</h3><p>Show/hide commission per listing — or hide in front of clients.</p></div>
+      <div class="feature"><div class="ic">📲</div><h3>One-Click Share</h3><p>WhatsApp, Facebook, LinkedIn, X, email, copy link.</p></div>
+      <div class="feature"><div class="ic">📐</div><h3>Admin Layout</h3><p>Control pagination &amp; 3 or 4 cards per row.</p></div>
+      <div class="feature"><div class="ic">📞</div><h3>Click-to-Call</h3><p>Per-listing phone with show/hide.</p></div>
+      <div class="feature"><div class="ic">📝</div><h3>Worksheets</h3><p>Digital client registration emailed to admin &amp; agent.</p></div>
+    </div>
+    <div class="shotwrap" style="max-height:300px; margin-top:22px"><img src="screenshots/04-listings.png" alt="Pre-construction listings" style="max-height:300px"/></div>
+  </section>
+
+  <!-- 7 — SUPPORT + OFFICE -->
+  <section class="slide">
+    <span class="num">07</span>
+    <span class="kicker">Modules · Support &amp; Operations</span>
+    <h2>Support, vendors, and office booking</h2>
+    <div class="grid g2">
+      <div class="feature"><div class="ic">💬</div><h3>Support Center</h3><p>Real-time ticket chat between agents and admins. Admin-managed categories (Marketing, Tech, Vendors, Billing…), priorities, and a full status workflow with email + in-app alerts.</p></div>
+      <div class="feature"><div class="ic">🚪</div><h3>Office &amp; Room Booking</h3><p>Multiple locations with maps and hours. Hourly room booking grid. Each office's inquiries route to its own inbox. Confirmations to the agent.</p></div>
+      <div class="feature"><div class="ic">🤝</div><h3>Approved Vendors</h3><p>A branded directory of brokerage-approved trades and services with contact details.</p></div>
+      <div class="feature"><div class="ic">📄</div><h3>Document Libraries</h3><p>Shared forms (clauses, schedule B, deal sheets) and buyer presentation kits — uploaded files or linked resources.</p></div>
+    </div>
+  </section>
+
+  <!-- 8 — ADMIN CONTROL -->
+  <section class="slide">
+    <span class="num">08</span>
+    <div class="two">
+      <div>
+        <span class="kicker">Admin Power</span>
+        <h2>Your team runs it — no developer required</h2>
+        <ul class="clean">
+          <li>Rename every section title &amp; subtitle</li>
+          <li>Reorder dashboard sections for all agents</li>
+          <li>Manage agents: approve, reset password, promote, remove</li>
+          <li>Full email &amp; notification control center</li>
+          <li>Per-office booking email routing</li>
+          <li>Upload guidance (sizes, formats, limits) on every image field</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feature">
+          <div class="ic">⚙️</div>
+          <h3>Granular notification control</h3>
+          <p>Toggle every email use case independently:</p>
+          <ul class="clean" style="margin-top:12px">
+            <li style="font-size:14px">Agent: bookings, courses, certificates, reminders, support replies</li>
+            <li style="font-size:14px">Admin: sign-ups, completions, worksheets, tickets</li>
+            <li style="font-size:14px">Broadcast: new course / listing / event to all agents</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 — ARCHITECTURE -->
+  <section class="slide">
+    <span class="num">09</span>
+    <span class="kicker">Technology</span>
+    <h2>Modern, secure, and cost-efficient</h2>
+    <div class="grid g3">
+      <div class="feature"><div class="ic">⚛️</div><h3>Frontend</h3><p>React + TypeScript, Tailwind, responsive UI.</p></div>
+      <div class="feature"><div class="ic">🗄️</div><h3>Database &amp; Auth</h3><p>PostgreSQL with row-level security &amp; real-time.</p></div>
+      <div class="feature"><div class="ic">🖥️</div><h3>Single App Server</h3><p>One Node process: app, uploads, email, APIs.</p></div>
+      <div class="feature"><div class="ic">✉️</div><h3>Branded Email</h3><p>Sent from the client's own verified domain.</p></div>
+      <div class="feature"><div class="ic">💾</div><h3>Server File Storage</h3><p>Videos/PDFs on disk — no per-file cloud fees.</p></div>
+      <div class="feature"><div class="ic">🔒</div><h3>Data Ownership</h3><p>Client owns the database and all content.</p></div>
+    </div>
+    <div class="badge-row">
+      <span class="tech">React</span><span class="tech">TypeScript</span><span class="tech">PostgreSQL</span>
+      <span class="tech">Node.js</span><span class="tech">Tailwind CSS</span><span class="tech">Self-hostable</span>
+    </div>
+  </section>
+
+  <!-- 10 — WHITE LABEL + DELIVERY -->
+  <section class="slide">
+    <span class="num">10</span>
+    <span class="kicker">Branding &amp; Delivery</span>
+    <h2>Delivered as your client's own product</h2>
+    <div class="two">
+      <div>
+        <h3 style="margin-top:6px">Fully white-labeled</h3>
+        <ul class="clean">
+          <li>Logo, colors, portal name &amp; domain</li>
+          <li>Branded transactional emails</li>
+          <li>No third-party branding shown to agents or clients</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-top:6px">Every deployment includes</h3>
+        <ul class="clean">
+          <li>Full setup, database &amp; branding config</li>
+          <li>Email domain connection + templates</li>
+          <li>Admin account + walkthrough</li>
+          <li>Seeded starter content</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — TIMELINE -->
+  <section class="slide">
+    <span class="num">11</span>
+    <span class="kicker">Implementation</span>
+    <h2>Live in about two weeks</h2>
+    <div class="flow">
+      <div class="step"><h3>Phase 1</h3><p>Branding, domain &amp; email · 2–3 days</p></div>
+      <span class="arrow">→</span>
+      <div class="step"><h3>Phase 2</h3><p>Content loading · 3–5 days</p></div>
+      <span class="arrow">→</span>
+      <div class="step"><h3>Phase 3</h3><p>Admin training + UAT · 2–3 days</p></div>
+      <span class="arrow">→</span>
+      <div class="step"><h3>Phase 4</h3><p>Go-live + handover · 1 day</p></div>
+    </div>
+    <p class="lead" style="margin-top:28px">Timelines depend on how quickly content (listings, documents, courses) is provided.</p>
+  </section>
+
+  <!-- 12 — PACKAGES -->
+  <section class="slide">
+    <span class="num">12</span>
+    <span class="kicker">Packaging</span>
+    <h2>Flexible plans for any brokerage</h2>
+    <div class="price-row">
+      <div class="price">
+        <span class="tag">Starter</span>
+        <h3>Core Portal</h3>
+        <ul>
+          <li>Auth + approval</li><li>Dashboard</li><li>Listings</li>
+          <li>Documents &amp; vendors</li><li>Calculators &amp; profiles</li>
+        </ul>
+      </div>
+      <div class="price featured">
+        <span class="tag">Professional</span>
+        <h3>Most Popular</h3>
+        <ul>
+          <li>Everything in Starter</li><li>Training / LMS + certificates</li>
+          <li>Support center</li><li>Office booking</li>
+          <li>Worksheets + notifications</li>
+        </ul>
+      </div>
+      <div class="price">
+        <span class="tag">Enterprise</span>
+        <h3>Full Suite</h3>
+        <ul>
+          <li>Everything in Professional</li><li>Property management</li>
+          <li>Events &amp; RSVPs</li><li>Broadcast emails</li>
+          <li>Advanced branding + priority support</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:20px; font-size:13px">Add-ons: hosting &amp; maintenance retainer, content-loading service, custom features. <em>Pricing tailored per engagement.</em></p>
+  </section>
+
+  <!-- 13 — WHY US / CLOSE -->
+  <section class="slide cover">
+    <span class="num">13</span>
+    <div class="center">
+      <span class="kicker" style="color:#fff">Why This Platform</span>
+      <h1 style="font-size:42px">Built for real estate.<br/>Run by your team.</h1>
+      <div class="grid g2" style="margin-top:8px">
+        <ul class="clean">
+          <li style="color:#fff">Real estate workflows, not a generic intranet</li>
+          <li style="color:#fff">Admin-first — no developers for daily use</li>
+        </ul>
+        <ul class="clean">
+          <li style="color:#fff">One codebase, fast to brand per client</li>
+          <li style="color:#fff">No data lock-in · cost-efficient hosting</li>
+        </ul>
+      </div>
+      <a class="cta" href="#">Book a live demo →</a>
+    </div>
+    <div class="foot" style="color:rgba(255,255,255,.7); border-top:1px solid rgba(255,255,255,.15)">
+      <span>[Your Company]</span><span>[Email] · [Phone] · [Website]</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button onclick="window.print()">⤓ Export PDF</button>
+  <button onclick="document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()">⤢ Present</button>
+</div>
+</body>
+</html>
