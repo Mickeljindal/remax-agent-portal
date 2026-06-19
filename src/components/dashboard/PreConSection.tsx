@@ -148,6 +148,7 @@ export default function PreConSection({
   const [projects, setProjects] = useState<PreconProject[]>([]);
   const [assets, setAssets] = useState<PreconAsset[]>([]);
   const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
+  const [statuses, setStatuses] = useState<string[]>([]);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [detail, setDetail] = useState<PreconProject | null>(null);
   const [cityFilter, setCityFilter] = useState<string>("all");
@@ -191,6 +192,12 @@ export default function PreConSection({
         .eq("is_active", true)
         .order("sort_order");
       setPropertyTypes(((typeData as { name: string }[]) || []).map((t) => t.name).filter(Boolean));
+      const { data: statusData } = await supabase
+        .from("precon_statuses")
+        .select("name")
+        .eq("is_active", true)
+        .order("sort_order");
+      setStatuses(((statusData as { name: string }[]) || []).map((s) => s.name).filter(Boolean));
     };
     load();
   }, []);
@@ -242,7 +249,10 @@ export default function PreConSection({
       if (cityFilter !== "all" && p.city_id !== cityFilter) return false;
       if (propertyFilter !== "all" && p.property_type !== "all" && p.property_type !== propertyFilter) return false;
       if (statusFilter !== "all") {
-        if (statusFilter === "ready") {
+        if (statuses.length > 0 && statuses.includes(statusFilter)) {
+          // Custom admin-managed status — exact match on the project's status name.
+          if ((p.status || "").trim().toLowerCase() !== statusFilter.trim().toLowerCase()) return false;
+        } else if (statusFilter === "ready") {
           if (!p.status.toLowerCase().includes("ready")) return false;
         } else {
           const b = saleBucket(p.status);
@@ -256,7 +266,7 @@ export default function PreConSection({
       }
       return true;
     });
-  }, [projects, cityFilter, propertyFilter, statusFilter, searchQuery]);
+  }, [projects, cityFilter, propertyFilter, statusFilter, statuses, searchQuery]);
 
   const demoCities = useMemo(() => [...new Set(demoListings.map((l) => l.cityName))].sort(), []);
   const filteredDemoListings = useMemo(() => {
@@ -351,9 +361,23 @@ export default function PreConSection({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
-                <SelectItem value="selling">Now selling</SelectItem>
-                <SelectItem value="coming_soon">Coming soon</SelectItem>
-                <SelectItem value="ready">Ready</SelectItem>
+                {PORTAL_SHOWCASE ? (
+                  <>
+                    <SelectItem value="selling">Now selling</SelectItem>
+                    <SelectItem value="coming_soon">Coming soon</SelectItem>
+                    <SelectItem value="ready">Ready</SelectItem>
+                  </>
+                ) : statuses.length > 0 ? (
+                  statuses.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))
+                ) : (
+                  <>
+                    <SelectItem value="selling">Now selling</SelectItem>
+                    <SelectItem value="coming_soon">Coming soon</SelectItem>
+                    <SelectItem value="ready">Ready</SelectItem>
+                  </>
+                )}
               </SelectContent>
             </Select>
           </div>
