@@ -18,6 +18,7 @@ export default function AdminDisplaySettings() {
   const [pageSize, setPageSize] = useState(6);
   const [enabled, setEnabled] = useState(true);
   const [gridCols, setGridCols] = useState(3);
+  const [showBookmarks, setShowBookmarks] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -29,12 +30,13 @@ export default function AdminDisplaySettings() {
     setPageSize(setting.page_size);
     setEnabled(setting.enabled);
     setGridCols(setting.grid_cols);
+    setShowBookmarks(setting.show_bookmarks);
   }, [setting]);
 
   const handleSave = async () => {
     const size = Math.max(1, Math.min(48, Number(pageSize) || 6));
     setSaving(true);
-    const ok = await save({ page_size: size, enabled, grid_cols: gridCols });
+    const ok = await save({ page_size: size, enabled, grid_cols: gridCols, show_bookmarks: showBookmarks });
     setSaving(false);
     if (ok) toast({ title: "Saved", description: "Listing display settings updated for all agents." });
     else toast({ variant: "destructive", title: "Could not save" });
@@ -110,6 +112,14 @@ export default function AdminDisplaySettings() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border p-3">
+              <div>
+                <Label className="font-medium">Show bookmark button</Label>
+                <p className="text-xs text-muted-foreground">Lets agents save listings to their bookmarks. Turn off to hide it.</p>
+              </div>
+              <Switch checked={showBookmarks} onCheckedChange={setShowBookmarks} />
             </div>
 
             <Button onClick={handleSave} disabled={saving} className="gap-2">

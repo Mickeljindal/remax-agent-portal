@@ -147,6 +147,7 @@ export default function PreConSection({
 }: PreConSectionProps) {
   const [projects, setProjects] = useState<PreconProject[]>([]);
   const [assets, setAssets] = useState<PreconAsset[]>([]);
+  const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [detail, setDetail] = useState<PreconProject | null>(null);
   const [cityFilter, setCityFilter] = useState<string>("all");
@@ -184,6 +185,12 @@ export default function PreConSection({
       }
       const { data: assetData } = await supabase.from("precon_assets").select("*").eq("is_active", true);
       setAssets((assetData as PreconAsset[]) || []);
+      const { data: typeData } = await supabase
+        .from("precon_property_types")
+        .select("name")
+        .eq("is_active", true)
+        .order("sort_order");
+      setPropertyTypes(((typeData as { name: string }[]) || []).map((t) => t.name).filter(Boolean));
     };
     load();
   }, []);
@@ -322,9 +329,17 @@ export default function PreConSection({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All types</SelectItem>
-                <SelectItem value="condo">Condos</SelectItem>
-                <SelectItem value="home">Homes</SelectItem>
-                <SelectItem value="townhome">Townhomes</SelectItem>
+                {PORTAL_SHOWCASE ? (
+                  <>
+                    <SelectItem value="condo">Condos</SelectItem>
+                    <SelectItem value="home">Homes</SelectItem>
+                    <SelectItem value="townhome">Townhomes</SelectItem>
+                  </>
+                ) : (
+                  propertyTypes.map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -453,67 +468,65 @@ export default function PreConSection({
                 </div>
               </button>
               <CardContent className="pt-4">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-foreground text-lg group-hover:text-accent transition-colors line-clamp-1">
-                      {project.name}
-                    </h3>
-                    {project.location && (
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                        <MapPin className="h-3 w-3 shrink-0" /> {project.location}
-                      </p>
-                    )}
-                    {(project.precon_cities?.name || project.property_type) && (
-                      <p className="mt-1 text-[10px] text-muted-foreground capitalize">
-                        {project.precon_cities?.name || "—"} ·{" "}
-                        {project.property_type === "condo"
-                          ? "Condo"
-                          : project.property_type === "home"
-                            ? "Home"
-                            : project.property_type === "townhome"
-                              ? "Townhome"
-                              : "Mixed"}
-                      </p>
-                    )}
-                    {project.price_range && (
-                      <p className="text-sm font-semibold text-accent mt-2">{project.price_range}</p>
-                    )}
-                    {isCoopVisibleToAgents(project, hideCommissionRates) &&
-                      project.commission_rate_percent != null &&
-                      !Number.isNaN(Number(project.commission_rate_percent)) && (
-                        <PreConCoopInline percent={Number(project.commission_rate_percent)} />
-                      )}
-                    {project.contact_phone?.trim() && (
-                      <p className="mt-2 flex items-center gap-1.5 text-sm">
-                        <Phone className="h-3.5 w-3.5 shrink-0 text-primary" />
-                        <a
-                          href={`tel:${project.contact_phone.replace(/[^\d+]/g, "")}`}
-                          className="font-medium text-primary underline-offset-4 hover:underline"
-                        >
-                          {project.contact_phone}
-                        </a>
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex shrink-0 flex-col items-end gap-1 sm:flex-row sm:items-start">
-                    <SocialShareIconRow
-                      compact
-                      preface={`Pre-con project: ${project.name}`}
-                      linkUrl={buildListingShareUrl(
-                        buildListingSharePayloadForPrecon(project, assets, hideCommissionRates)
-                      )}
-                    />
-                    <Button
-                      type="button"
-                      size="icon"
-                      variant={bookmarks.includes(project.id) ? "default" : "outline"}
-                      className="shrink-0"
-                      onClick={() => toggleBookmark(project.id)}
-                      aria-label="Bookmark"
+                <h3 className="font-semibold text-foreground text-lg group-hover:text-accent transition-colors line-clamp-2">
+                  {project.name}
+                </h3>
+                {project.location && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                    <MapPin className="h-3 w-3 shrink-0" /> {project.location}
+                  </p>
+                )}
+                {(project.precon_cities?.name || project.property_type) && (
+                  <p className="mt-1 text-[10px] text-muted-foreground capitalize">
+                    {project.precon_cities?.name || "—"} ·{" "}
+                    {project.property_type === "condo"
+                      ? "Condo"
+                      : project.property_type === "home"
+                        ? "Home"
+                        : project.property_type === "townhome"
+                          ? "Townhome"
+                          : "Mixed"}
+                  </p>
+                )}
+                {project.price_range && (
+                  <p className="text-sm font-semibold text-accent mt-2">{project.price_range}</p>
+                )}
+                {isCoopVisibleToAgents(project, hideCommissionRates) &&
+                  project.commission_rate_percent != null &&
+                  !Number.isNaN(Number(project.commission_rate_percent)) && (
+                    <PreConCoopInline percent={Number(project.commission_rate_percent)} />
+                  )}
+                {project.contact_phone?.trim() && (
+                  <p className="mt-2 flex items-center gap-1.5 text-sm">
+                    <Phone className="h-3.5 w-3.5 shrink-0 text-primary" />
+                    <a
+                      href={`tel:${project.contact_phone.replace(/[^\d+]/g, "")}`}
+                      className="font-medium text-primary underline-offset-4 hover:underline"
                     >
-                      <Bookmark className={`h-4 w-4 ${bookmarks.includes(project.id) ? "fill-current" : ""}`} />
-                    </Button>
-                  </div>
+                      {project.contact_phone}
+                    </a>
+                  </p>
+                )}
+
+                {/* Actions row — kept below so the title always shows in full */}
+                <div className="mt-3 flex items-center gap-1 border-t border-border/60 pt-3">
+                  <SocialShareIconRow
+                    compact
+                    preface={`Pre-con project: ${project.name}`}
+                    linkUrl={buildListingShareUrl(
+                      buildListingSharePayloadForPrecon(project, assets, hideCommissionRates)
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant={bookmarks.includes(project.id) ? "default" : "outline"}
+                    className={`ml-auto shrink-0 ${pagination.show_bookmarks ? "" : "hidden"}`}
+                    onClick={() => toggleBookmark(project.id)}
+                    aria-label="Bookmark"
+                  >
+                    <Bookmark className={`h-4 w-4 ${bookmarks.includes(project.id) ? "fill-current" : ""}`} />
+                  </Button>
                 </div>
                 <p className="text-xs text-muted-foreground line-clamp-2 mt-2">{project.description}</p>
                 {project.external_url && (

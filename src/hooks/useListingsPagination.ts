@@ -5,9 +5,10 @@ export interface ListingsPaginationSetting {
   page_size: number;
   enabled: boolean;
   grid_cols: number; // 3 or 4 columns on large screens
+  show_bookmarks: boolean;
 }
 
-const DEFAULTS: ListingsPaginationSetting = { page_size: 6, enabled: true, grid_cols: 3 };
+const DEFAULTS: ListingsPaginationSetting = { page_size: 6, enabled: true, grid_cols: 3, show_bookmarks: true };
 const KEY = "listings_pagination";
 
 /**
@@ -26,6 +27,7 @@ export function useListingsPagination() {
         page_size: typeof v.page_size === "number" && v.page_size > 0 ? v.page_size : DEFAULTS.page_size,
         enabled: v.enabled !== false,
         grid_cols: v.grid_cols === 4 ? 4 : DEFAULTS.grid_cols,
+        show_bookmarks: v.show_bookmarks !== false,
       });
     }
     setLoading(false);

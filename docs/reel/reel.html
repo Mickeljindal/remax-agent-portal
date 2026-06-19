@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#0a1628}
+  #stage{
+    position:relative;width:1080px;height:1920px;overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(120% 80% at 50% 0%, #1a4d8f 0%, #0e2c54 45%, #0a1628 100%);
+  }
+  /* moving accent blobs */
+  .blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5}
+  #b1{width:560px;height:560px;background:#e2231a;left:-160px;top:-120px}
+  #b2{width:620px;height:620px;background:#1f6fd6;right:-220px;bottom:120px}
+  #grain{position:absolute;inset:0;opacity:.06;
+    background-image:radial-gradient(#fff 1px,transparent 1px);background-size:6px 6px}
+
+  #brand{position:absolute;top:70px;left:0;right:0;text-align:center;color:#fff;z-index:6}
+  #brand .logo{display:inline-flex;align-items:center;gap:16px}
+  #brand .mark{width:64px;height:64px;border-radius:18px;background:#fff;color:#1a4d8f;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:34px}
+  #brand .name{font-size:30px;font-weight:800;letter-spacing:.04em}
+  #brand .name small{display:block;font-size:15px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.22em}
+
+  /* feature card */
+  #card{position:absolute;left:80px;top:560px;width:920px;z-index:5;will-change:transform,opacity}
+  .window{background:#fff;border-radius:34px;overflow:hidden;box-shadow:0 50px 120px rgba(0,0,0,.55)}
+  .bar{height:64px;background:#f1f5f9;display:flex;align-items:center;gap:12px;padding:0 26px;border-bottom:1px solid #e2e8f0}
+  .dot{width:16px;height:16px;border-radius:50%}
+  .shot{width:920px;height:1040px;overflow:hidden;background:#fff}
+  .shot img{width:920px;display:block;will-change:transform}
+
+  #cap{position:absolute;left:80px;width:920px;top:300px;z-index:6;color:#fff;will-change:transform,opacity}
+  #cap .tag{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+    color:#fff;font-size:22px;font-weight:700;letter-spacing:.18em;padding:10px 22px;border-radius:999px}
+  #cap .title{margin-top:22px;font-size:62px;line-height:1.05;font-weight:800;letter-spacing:-.02em}
+  #cap .sub{margin-top:16px;font-size:30px;color:rgba(255,255,255,.82);font-weight:500}
+
+  /* intro */
+  #intro{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;will-change:transform,opacity}
+  #intro .mark{width:150px;height:150px;border-radius:38px;background:#fff;color:#1a4d8f;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:84px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+  #intro h1{margin-top:46px;font-size:96px;font-weight:800;letter-spacing:-.02em;line-height:1}
+  #intro p{margin-top:24px;font-size:34px;color:rgba(255,255,255,.78);letter-spacing:.06em}
+  #intro .peek{margin-top:50px;font-size:26px;font-weight:700;letter-spacing:.28em;color:#ff6a5e}
+
+  /* outro */
+  #outro{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;will-change:transform,opacity}
+  #outro h1{font-size:104px;font-weight:800;letter-spacing:-.02em;line-height:1.02}
+  #outro h1 span{color:#ff6a5e}
+  #outro p{margin-top:30px;font-size:34px;color:rgba(255,255,255,.82)}
+  #outro .cta{margin-top:60px;background:#e2231a;color:#fff;font-size:34px;font-weight:800;
+    padding:30px 64px;border-radius:20px;box-shadow:0 24px 60px rgba(226,35,26,.4)}
+  #outro .handle{margin-top:40px;font-size:26px;color:rgba(255,255,255,.7);letter-spacing:.06em}
+
+  /* progress segments */
+  #prog{position:absolute;bottom:54px;left:80px;right:80px;display:flex;gap:10px;z-index:10}
+  #prog .seg{flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.22);overflow:hidden}
+  #prog .seg i{display:block;height:100%;width:0;background:#fff}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="blob" id="b1"></div>
+  <div class="blob" id="b2"></div>
+  <div id="grain"></div>
+
+  <div id="brand"><div class="logo"><div class="mark">A</div>
+    <div class="name">AGENT PORTAL<small>REMAX EXCELLENCE</small></div></div></div>
+
+  <div id="cap"><span class="tag" id="capTag">DASHBOARD</span>
+    <div class="title" id="capTitle">Everything in one place</div>
+    <div class="sub" id="capSub">Calendar, training &amp; tasks at a glance</div></div>
+
+  <div id="card"><div class="window">
+    <div class="bar"><span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span></div>
+    <div class="shot"><img id="shotImg" src="../screenshots/02-dashboard.png" /></div>
+  </div></div>
+
+  <div id="intro">
+    <div class="mark">A</div>
+    <h1>Agent Portal</h1>
+    <p>Your brokerage, in one place</p>
+    <div class="peek">SNEAK PEEK</div>
+  </div>
+
+  <div id="outro">
+    <h1>One portal.<br/><span>Every agent.</span></h1>
+    <p>Training · Listings · Tools · Support</p>
+    <div class="cta">Coming soon</div>
+    <div class="handle">@yourbrokerage</div>
+  </div>
+
+  <div id="prog"></div>
+</div>
+
+<script>
+  const FEATURES = [
+    { img:"02-dashboard.png", tag:"DASHBOARD", title:"Everything in one place", sub:"Calendar, training & tasks at a glance" },
+    { img:"03-courses.png",   tag:"TRAINING",  title:"Built-in learning",       sub:"Video courses, quizzes & certificates" },
+    { img:"04-listings.png",  tag:"LISTINGS",  title:"Pre-construction inventory", sub:"Search, filter & share in a tap" },
+    { img:"05-assets.png",    tag:"AGENT TOOLS", title:"Calculators & worksheets", sub:"HST, commission & client forms" },
+    { img:"06-vendors.png",   tag:"VENDORS",   title:"Approved vendors",        sub:"Trusted trades & services" },
+    { img:"07-support.png",   tag:"SUPPORT",   title:"Help & 1-tap booking",    sub:"Tickets + book a meeting instantly" },
+    { img:"08-offices.png",   tag:"OFFICES",   title:"Book a meeting room",     sub:"Reserve a room in seconds" },
+  ];
+
+  const INTRO = 2.6, FEAT = 2.5, OUTRO = 2.8;
+  const FSTART = INTRO;
+  const OSTART = FSTART + FEATURES.length * FEAT;
+  const TOTAL = OSTART + OUTRO;
+  window.__duration = TOTAL;
+
+  // Build progress segments (intro + each feature + outro)
+  const segCount = FEATURES.length + 2;
+  const prog = document.getElementById("prog");
+  for (let i=0;i<segCount;i++){ const s=document.createElement("div"); s.className="seg"; s.innerHTML="<i></i>"; prog.appendChild(s); }
+  const segs = [...prog.querySelectorAll(".seg i")];
+
+  // Preload all images
+  let ready = 0;
+  const imgs = FEATURES.map(f => { const im = new Image(); im.src = "../screenshots/"+f.img; im.onload=()=>{ready++; if(ready>=FEATURES.length) window.__ready=true;}; return im; });
+
+  const el = {
+    intro: document.getElementById("intro"), outro: document.getElementById("outro"),
+    card: document.getElementById("card"), cap: document.getElementById("cap"),
+    shot: document.getElementById("shotImg"), brand: document.getElementById("brand"),
+    capTag: document.getElementById("capTag"), capTitle: document.getElementById("capTitle"), capSub: document.getElementById("capSub"),
+    b1: document.getElementById("b1"), b2: document.getElementById("b2"),
+  };
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const easeOut=t=>1-Math.pow(1-t,3);
+  const easeInOut=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+
+  window.renderFrame = function(t){
+    t = clamp(t,0,TOTAL-0.001);
+
+    // ambient motion
+    el.b1.style.transform = `translate(${Math.sin(t*0.6)*40}px,${Math.cos(t*0.5)*30}px)`;
+    el.b2.style.transform = `translate(${Math.cos(t*0.4)*50}px,${Math.sin(t*0.45)*40}px)`;
+
+    // progress bar fill
+    let filled;
+    if (t < FSTART) filled = t/FSTART * 1; // segment 0 fills during intro
+    const segDur = [INTRO, ...FEATURES.map(()=>FEAT), OUTRO];
+    let acc=0;
+    for(let i=0;i<segs.length;i++){
+      const start=acc, end=acc+segDur[i];
+      const p = clamp((t-start)/(end-start),0,1);
+      segs[i].style.width = (p*100)+"%";
+      acc=end;
+    }
+
+    const inIntro = t < INTRO;
+    const inOutro = t >= OSTART;
+    const inFeat = !inIntro && !inOutro;
+
+    // INTRO
+    if (inIntro){
+      const p = t/INTRO;
+      const appear = easeOut(clamp(p/0.5,0,1));
+      const leave = easeInOut(clamp((p-0.8)/0.2,0,1));
+      el.intro.style.opacity = appear*(1-leave);
+      el.intro.style.transform = `scale(${0.9+0.1*appear - 0.04*leave}) translateY(${-30*leave}px)`;
+      el.intro.style.display="flex";
+    } else { el.intro.style.opacity=0; el.intro.style.display="none"; }
+
+    // OUTRO
+    if (inOutro){
+      const p = (t-OSTART)/OUTRO;
+      const appear = easeOut(clamp(p/0.4,0,1));
+      el.outro.style.opacity = appear;
+      el.outro.style.transform = `scale(${0.94+0.06*appear})`;
+      el.outro.style.display="flex";
+    } else { el.outro.style.opacity=0; el.outro.style.display="none"; }
+
+    // BRAND wordmark visible only during features
+    el.brand.style.opacity = inFeat ? 1 : 0;
+
+    // FEATURES
+    if (inFeat){
+      const idx = clamp(Math.floor((t-FSTART)/FEAT),0,FEATURES.length-1);
+      const local = (t-FSTART - idx*FEAT)/FEAT; // 0..1 within scene
+      const f = FEATURES[idx];
+      el.shot.src = "../screenshots/"+f.img;
+      el.capTag.textContent = f.tag;
+      el.capTitle.textContent = f.title;
+      el.capSub.textContent = f.sub;
+
+      const inP = easeOut(clamp(local/0.18,0,1));
+      const outP = easeInOut(clamp((local-0.82)/0.18,0,1));
+      const op = inP*(1-outP);
+
+      const cardY = (1-inP)*80 - outP*50;
+      const cardS = 0.95 + 0.05*inP;
+      el.card.style.opacity = op;
+      el.card.style.transform = `translateY(${cardY}px) scale(${cardS})`;
+
+      // slow vertical pan inside the window to feel alive
+      const panMax = Math.max(0, (el.shot.naturalHeight||1040) - 1040);
+      el.shot.style.transform = `translateY(${-Math.min(panMax,120)*local}px)`;
+
+      const capY = (1-easeOut(clamp((local-0.05)/0.18,0,1)))*40 - outP*40;
+      el.cap.style.opacity = op;
+      el.cap.style.transform = `translateY(${capY}px)`;
+    } else {
+      el.card.style.opacity = 0;
+      el.cap.style.opacity = 0;
+    }
+  };
+
+  window.renderFrame(0);
+</script>
+</body>
+</html>
