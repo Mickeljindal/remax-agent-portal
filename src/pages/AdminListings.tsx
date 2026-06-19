@@ -49,6 +49,30 @@ interface ProjectTag { project_id: string; tag_id: string; }
 
 const TAG_COLORS = ["red", "blue", "green", "amber", "orange", "purple", "indigo", "pink", "emerald", "cyan", "gray"];
 
+// Static class maps — Tailwind only keeps classes it can see as complete strings,
+// so dynamic `bg-${color}-500` gets purged and renders invisible. These full strings fix that.
+const SOLID_BADGE: Record<string, string> = {
+  red: "bg-red-500 text-white", blue: "bg-blue-500 text-white", green: "bg-green-500 text-white",
+  amber: "bg-amber-500 text-white", orange: "bg-orange-500 text-white", purple: "bg-purple-500 text-white",
+  indigo: "bg-indigo-500 text-white", pink: "bg-pink-500 text-white", emerald: "bg-emerald-500 text-white",
+  cyan: "bg-cyan-500 text-white", gray: "bg-gray-500 text-white",
+};
+const SOLID_HOVER: Record<string, string> = {
+  red: "bg-red-500 hover:bg-red-600", blue: "bg-blue-500 hover:bg-blue-600", green: "bg-green-500 hover:bg-green-600",
+  amber: "bg-amber-500 hover:bg-amber-600", orange: "bg-orange-500 hover:bg-orange-600", purple: "bg-purple-500 hover:bg-purple-600",
+  indigo: "bg-indigo-500 hover:bg-indigo-600", pink: "bg-pink-500 hover:bg-pink-600", emerald: "bg-emerald-500 hover:bg-emerald-600",
+  cyan: "bg-cyan-500 hover:bg-cyan-600", gray: "bg-gray-500 hover:bg-gray-600",
+};
+const LIGHT_BADGE: Record<string, string> = {
+  red: "bg-red-100 text-red-800", blue: "bg-blue-100 text-blue-800", green: "bg-green-100 text-green-800",
+  amber: "bg-amber-100 text-amber-800", orange: "bg-orange-100 text-orange-800", purple: "bg-purple-100 text-purple-800",
+  indigo: "bg-indigo-100 text-indigo-800", pink: "bg-pink-100 text-pink-800", emerald: "bg-emerald-100 text-emerald-800",
+  cyan: "bg-cyan-100 text-cyan-800", gray: "bg-gray-100 text-gray-800",
+};
+const solid = (c: string) => SOLID_BADGE[c] || SOLID_BADGE.gray;
+const solidHover = (c: string) => SOLID_HOVER[c] || SOLID_HOVER.gray;
+const light = (c: string) => LIGHT_BADGE[c] || LIGHT_BADGE.gray;
+
 export default function AdminListings() {
   const navigate = useNavigate();
   const { user, loading, isAdmin } = useAuth();
@@ -415,7 +439,7 @@ export default function AdminListings() {
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
                             {getProjectTags(p.id).map((t) => (
-                              <Badge key={t.id} variant="outline" className={`text-[9px] bg-${t.color}-100 text-${t.color}-800`}>{t.name}</Badge>
+                              <Badge key={t.id} variant="outline" className={`text-[9px] ${light(t.color)}`}>{t.name}</Badge>
                             ))}
                             {p.is_new && <Badge className="text-[9px] bg-red-500">New</Badge>}
                           </div>
@@ -453,7 +477,7 @@ export default function AdminListings() {
                 <div className="flex flex-wrap gap-3">
                   {tags.map((t) => (
                     <div key={t.id} className="flex items-center gap-2 border rounded-lg px-3 py-2">
-                      <Badge className={`bg-${t.color}-500 text-white text-xs`}>{t.name}</Badge>
+                      <Badge className={`${solid(t.color)} text-xs`}>{t.name}</Badge>
                       <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => { setEditingTag(t); setTagForm({ name: t.name, color: t.color }); setTagDialogOpen(true); }}>
                         <Pencil className="h-3 w-3" />
                       </Button>
@@ -511,7 +535,7 @@ export default function AdminListings() {
                 <div className="flex flex-wrap gap-3">
                   {statuses.map((s) => (
                     <div key={s.id} className="flex items-center gap-2 border rounded-lg px-3 py-2">
-                      <Badge className={`bg-${s.color}-500 text-white text-xs`}>{s.name}</Badge>
+                      <Badge className={`${solid(s.color)} text-xs`}>{s.name}</Badge>
                       <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => { setEditingStatus(s); setStatusForm({ name: s.name, color: s.color }); setStatusDialogOpen(true); }}>
                         <Pencil className="h-3 w-3" />
                       </Button>
@@ -644,7 +668,7 @@ export default function AdminListings() {
                     <Badge
                       key={t.id}
                       variant={selected ? "default" : "outline"}
-                      className={`cursor-pointer text-xs ${selected ? `bg-${t.color}-500 hover:bg-${t.color}-600` : ""}`}
+                      className={`cursor-pointer text-xs ${selected ? solidHover(t.color) : ""}`}
                       onClick={() => {
                         setProjectForm({
                           ...projectForm,
