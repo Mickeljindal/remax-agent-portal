@@ -207,7 +207,7 @@ export default function AdminEvents() {
       else {
         toast({
           title: rows.length > 1 ? `${rows.length} sessions created` : "Event created",
-          description: rows.length > 1 ? `Repeating ${form.recurrence} until ${format(new Date(starts[starts.length - 1]), "MMM d, yyyy")}` : undefined,
+          description: rows.length > 1 ? `Repeating ${form.recurrence === "monthly_dow" ? describeMonthlyDow(form.event_date) + " monthly" : form.recurrence} until ${format(new Date(starts[starts.length - 1]), "MMM d, yyyy")}` : undefined,
         });
         setDialogOpen(false);
         fetchData();
@@ -221,6 +221,38 @@ export default function AdminEvents() {
     setSaving(false);
   };
 
+  /**
+   * Date of the nth weekday in a given month.
+   * ordinal: 1-4 for first..fourth, or "last" for the last occurrence of that weekday.
+   * weekday: 0 (Sun) .. 6 (Sat).
+   */
+  function nthWeekdayOfMonth(year: number, month: number, weekday: number, ordinal: number | "last"): Date {
+    if (ordinal === "last") {
+      // Walk back from the last day of the month to the target weekday.
+      const lastDay = new Date(year, month + 1, 0);
+      const diff = (lastDay.getDay() - weekday + 7) % 7;
+      lastDay.setDate(lastDay.getDate() - diff);
+      return lastDay;
+    }
+    const first = new Date(year, month, 1);
+    const offset = (weekday - first.getDay() + 7) % 7;
+    return new Date(year, month, 1 + offset + (ordinal - 1) * 7);
+  }
+
+  /** Human label for the monthly-by-weekday position of a date, e.g. "last Wednesday". */
+  function describeMonthlyDow(startLocal: string): string {
+    if (!startLocal) return "same weekday each month";
+    const d = new Date(startLocal);
+    if (Number.isNaN(d.getTime())) return "same weekday each month";
+    const dom = d.getDate();
+    const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    const isLast = dom + 7 > daysInMonth;
+    const ordinals = ["first", "second", "third", "fourth"];
+    const ordinal = isLast ? "last" : ordinals[Math.floor((dom - 1) / 7)] ?? "last";
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return `${ordinal} ${weekdays[d.getDay()]}`;
+  }
+
   /** Returns ISO start times for a recurring series (capped at 104 occurrences). */
   function buildRecurrenceDates(startLocal: string, recurrence: string, untilLocal: string): string[] {
     const start = new Date(startLocal);
@@ -228,8 +260,30 @@ export default function AdminEvents() {
     const until = new Date(untilLocal);
     until.setHours(23, 59, 59, 999);
     const out: string[] = [];
-    const cursor = new Date(start);
     let guard = 0;
+
+    if (recurrence === "monthly_dow") {
+      // Repeat on the same weekday position each month (e.g. "last Wednesday").
+      const weekday = start.getDay();
+      const dom = start.getDate();
+      const daysInMonth = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate();
+      const isLast = dom + 7 > daysInMonth;
+      const ordinal: number | "last" = isLast ? "last" : Math.floor((dom - 1) / 7) + 1;
+      const hours = start.getHours();
+      const minutes = start.getMinutes();
+      let monthCursor = new Date(start.getFullYear(), start.getMonth(), 1);
+      while (guard < 104) {
+        const occ = nthWeekdayOfMonth(monthCursor.getFullYear(), monthCursor.getMonth(), weekday, ordinal);
+        occ.setHours(hours, minutes, 0, 0);
+        if (occ > until) break;
+        if (occ >= start) out.push(occ.toISOString());
+        monthCursor.setMonth(monthCursor.getMonth() + 1);
+        guard++;
+      }
+      return out.length ? out : [start.toISOString()];
+    }
+
+    const cursor = new Date(start);
     while (cursor <= until && guard < 104) {
       out.push(new Date(cursor).toISOString());
       if (recurrence === "weekly") cursor.setDate(cursor.getDate() + 7);
@@ -473,7 +527,10 @@ export default function AdminEvents() {
                         <SelectItem value="none">Does not repeat</SelectItem>
                         <SelectItem value="weekly">Weekly</SelectItem>
                         <SelectItem value="biweekly">Every 2 weeks</SelectItem>
-                        <SelectItem value="monthly">Monthly</SelectItem>
+                        <SelectItem value="monthly">Monthly (same date)</SelectItem>
+                        <SelectItem value="monthly_dow">
+                          Monthly{form.event_date ? ` (${describeMonthlyDow(form.event_date)})` : " (same weekday)"}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -489,7 +546,10 @@ export default function AdminEvents() {
                 </div>
                 {form.recurrence !== "none" && (
                   <p className="text-[11px] text-muted-foreground">
-                    Creates a session on the calendar for each {form.recurrence === "weekly" ? "week" : form.recurrence === "biweekly" ? "2 weeks" : "month"} from the start date until the "repeat until" date.
+                    {form.recurrence === "monthly_dow"
+                      ? `Creates a session on the ${describeMonthlyDow(form.event_date)} of every month from the start date until the "repeat until" date.`
+                      : `Creates a session on the calendar for each ${form.recurrence === "weekly" ? "week" : form.recurrence === "biweekly" ? "2 weeks" : "month"} from the start date until the "repeat until" date.`}
+                    {" "}Tip: set "repeat until" about 3 months ahead to fill the calendar.
                   </p>
                 )}
               </div>
