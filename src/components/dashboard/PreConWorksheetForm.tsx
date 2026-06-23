@@ -79,6 +79,9 @@ export default function PreConWorksheetForm({
   const [date, setDate] = useState("");
   const [additionalComments, setAdditionalComments] = useState("");
   const [brokerageName, setBrokerageName] = useState("RE/MAX Excellence Realty Inc.");
+  const [brokerAgentName, setBrokerAgentName] = useState(agentName || "");
+  const [brokerAgentEmail, setBrokerAgentEmail] = useState(agentEmail || "");
+  const [brokerRecoNumber, setBrokerRecoNumber] = useState(recoNumber || "");
   const [officePhone, setOfficePhone] = useState("");
   const [agentCellPhone, setAgentCellPhone] = useState("");
   const [purchaser1, setPurchaser1] = useState<PurchaserForm>(emptyPurchaser());
@@ -148,11 +151,11 @@ export default function PreConWorksheetForm({
         additionalComments,
         cooperatingBroker: {
           brokerageName,
-          agentName: agentName || "",
-          agentEmail: agentEmail || "",
+          agentName: brokerAgentName,
+          agentEmail: brokerAgentEmail,
           officePhone,
           cellPhone: agentCellPhone,
-          recoNumber: recoNumber || "",
+          recoNumber: brokerRecoNumber,
         },
         purchasers: [purchaser1, purchaser2],
         idAttachment: {
@@ -237,9 +240,9 @@ export default function PreConWorksheetForm({
             </p>
             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
               <Input placeholder="Brokerage name *" value={brokerageName} onChange={(e) => setBrokerageName(e.target.value)} />
-              <Input placeholder="Agent name" value={agentName || ""} readOnly />
-              <Input placeholder="Agent email" value={agentEmail || ""} readOnly />
-              <Input placeholder="RECO number" value={recoNumber || ""} readOnly />
+              <Input placeholder="Agent name" value={brokerAgentName} onChange={(e) => setBrokerAgentName(e.target.value)} />
+              <Input placeholder="Agent email" value={brokerAgentEmail} onChange={(e) => setBrokerAgentEmail(e.target.value)} />
+              <Input placeholder="RECO number" value={brokerRecoNumber} onChange={(e) => setBrokerRecoNumber(e.target.value)} />
               <Input placeholder="Office phone" value={officePhone} onChange={(e) => setOfficePhone(e.target.value)} />
               <Input placeholder="Cell phone" value={agentCellPhone} onChange={(e) => setAgentCellPhone(e.target.value)} />
             </div>
