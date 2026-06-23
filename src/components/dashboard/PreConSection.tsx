@@ -94,11 +94,51 @@ function saleBucket(status: string): "selling" | "coming_soon" {
   return "selling";
 }
 
-function propertyTypeLabel(t: string): string {
-  if (t === "condo") return "Condo";
-  if (t === "home") return "Home";
-  if (t === "townhome") return "Townhome";
-  return "Mixed";
+function propertyTypeLabel(t: string | null | undefined): string {
+  const v = (t || "").trim();
+  if (!v || v === "all") return "";
+  const l = v.toLowerCase();
+  if (l === "condo") return "Condo";
+  if (l === "home") return "Home";
+  if (l === "townhome") return "Townhome";
+  // Admin-defined custom type — show it as-is (capitalized by CSS).
+  return v;
+}
+
+/**
+ * Soft tint classes keyed by the admin-chosen status color (precon_statuses.color).
+ * Full literal class strings so Tailwind's JIT purge keeps them in the build.
+ */
+const STATUS_TINT: Record<string, string> = {
+  green: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200",
+  emerald: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200",
+  teal: "bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-200",
+  blue: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200",
+  sky: "bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200",
+  amber: "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200",
+  orange: "bg-orange-100 text-orange-900 dark:bg-orange-900/40 dark:text-orange-200",
+  red: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200",
+  purple: "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200",
+  indigo: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-200",
+  pink: "bg-pink-100 text-pink-800 dark:bg-pink-900/40 dark:text-pink-200",
+  cyan: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200",
+  gray: "bg-gray-100 text-gray-800 dark:bg-gray-800/60 dark:text-gray-200",
+};
+
+/** Fallback color for statuses that have no admin color (e.g. legacy free-text). */
+function statusKeywordColor(status: string): string {
+  const l = (status || "").toLowerCase();
+  if (l.includes("sold") || l.includes("closed")) return "red";
+  if (l.includes("coming")) return "amber";
+  if (l.includes("ready") || l.includes("move")) return "teal";
+  if (l.includes("selling") || l.includes("active") || l.includes("now") || l.includes("available")) return "green";
+  return "blue";
+}
+
+/** Resolve the badge classes for a project status using the admin color map + keyword fallback. */
+function statusBadgeClass(status: string, colorMap: Record<string, string>): string {
+  const color = colorMap[(status || "").trim().toLowerCase()] || statusKeywordColor(status);
+  return STATUS_TINT[color] || STATUS_TINT.blue;
 }
 
 /** Per-listing admin switch: when false, agents do not see co-op % on cards, detail, or shared links. */
@@ -149,6 +189,7 @@ export default function PreConSection({
   const [assets, setAssets] = useState<PreconAsset[]>([]);
   const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
+  const [statusColorMap, setStatusColorMap] = useState<Record<string, string>>({});
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [detail, setDetail] = useState<PreconProject | null>(null);
   const [cityFilter, setCityFilter] = useState<string>("all");
@@ -194,10 +235,16 @@ export default function PreConSection({
       setPropertyTypes(((typeData as { name: string }[]) || []).map((t) => t.name).filter(Boolean));
       const { data: statusData } = await supabase
         .from("precon_statuses")
-        .select("name")
+        .select("name, color")
         .eq("is_active", true)
         .order("sort_order");
-      setStatuses(((statusData as { name: string }[]) || []).map((s) => s.name).filter(Boolean));
+      const statusRows = (statusData as { name: string; color: string | null }[]) || [];
+      setStatuses(statusRows.map((s) => s.name).filter(Boolean));
+      setStatusColorMap(
+        Object.fromEntries(
+          statusRows.filter((s) => s.name).map((s) => [s.name.trim().toLowerCase(), s.color || "blue"])
+        )
+      );
     };
     load();
   }, []);
@@ -223,13 +270,6 @@ export default function PreConSection({
   const isNew = (p: PreconProject) => {
     if (!p.created_at) return false;
     return differenceInDays(new Date(), parseISO(p.created_at)) <= 7;
-  };
-
-  const statusColors: Record<string, string> = {
-    selling: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200",
-    active: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200",
-    "coming soon": "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200",
-    "sold out": "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200",
   };
 
   const assetCategories = [...new Set(assets.map((a) => a.category))];
@@ -477,7 +517,7 @@ export default function PreConSection({
                     <Building2 className="h-14 w-14 text-primary-foreground/40" />
                   )}
                   <div className="absolute top-3 left-3 flex gap-2">
-                    <Badge className={statusColors[project.status.toLowerCase()] || "bg-muted"}>
+                    <Badge className={`border-0 ${statusBadgeClass(project.status, statusColorMap)}`}>
                       {project.status}
                     </Badge>
                     {isNew(project) && (
@@ -500,18 +540,16 @@ export default function PreConSection({
                     <MapPin className="h-3 w-3 shrink-0" /> {project.location}
                   </p>
                 )}
-                {(project.precon_cities?.name || project.property_type) && (
-                  <p className="mt-1 text-[10px] text-muted-foreground capitalize">
-                    {project.precon_cities?.name || "—"} ·{" "}
-                    {project.property_type === "condo"
-                      ? "Condo"
-                      : project.property_type === "home"
-                        ? "Home"
-                        : project.property_type === "townhome"
-                          ? "Townhome"
-                          : "Mixed"}
-                  </p>
-                )}
+                {(() => {
+                  const city = project.precon_cities?.name?.trim();
+                  const type = propertyTypeLabel(project.property_type);
+                  if (!city && !type) return null;
+                  return (
+                    <p className="mt-1 text-[10px] text-muted-foreground capitalize">
+                      {[city, type].filter(Boolean).join(" · ")}
+                    </p>
+                  );
+                })()}
                 {project.price_range && (
                   <p className="text-sm font-semibold text-accent mt-2">{project.price_range}</p>
                 )}
