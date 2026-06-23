@@ -44,6 +44,7 @@ interface Worksheet {
   broker_reco_number: string | null;
   purchasers: any[];
   id_attachment_filename: string | null;
+  id_attachment_url: string | null;
   status: string;
   admin_notes: string | null;
   created_at: string;
@@ -267,8 +268,38 @@ export default function AdminWorksheets() {
                   </div>
                 )}
 
-                {selected.id_attachment_filename && (
-                  <p className="text-xs text-muted-foreground">📎 Client ID attached: {selected.id_attachment_filename} (sent via email)</p>
+                {(selected.id_attachment_url || selected.id_attachment_filename) && (
+                  <div className="border rounded-lg p-4 space-y-2">
+                    <h3 className="font-semibold text-sm">Client ID attachment</h3>
+                    {selected.id_attachment_url ? (
+                      <>
+                        <a
+                          href={selected.id_attachment_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block w-fit"
+                        >
+                          <img
+                            src={selected.id_attachment_url}
+                            alt={selected.id_attachment_filename || "Client ID"}
+                            className="max-h-72 rounded-md border border-border object-contain"
+                          />
+                        </a>
+                        <a
+                          href={selected.id_attachment_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-primary underline-offset-4 hover:underline"
+                        >
+                          Open full size: {selected.id_attachment_filename || "view image"}
+                        </a>
+                      </>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        📎 {selected.id_attachment_filename} — submitted before in-portal viewing was enabled, available in the email copy only.
+                      </p>
+                    )}
+                  </div>
                 )}
 
                 {/* Admin notes */}

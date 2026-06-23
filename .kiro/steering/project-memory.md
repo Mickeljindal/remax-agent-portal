@@ -65,6 +65,14 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   "Mixed"/"—"; the line is hidden when both city and type are empty.
 - Tailwind JIT purges dynamic `bg-${color}` classes — always use full literal class
   strings in color maps (see STATUS_TINT, AdminListings SOLID_BADGE).
+- Pre-con worksheet (`PreConWorksheetForm.tsx` → `/api/submit-precon-worksheet` in
+  `server.js` → `AdminWorksheets.tsx`): emails admin + agent copies (with ID image),
+  saves the row to `precon_worksheets`, and now also writes the client ID image to
+  disk under `uploads/precon-documents/worksheets/` and stores `id_attachment_url`
+  so admins can view it inline in the admin dashboard. Needs migration
+  `20260624140000_worksheet_attachment_url.sql` applied + server redeploy.
+  NOTE: `/files/*` is served unauthenticated, so the ID image lives at an
+  unguessable (random) but public URL — flagged as a PII tradeoff.
 - Server env loading needed care — `.env` at root and `server/.env`.
 
 ## Conventions

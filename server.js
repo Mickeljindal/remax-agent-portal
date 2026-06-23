@@ -524,6 +524,25 @@ app.post("/api/submit-precon-worksheet", async (req, res) => {
     });
 
     // Persist submission so it shows in the admin portal (best-effort).
+    // Save the client ID image to disk so admins can view it in the dashboard
+    // (the email above already carries it as an attachment).
+    let idAttachmentUrl = null;
+    try {
+      const ext = payload.idAttachment.mimeType === "image/png" ? ".png" : ".jpg";
+      const safeBase = (payload.idAttachment.filename || "client-id")
+        .replace(/\.[^.]+$/, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .slice(0, 40) || "client-id";
+      const fileName = `${safeBase}-${Date.now()}-${crypto.randomBytes(6).toString("hex")}${ext}`;
+      const dir = path.join(UPLOAD_ROOT, "precon-documents", "worksheets");
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, fileName), Buffer.from(payload.idAttachment.contentBase64, "base64"));
+      idAttachmentUrl = `${PUBLIC_BASE_URL}/files/precon-documents/worksheets/${fileName}`;
+    } catch (fileErr) {
+      console.error("Failed to save worksheet ID attachment to disk:", fileErr);
+    }
+
     try {
       await adminClient.from("precon_worksheets").insert({
         agent_id: payload.metadata?.agentId || null,
@@ -544,6 +563,7 @@ app.post("/api/submit-precon-worksheet", async (req, res) => {
         broker_reco_number: payload.cooperatingBroker.recoNumber || null,
         purchasers: payload.purchasers || [],
         id_attachment_filename: payload.idAttachment.filename || null,
+        id_attachment_url: idAttachmentUrl,
         status: "submitted",
         email_sent: true,
       });
