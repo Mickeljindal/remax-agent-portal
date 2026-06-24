@@ -51,6 +51,11 @@ interface Worksheet {
 }
 
 const STATUS_OPTIONS = ["submitted", "reviewed", "processed", "archived"];
+
+/** Same-origin by default; override only when the API runs on a separate host. */
+const SERVER_BASE =
+  (import.meta.env.VITE_UPLOAD_SERVER_URL as string | undefined)?.replace(/\/$/, "") || "";
+
 const statusColors: Record<string, string> = {
   submitted: "bg-blue-100 text-blue-800",
   reviewed: "bg-amber-100 text-amber-800",
@@ -69,6 +74,9 @@ export default function AdminWorksheets() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selected, setSelected] = useState<Worksheet | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
+  const [idImageUrl, setIdImageUrl] = useState<string | null>(null);
+  const [idImageLoading, setIdImageLoading] = useState(false);
+  const [idImageError, setIdImageError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth");
@@ -104,6 +112,42 @@ export default function AdminWorksheets() {
   const openDetail = (w: Worksheet) => {
     setSelected(w);
     setAdminNotes(w.admin_notes || "");
+    loadIdImage(w);
+  };
+
+  // Fetch the client ID image through the admin-only endpoint (sends the auth
+  // token), then show it via an object URL. The image is never publicly served.
+  const loadIdImage = async (w: Worksheet) => {
+    // Clear any previously loaded image.
+    setIdImageUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setIdImageError(null);
+    if (!w.id_attachment_url) return;
+    setIdImageLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(`${SERVER_BASE}/api/worksheet-id/${w.id}`, {
+        headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {},
+      });
+      if (!res.ok) throw new Error(`(${res.status})`);
+      const blob = await res.blob();
+      setIdImageUrl(URL.createObjectURL(blob));
+    } catch (e) {
+      setIdImageError(e instanceof Error ? e.message : "Could not load image.");
+    } finally {
+      setIdImageLoading(false);
+    }
+  };
+
+  const closeDetail = () => {
+    setSelected(null);
+    setIdImageUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setIdImageError(null);
   };
 
   const filtered = worksheets.filter((w) => {
@@ -193,7 +237,7 @@ export default function AdminWorksheets() {
       </main>
 
       {/* Detail dialog */}
-      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+      <Dialog open={!!selected} onOpenChange={(o) => !o && closeDetail()}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           {selected && (
             <>
@@ -272,31 +316,39 @@ export default function AdminWorksheets() {
                   <div className="border rounded-lg p-4 space-y-2">
                     <h3 className="font-semibold text-sm">Client ID attachment</h3>
                     {selected.id_attachment_url ? (
-                      <>
-                        <a
-                          href={selected.id_attachment_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block w-fit"
-                        >
-                          <img
-                            src={selected.id_attachment_url}
-                            alt={selected.id_attachment_filename || "Client ID"}
-                            className="max-h-72 rounded-md border border-border object-contain"
-                          />
-                        </a>
-                        <a
-                          href={selected.id_attachment_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs font-medium text-primary underline-offset-4 hover:underline"
-                        >
-                          Open full size: {selected.id_attachment_filename || "view image"}
-                        </a>
-                      </>
+                      idImageLoading ? (
+                        <p className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Loader2 className="h-3 w-3 animate-spin" /> Loading secure image…
+                        </p>
+                      ) : idImageUrl ? (
+                        <>
+                          <a href={idImageUrl} target="_blank" rel="noopener noreferrer" className="block w-fit">
+                            <img
+                              src={idImageUrl}
+                              alt={selected.id_attachment_filename || "Client ID"}
+                              className="max-h-72 rounded-md border border-border object-contain"
+                            />
+                          </a>
+                          <a
+                            href={idImageUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs font-medium text-primary underline-offset-4 hover:underline"
+                          >
+                            Open full size: {selected.id_attachment_filename || "view image"}
+                          </a>
+                          <p className="text-[11px] text-muted-foreground">
+                            🔒 Admin-only — this ID image is not publicly accessible.
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-xs text-destructive">
+                          Could not load the ID image {idImageError}. It is still attached to the email copy.
+                        </p>
+                      )
                     ) : (
                       <p className="text-xs text-muted-foreground">
-                        📎 {selected.id_attachment_filename} — submitted before in-portal viewing was enabled, available in the email copy only.
+                        📎 {selected.id_attachment_filename} — submitted before in-portal viewing was enabled; available in the email copy only.
                       </p>
                     )}
                   </div>
@@ -309,7 +361,7 @@ export default function AdminWorksheets() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setSelected(null)}>Close</Button>
+                <Button variant="outline" onClick={closeDetail}>Close</Button>
                 <Button onClick={saveNotes}>Save Notes</Button>
               </DialogFooter>
             </>

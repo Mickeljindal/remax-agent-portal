@@ -24,6 +24,11 @@ app.use(express.json({ limit: "30mb" }));
 // Where uploaded files are stored on the KloudBean server disk
 const UPLOAD_ROOT = process.env.UPLOAD_DIR || path.join(__dirname, "uploads");
 
+// Private storage for SENSITIVE files (client ID images). This directory is NOT
+// served by the public /files/* route, so these files can only be retrieved
+// through the admin-authenticated /api/worksheet-id endpoint below.
+const PRIVATE_ROOT = process.env.PRIVATE_UPLOAD_DIR || path.join(__dirname, "private-uploads");
+
 // Supabase project URL + anon key — used to validate the uploader's token
 // by asking Supabase who the user is (works with any JWT signing method).
 const SUPABASE_URL = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "").replace(/\/$/, "");
@@ -524,8 +529,8 @@ app.post("/api/submit-precon-worksheet", async (req, res) => {
     });
 
     // Persist submission so it shows in the admin portal (best-effort).
-    // Save the client ID image to disk so admins can view it in the dashboard
-    // (the email above already carries it as an attachment).
+    // Save the client ID image to PRIVATE storage (not the public /files/* route)
+    // so only admins can view it via the authenticated endpoint below.
     let idAttachmentUrl = null;
     try {
       const ext = payload.idAttachment.mimeType === "image/png" ? ".png" : ".jpg";
@@ -535,10 +540,11 @@ app.post("/api/submit-precon-worksheet", async (req, res) => {
         .replace(/[^a-z0-9]+/g, "-")
         .slice(0, 40) || "client-id";
       const fileName = `${safeBase}-${Date.now()}-${crypto.randomBytes(6).toString("hex")}${ext}`;
-      const dir = path.join(UPLOAD_ROOT, "precon-documents", "worksheets");
+      const dir = path.join(PRIVATE_ROOT, "worksheet-ids");
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(path.join(dir, fileName), Buffer.from(payload.idAttachment.contentBase64, "base64"));
-      idAttachmentUrl = `${PUBLIC_BASE_URL}/files/precon-documents/worksheets/${fileName}`;
+      // Store a RELATIVE private path (resolved server-side); never a public URL.
+      idAttachmentUrl = `worksheet-ids/${fileName}`;
     } catch (fileErr) {
       console.error("Failed to save worksheet ID attachment to disk:", fileErr);
     }
@@ -591,6 +597,39 @@ app.post("/api/submit-precon-worksheet", async (req, res) => {
   } catch (e) {
     console.error("submit-precon-worksheet error:", e);
     res.status(400).json({ error: e.message || "Worksheet submission failed." });
+  }
+});
+
+// ─── Serve a worksheet's client ID image (ADMIN ONLY, from private storage) ───
+app.get("/api/worksheet-id/:worksheetId", async (req, res) => {
+  if (!adminClient) return res.status(503).json({ error: "Not configured." });
+  try {
+    const caller = await getCallingUser(req);
+    if (!caller?.id) return res.status(401).json({ error: "Unauthorized." });
+    if (!(await isAdminUser(caller.id))) return res.status(403).json({ error: "Admin access required." });
+
+    const { data: row } = await adminClient
+      .from("precon_worksheets")
+      .select("id_attachment_url")
+      .eq("id", req.params.worksheetId)
+      .maybeSingle();
+
+    const rel = row?.id_attachment_url;
+    if (!rel) return res.status(404).json({ error: "No attachment for this worksheet." });
+
+    const full = path.join(PRIVATE_ROOT, rel);
+    if (!full.startsWith(PRIVATE_ROOT)) return res.status(400).json({ error: "Invalid path" });
+
+    fs.stat(full, (err, stat) => {
+      if (err) return res.status(404).json({ error: "File not found on server." });
+      const ext = path.extname(full).toLowerCase();
+      const mime = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg" }[ext] || "application/octet-stream";
+      res.writeHead(200, { "Content-Type": mime, "Content-Length": stat.size, "Cache-Control": "private, no-store" });
+      fs.createReadStream(full).pipe(res);
+    });
+  } catch (e) {
+    console.error("worksheet-id error:", e);
+    res.status(500).json({ error: "Could not load attachment." });
   }
 });
 

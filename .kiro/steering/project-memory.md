@@ -71,8 +71,11 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   disk under `uploads/precon-documents/worksheets/` and stores `id_attachment_url`
   so admins can view it inline in the admin dashboard. Needs migration
   `20260624140000_worksheet_attachment_url.sql` applied + server redeploy.
-  NOTE: `/files/*` is served unauthenticated, so the ID image lives at an
-  unguessable (random) but public URL — flagged as a PII tradeoff.
+  SECURITY: ID images are now stored in PRIVATE storage (`private-uploads/`,
+  env `PRIVATE_UPLOAD_DIR`), NOT under the public `/files/*` route. `id_attachment_url`
+  holds a relative private path. The admin dashboard fetches the image via the
+  admin-only `GET /api/worksheet-id/:id` endpoint (token sent, shown as object URL).
+  Migration `20260624140000` already applied to the live DB.
 - Server env loading needed care — `.env` at root and `server/.env`.
 
 ## Conventions
