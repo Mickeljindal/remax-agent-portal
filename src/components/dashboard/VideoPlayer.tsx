@@ -14,7 +14,7 @@ import {
   Maximize,
   SkipForward,
 } from "lucide-react";
-import { toEmbedUrl } from "@/lib/videoEmbed";
+import { toEmbedUrl, getYouTubeId, loadYouTubeIframeApi } from "@/lib/videoEmbed";
 
 interface VideoPlayerProps {
   moduleId: string;
@@ -64,6 +64,15 @@ export default function VideoPlayer({
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const watchedRef = useRef(initialWatchedSeconds);
   const isDirect = isDirectVideoUrl(videoUrl);
+  const ytId = !isDirect ? getYouTubeId(videoUrl) : null;
+  const isYouTube = !!ytId;
+
+  // YouTube IFrame API tracking refs
+  const ytContainerRef = useRef<HTMLDivElement>(null);
+  const ytPlayerRef = useRef<YTPlayer | null>(null);
+  const ytPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const completedRef = useRef(isCompleted);
+  useEffect(() => { completedRef.current = completed; }, [completed]);
 
   const totalSeconds = durationMinutes ? durationMinutes * 60 : duration;
   const progressPercent = totalSeconds > 0 ? Math.min((watchedSeconds / totalSeconds) * 100, 100) : 0;
@@ -103,6 +112,76 @@ export default function VideoPlayer({
       }
     };
   }, []);
+
+  // ─── YouTube IFrame API: real watch-time tracking for embedded YouTube videos ───
+  useEffect(() => {
+    if (!isYouTube || !ytId) return;
+    let cancelled = false;
+
+    const stopPolling = () => {
+      if (ytPollRef.current) { clearInterval(ytPollRef.current); ytPollRef.current = null; }
+    };
+
+    const startPolling = () => {
+      if (ytPollRef.current) return;
+      ytPollRef.current = setInterval(() => {
+        const p = ytPlayerRef.current;
+        if (!p?.getCurrentTime) return;
+        const ct = Math.floor(p.getCurrentTime());
+        const dur = Math.floor(p.getDuration?.() || 0);
+        if (dur && dur !== duration) setDuration(dur);
+        if (ct > watchedRef.current) {
+          watchedRef.current = ct;
+          setWatchedSeconds(ct);
+          setCurrentTime(ct);
+          onProgressUpdate?.(ct);
+          if (ct % 10 === 0) saveProgress(ct); // periodic save
+          const total = durationMinutes ? durationMinutes * 60 : dur;
+          if (total > 0 && ct >= total * COMPLETION_THRESHOLD && !completedRef.current) {
+            setCompleted(true);
+            onComplete?.();
+            saveProgress(ct);
+          }
+        }
+      }, 1000);
+    };
+
+    loadYouTubeIframeApi()
+      .then((YT) => {
+        if (cancelled || !YT || !ytContainerRef.current) return;
+        ytPlayerRef.current = new YT.Player(ytContainerRef.current, {
+          width: "100%",
+          height: "100%",
+          videoId: ytId,
+          playerVars: { rel: 0, modestbranding: 1, playsinline: 1 },
+          events: {
+            onReady: (e) => {
+              if (initialWatchedSeconds > 0) e.target.seekTo(initialWatchedSeconds, true);
+            },
+            onStateChange: (e) => {
+              const S = YT.PlayerState;
+              if (e.data === S.PLAYING) { setIsPlaying(true); startPolling(); }
+              else if (e.data === S.PAUSED) { setIsPlaying(false); stopPolling(); saveProgress(watchedRef.current); }
+              else if (e.data === S.ENDED) {
+                setIsPlaying(false);
+                stopPolling();
+                if (!completedRef.current) { setCompleted(true); onComplete?.(); }
+                saveProgress(watchedRef.current);
+              }
+            },
+          },
+        });
+      })
+      .catch(() => { /* API failed to load — falls back to manual completion */ });
+
+    return () => {
+      cancelled = true;
+      stopPolling();
+      try { ytPlayerRef.current?.destroy?.(); } catch { /* ignore */ }
+      ytPlayerRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isYouTube, ytId]);
 
   // Video element event handlers (for direct video)
   const handleTimeUpdate = () => {
@@ -255,7 +334,42 @@ export default function VideoPlayer({
     );
   }
 
-  // ─── RENDER: EMBED VIDEO (YouTube/Vimeo) ───────────────────
+  // ─── RENDER: YOUTUBE (tracked via IFrame API) ──────────────
+  if (isYouTube) {
+    return (
+      <div className="space-y-3">
+        <div className="relative aspect-video overflow-hidden rounded-xl bg-black">
+          <div ref={ytContainerRef} className="h-full w-full" />
+        </div>
+
+        {/* Progress info */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 space-y-1">
+            <Progress value={progressPercent} className="h-2" />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" /> {formatTime(watchedSeconds)} watched
+              </span>
+              {totalSeconds > 0 && <span>{formatTime(totalSeconds)} total</span>}
+            </div>
+          </div>
+          {completed && (
+            <Badge className="bg-green-600 gap-1 shrink-0">
+              <CheckCircle2 className="h-3 w-3" /> Completed
+            </Badge>
+          )}
+        </div>
+
+        {!completed && (
+          <p className="rounded-lg bg-muted/50 p-2 text-xs text-muted-foreground">
+            ▶️ Watch progress is tracked automatically. This module completes once you've watched about 90%.
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  // ─── RENDER: EMBED VIDEO (Vimeo / other) ───────────────────
   return (
     <div className="space-y-3">
       <div className="relative rounded-xl overflow-hidden bg-black">

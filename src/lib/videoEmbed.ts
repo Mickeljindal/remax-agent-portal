@@ -88,3 +88,31 @@ function extractVimeoId(url: string): string | null {
     return null;
   }
 }
+
+/** Returns the YouTube video id for any YouTube URL, or null if not YouTube. */
+export function getYouTubeId(rawUrl: string): string | null {
+  if (!rawUrl) return null;
+  return extractYouTubeId(rawUrl.trim())?.id ?? null;
+}
+
+// Loads the YouTube IFrame Player API once and resolves with window.YT.
+let ytApiPromise: Promise<typeof window.YT> | null = null;
+export function loadYouTubeIframeApi(): Promise<typeof window.YT> {
+  if (typeof window === "undefined") return Promise.reject(new Error("no window"));
+  if (window.YT?.Player) return Promise.resolve(window.YT);
+  if (ytApiPromise) return ytApiPromise;
+
+  ytApiPromise = new Promise((resolve) => {
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      prev?.();
+      resolve(window.YT);
+    };
+    if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
+  });
+  return ytApiPromise;
+}

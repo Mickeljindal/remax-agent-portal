@@ -90,6 +90,10 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   `src/lib/videoEmbed.ts` `toEmbedUrl()` converts watch/youtu.be/shorts/live/vimeo
   links to the provider `/embed/` form; used by `VideoPlayer.tsx` getEmbedUrl. Admins
   can paste any normal YouTube link now. Non-video URLs pass through unchanged.
+  YouTube videos now track watch time automatically via the IFrame API
+  (`loadYouTubeIframeApi`/`getYouTubeId` + YT branch in `VideoPlayer.tsx`,
+  global typings in `src/types/youtube.d.ts`); auto-completes at ~90% watched.
+  Vimeo/other embeds still complete manually. Direct uploads track natively.
 
 ## Conventions
 
