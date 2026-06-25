@@ -86,6 +86,10 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   office card lists its rooms with add/edit/delete + active toggle (meeting_rooms CRUD).
   Default seeded rooms: Mississauga (Boardroom A, Meeting Room B, Virtual Room),
   Brampton (Conference Room, Huddle Room, Virtual Room).
+- Course video "refused to connect": YouTube/Vimeo watch/share URLs can't be iframed.
+  `src/lib/videoEmbed.ts` `toEmbedUrl()` converts watch/youtu.be/shorts/live/vimeo
+  links to the provider `/embed/` form; used by `VideoPlayer.tsx` getEmbedUrl. Admins
+  can paste any normal YouTube link now. Non-video URLs pass through unchanged.
 
 ## Conventions
 

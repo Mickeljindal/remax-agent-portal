@@ -14,6 +14,7 @@ import {
   Maximize,
   SkipForward,
 } from "lucide-react";
+import { toEmbedUrl } from "@/lib/videoEmbed";
 
 interface VideoPlayerProps {
   moduleId: string;
@@ -165,19 +166,9 @@ export default function VideoPlayer({
     return `${m}:${sec.toString().padStart(2, "0")}`;
   };
 
-  // Build embed URL with API params
-  const getEmbedUrl = () => {
-    let url = videoUrl;
-    if (url.includes("youtube.com") || url.includes("youtu.be")) {
-      const sep = url.includes("?") ? "&" : "?";
-      url += `${sep}enablejsapi=1&rel=0&modestbranding=1`;
-    }
-    if (url.includes("vimeo.com")) {
-      const sep = url.includes("?") ? "&" : "?";
-      url += `${sep}api=1&byline=0&portrait=0`;
-    }
-    return url;
-  };
+  // Build an embeddable URL (converts youtube.com/watch, youtu.be, vimeo.com, etc.
+  // into the provider's /embed/ form so the iframe is allowed to load).
+  const getEmbedUrl = () => toEmbedUrl(videoUrl);
 
   // ─── RENDER: DIRECT VIDEO (MP4/WebM from storage) ──────────
   if (isDirect) {
