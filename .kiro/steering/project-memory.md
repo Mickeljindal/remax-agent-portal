@@ -82,9 +82,10 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   Office + Room pickers. `OfficeBooking.tsx` fetches active events with a `room_id` for
   the selected day (`fetchRoomEvents` / `eventForSlot`) and blocks those hourly slots
   (amber "Event" label). Events with no `end_date` block a single 1-hour slot.
-  NOTE: there is still no admin UI to add/edit meeting_rooms (seeded via SQL only) —
-  rooms are: Mississauga (Boardroom A, Meeting Room B, Virtual Room), Brampton
-  (Conference Room, Huddle Room, Virtual Room).
+  NOTE: admins now manage meeting rooms in `AdminOffices.tsx` (`/admin/offices`) — each
+  office card lists its rooms with add/edit/delete + active toggle (meeting_rooms CRUD).
+  Default seeded rooms: Mississauga (Boardroom A, Meeting Room B, Virtual Room),
+  Brampton (Conference Room, Huddle Room, Virtual Room).
 
 ## Conventions
 
