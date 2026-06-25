@@ -77,6 +77,14 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   admin-only `GET /api/worksheet-id/:id` endpoint (token sent, shown as object URL).
   Migration `20260624140000` already applied to the live DB.
 - Server env loading needed care — `.env` at root and `server/.env`.
+- Event → room booking conflict: `events.room_id` (migration `20260624150000`, applied
+  to live DB) links an event to a `meeting_rooms` row. `AdminEvents.tsx` has optional
+  Office + Room pickers. `OfficeBooking.tsx` fetches active events with a `room_id` for
+  the selected day (`fetchRoomEvents` / `eventForSlot`) and blocks those hourly slots
+  (amber "Event" label). Events with no `end_date` block a single 1-hour slot.
+  NOTE: there is still no admin UI to add/edit meeting_rooms (seeded via SQL only) —
+  rooms are: Mississauga (Boardroom A, Meeting Room B, Virtual Room), Brampton
+  (Conference Room, Huddle Room, Virtual Room).
 
 ## Conventions
 

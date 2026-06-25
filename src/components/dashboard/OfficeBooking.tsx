@@ -19,6 +19,7 @@ import { callServerApi } from "@/lib/serverApi";
 interface Location { id: string; name: string; address: string | null; phone: string | null; notification_email: string | null; }
 interface Room { id: string; location_id: string; name: string; capacity: number | null; amenities: string | null; is_virtual: boolean; }
 interface Booking { id: string; room_id: string; agent_id: string; title: string; start_time: string; end_time: string; is_virtual: boolean; status: string; }
+interface RoomEvent { id: string; title: string; event_date: string; end_date: string | null; room_id: string | null; }
 
 interface OfficeBookingProps {
   agentId: string | undefined;
@@ -38,6 +39,7 @@ export default function OfficeBooking({ agentId, agentName, agentEmail }: Office
   const officeLabel = label("offices", "Office Locations & Booking", "Reserve a meeting room — pick a location, day, and time");
   const [rooms, setRooms] = useState<Room[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [roomEvents, setRoomEvents] = useState<RoomEvent[]>([]);
   const [activeLocationId, setActiveLocationId] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date>(startOfDay(new Date()));
   const [weekStart, setWeekStart] = useState<Date>(startOfDay(new Date()));
@@ -50,7 +52,7 @@ export default function OfficeBooking({ agentId, agentName, agentEmail }: Office
   const [saving, setSaving] = useState(false);
 
   useEffect(() => { fetchData(); }, []);
-  useEffect(() => { fetchBookings(); }, [selectedDate]);
+  useEffect(() => { fetchBookings(); fetchRoomEvents(); }, [selectedDate]);
 
   const fetchData = async () => {
     const { data: locData } = await supabase.from("office_locations").select("*").eq("is_active", true).order("sort_order");
@@ -72,12 +74,39 @@ export default function OfficeBooking({ agentId, agentName, agentEmail }: Office
     setBookings((data as Booking[]) || []);
   };
 
+  // Admin-scheduled events that occupy a specific room block that slot too.
+  const fetchRoomEvents = async () => {
+    const dayStart = startOfDay(selectedDate);
+    const dayEnd = addDays(dayStart, 1);
+    const { data } = await supabase
+      .from("events")
+      .select("id, title, event_date, end_date, room_id")
+      .eq("is_active", true)
+      .not("room_id", "is", null)
+      .gte("event_date", dayStart.toISOString())
+      .lt("event_date", dayEnd.toISOString());
+    setRoomEvents((data as RoomEvent[]) || []);
+  };
+
   const isSlotBooked = (roomId: string, slot: string) => {
     const [h] = slot.split(":").map(Number);
     const slotStart = new Date(selectedDate); slotStart.setHours(h, 0, 0, 0);
     return bookings.some((b) => {
       if (b.room_id !== roomId) return false;
       const s = new Date(b.start_time); const e = new Date(b.end_time);
+      return slotStart >= s && slotStart < e;
+    });
+  };
+
+  // Returns the event reserving this room/slot, if any (so we can show its title).
+  const eventForSlot = (roomId: string, slot: string): RoomEvent | undefined => {
+    const [h] = slot.split(":").map(Number);
+    const slotStart = new Date(selectedDate); slotStart.setHours(h, 0, 0, 0);
+    return roomEvents.find((ev) => {
+      if (ev.room_id !== roomId) return false;
+      const s = new Date(ev.event_date);
+      // No end time → assume the event blocks a single 1-hour slot.
+      const e = ev.end_date ? new Date(ev.end_date) : new Date(s.getTime() + 60 * 60 * 1000);
       return slotStart >= s && slotStart < e;
     });
   };
@@ -312,20 +341,23 @@ export default function OfficeBooking({ agentId, agentName, agentEmail }: Office
                             {SLOTS.map((slot) => {
                               const booked = isSlotBooked(room.id, slot.value);
                               const mine = myBooking(room.id, slot.value);
+                              const reservedEvent = !mine && !booked ? eventForSlot(room.id, slot.value) : undefined;
+                              const blocked = booked || !!reservedEvent;
                               return (
                                 <button
                                   key={slot.value}
-                                  disabled={booked && !mine}
+                                  disabled={blocked && !mine}
                                   onClick={() => mine ? cancelBooking(mine.id) : openBooking(room, slot.value)}
                                   className={cn(
                                     "rounded-md py-1.5 text-xs font-medium transition-all",
                                     mine ? "bg-[#1a4d8f] text-white hover:bg-[#e2231a]"
+                                      : reservedEvent ? "bg-amber-100 text-amber-800 cursor-not-allowed dark:bg-amber-950/40 dark:text-amber-200"
                                       : booked ? "bg-muted text-muted-foreground/50 line-through cursor-not-allowed"
                                       : "bg-green-50 text-green-700 hover:bg-[#e2231a] hover:text-white dark:bg-green-950/30 dark:text-green-300"
                                   )}
-                                  title={mine ? "Click to cancel your booking" : booked ? "Booked" : "Click to book"}
+                                  title={mine ? "Click to cancel your booking" : reservedEvent ? `Reserved for event: ${reservedEvent.title}` : booked ? "Booked" : "Click to book"}
                                 >
-                                  {mine ? "✓ Yours" : slot.label}
+                                  {mine ? "✓ Yours" : reservedEvent ? "Event" : slot.label}
                                 </button>
                               );
                             })}

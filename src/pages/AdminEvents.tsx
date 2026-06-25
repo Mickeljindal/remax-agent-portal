@@ -50,12 +50,16 @@ interface Event {
   end_date: string | null;
   event_type: string;
   location: string | null;
+  room_id: string | null;
   is_active: boolean;
   max_attendees: number | null;
   notify_agents: boolean;
   reminder_hours_before: number | null;
   created_at: string;
 }
+
+interface OfficeLocation { id: string; name: string; }
+interface MeetingRoom { id: string; location_id: string; name: string; }
 
 interface RsvpCount {
   event_id: string;
@@ -71,6 +75,8 @@ export default function AdminEvents() {
   const pageLabel = cardLabel("events", "Events management", "Create events, notify agents, track RSVPs");
   const { sendNotification } = useNotifications();
   const [events, setEvents] = useState<Event[]>([]);
+  const [officeLocations, setOfficeLocations] = useState<OfficeLocation[]>([]);
+  const [meetingRooms, setMeetingRooms] = useState<MeetingRoom[]>([]);
   const [rsvpCounts, setRsvpCounts] = useState<Record<string, number>>({});
   const [loadingData, setLoadingData] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -85,6 +91,8 @@ export default function AdminEvents() {
     end_date: "",
     event_type: "Meeting",
     location: "",
+    location_id: "none",
+    room_id: "none",
     is_active: true,
     max_attendees: "",
     notify_agents: true,
@@ -109,12 +117,16 @@ export default function AdminEvents() {
 
   const fetchData = async () => {
     setLoadingData(true);
-    const [eventsRes, rsvpsRes] = await Promise.all([
+    const [eventsRes, rsvpsRes, locRes, roomRes] = await Promise.all([
       supabase.from("events").select("*").order("event_date", { ascending: false }),
       supabase.from("event_rsvps").select("event_id"),
+      supabase.from("office_locations").select("id, name").eq("is_active", true).order("sort_order"),
+      supabase.from("meeting_rooms").select("id, location_id, name").eq("is_active", true),
     ]);
 
     setEvents((eventsRes.data as Event[]) || []);
+    setOfficeLocations((locRes.data as OfficeLocation[]) || []);
+    setMeetingRooms((roomRes.data as MeetingRoom[]) || []);
 
     // Count RSVPs per event
     const counts: Record<string, number> = {};
@@ -134,6 +146,8 @@ export default function AdminEvents() {
       end_date: "",
       event_type: "Meeting",
       location: "",
+      location_id: "none",
+      room_id: "none",
       is_active: true,
       max_attendees: "",
       notify_agents: true,
@@ -146,6 +160,7 @@ export default function AdminEvents() {
 
   const openEdit = (event: Event) => {
     setEditing(event);
+    const room = event.room_id ? meetingRooms.find((r) => r.id === event.room_id) : null;
     setForm({
       title: event.title,
       description: event.description || "",
@@ -153,6 +168,8 @@ export default function AdminEvents() {
       end_date: event.end_date ? event.end_date.slice(0, 16) : "",
       event_type: event.event_type,
       location: event.location || "",
+      location_id: room?.location_id || "none",
+      room_id: event.room_id || "none",
       is_active: event.is_active,
       max_attendees: event.max_attendees?.toString() || "",
       notify_agents: event.notify_agents ?? true,
@@ -177,6 +194,7 @@ export default function AdminEvents() {
       end_date: form.end_date ? new Date(form.end_date).toISOString() : null,
       event_type: form.event_type,
       location: form.location.trim() || null,
+      room_id: form.room_id && form.room_id !== "none" ? form.room_id : null,
       is_active: form.is_active,
       max_attendees: form.max_attendees ? parseInt(form.max_attendees) : null,
       notify_agents: form.notify_agents,
@@ -507,6 +525,51 @@ export default function AdminEvents() {
             <div>
               <Label>Location</Label>
               <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Office boardroom / Zoom link" />
+            </div>
+            <div className="rounded-lg border border-border bg-muted/30 p-3 space-y-3">
+              <Label className="text-sm font-semibold">Reserve a meeting room (optional)</Label>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-xs">Office</Label>
+                  <Select value={form.location_id} onValueChange={(v) => setForm({ ...form, location_id: v, room_id: "none" })}>
+                    <SelectTrigger><SelectValue placeholder="Select office" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No room / external</SelectItem>
+                      {officeLocations.map((l) => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs">Meeting room</Label>
+                  <Select
+                    value={form.room_id}
+                    disabled={form.location_id === "none"}
+                    onValueChange={(v) => {
+                      const room = meetingRooms.find((r) => r.id === v);
+                      const office = officeLocations.find((o) => o.id === form.location_id);
+                      setForm((f) => ({
+                        ...f,
+                        room_id: v,
+                        location:
+                          v !== "none" && !f.location.trim() && room
+                            ? `${room.name}${office ? ` — ${office.name}` : ""}`
+                            : f.location,
+                      }));
+                    }}
+                  >
+                    <SelectTrigger><SelectValue placeholder="Select room" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No specific room</SelectItem>
+                      {meetingRooms
+                        .filter((r) => r.location_id === form.location_id)
+                        .map((r) => <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Linking a room blocks that time slot in the agent boardroom booking, so agents can't double-book it.
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
