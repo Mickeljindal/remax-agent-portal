@@ -101,16 +101,25 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   FIRST version used dense desktop screenshots scaled into a vertical frame — the
   user rejected it as unreadable, no clear message, no attraction. SECOND version was
   a typography-led redesign with purpose-drawn vector UI mockups (no screenshots).
-  CURRENT version adds REAL PHOTOGRAPHY: 8 Unsplash photos in `docs/reel/img/`
+  THIRD version added REAL PHOTOGRAPHY: 8 Unsplash photos in `docs/reel/img/`
   (home1, home2, interior1, agent_woman, agent_man, skyline, keys, handshake) used as
   Ken-Burns backgrounds behind the vector UI mock cards. `handshake.jpg` backs the
-  outro. All 8 are referenced + preloaded in `reel.html`. Latest render: ~685 frames,
-  ~22.8s, ~22 MB MP4. The render script proactively recycles Chrome every ~150 frames
-  (headless crashes after ~600 screenshots) and retries dropped frames. Needs Chrome
-  at /Applications + ffmpeg + puppeteer-core.
+  outro. All 8 are referenced + preloaded in `reel.html`.
+  CURRENT version is an After Effects–style cinematic redesign: camera push-in/out
+  with motion blur, line-by-line masked headline reveals, 3D card tilt settle
+  (rotateX/Y + perspective), light-sweep sheen across cards, parallax Ken-Burns
+  backgrounds, overshoot pops (easeOutBack), CTA heartbeat pulse, ghost scene numbers.
+  Adds a reusable RE/MAX balloon SVG icon (red/white/blue bands clipped to a balloon
+  `<symbol id="balloon">`, reused via `<use>` in brand bar, intro, outro) and the REAL
+  logo at `docs/reel/img/logo.png` (copied from `src/assets/remax-excellence-logo.png`)
+  shown on the intro (clip-wipe reveal) and outro. Timing: INTRO 3.6s, 6 feature scenes
+  @ 2.9s, OUTRO 4.2s (~25s total). Latest render: 756 frames @30fps, ~20 MB MP4.
+  The render script proactively recycles Chrome every ~150 frames (headless crashes
+  after ~600 screenshots) and retries dropped frames. Needs Chrome at /Applications +
+  ffmpeg + puppeteer-core.
   NOTE: `scripts/` is gitignored, so render-reel.mjs / deck-to-pdf.mjs changes are NOT
-  committed — only `docs/reel/reel.html`, `docs/reel/img/*.jpg`, and
-  `docs/Agent-Portal-Reel.mp4` get committed.
+  committed — only `docs/reel/reel.html`, `docs/reel/img/*.jpg`, `docs/reel/img/logo.png`,
+  and `docs/Agent-Portal-Reel.mp4` get committed.
   GOTCHA: terminal output buffers can be STALE after a render — verify the MP4's
   on-disk mtime is newer than the newest input image rather than trusting buffered logs.
   PENDING with user: the CTA site `joinremaxex.com` is a placeholder — confirm the

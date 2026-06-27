@@ -11,52 +11,68 @@
     color:#fff;
     background:radial-gradient(130% 90% at 50% -5%, #1f5fb0 0%, #103163 42%, #0a1b39 72%, #070f1f 100%);
   }
-  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;z-index:0}
+
+  /* ---- ambient depth ---- */
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;z-index:0;will-change:transform}
   #b1{width:620px;height:620px;background:#e2231a;left:-180px;top:-140px}
   #b2{width:680px;height:680px;background:#1f7fe0;right:-240px;bottom:60px}
-  #grain{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:6px 6px;z-index:6;pointer-events:none}
+  #grain{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:6px 6px;z-index:9;pointer-events:none}
+  /* cinematic vignette + film bars feel */
+  #vignette{position:absolute;inset:0;z-index:8;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 42%, transparent 55%, rgba(3,8,18,.55) 100%)}
 
   /* giant ghost scene number */
-  #ghost{position:absolute;right:40px;top:300px;font-size:560px;font-weight:900;line-height:1;
-    color:rgba(255,255,255,.07);z-index:2;letter-spacing:-.04em}
+  #ghost{position:absolute;right:36px;top:280px;font-size:560px;font-weight:900;line-height:1;
+    color:rgba(255,255,255,.06);z-index:2;letter-spacing:-.04em;will-change:transform,opacity}
 
-  /* persistent brand */
-  #brand{position:absolute;top:74px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:18px;z-index:7}
-  #brand .mark{width:58px;height:58px;border-radius:16px;
-    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);box-shadow:0 10px 30px rgba(0,0,0,.4)}
-  #brand .name{font-size:27px;font-weight:800;letter-spacing:.14em}
-  #brand .name small{display:block;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.32em}
+  /* ---- RE/MAX balloon icon (defined once, reused via <use>) ---- */
+  .balloon{display:block}
 
-  /* feature scenes */
-  .scene{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 90px;text-align:center}
-  /* photographic background per scene + dark overlay so foreground stays legible */
-  .scene .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transform:scale(1.08);will-change:transform}
+  /* persistent brand bar */
+  #brand{position:absolute;top:70px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:16px;z-index:7;will-change:transform,opacity}
+  #brand .bmark{width:52px;height:66px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));will-change:transform}
+  #brand .name{font-size:26px;font-weight:800;letter-spacing:.14em}
+  #brand .name small{display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.32em}
+
+  /* ---- feature scenes ---- */
+  .scene{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 90px;text-align:center;will-change:opacity}
+  .scene .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transform:scale(1.12);will-change:transform;filter:saturate(1.05)}
   .scene .veil{position:absolute;inset:0;z-index:1;
-    background:linear-gradient(180deg, rgba(7,15,31,.62) 0%, rgba(7,15,31,.45) 38%, rgba(7,15,31,.72) 100%)}
-  .scene .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%}
+    background:linear-gradient(180deg, rgba(7,15,31,.66) 0%, rgba(7,15,31,.46) 38%, rgba(7,15,31,.74) 100%)}
+  .scene .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;will-change:transform,filter}
+
   .scene .kick{display:inline-block;background:rgba(226,35,26,.95);color:#fff;font-size:24px;font-weight:800;
-    letter-spacing:.2em;padding:12px 26px;border-radius:999px;box-shadow:0 14px 34px rgba(226,35,26,.4)}
-  .scene h2{margin-top:26px;font-size:92px;line-height:.98;font-weight:900;letter-spacing:-.03em;text-shadow:0 6px 30px rgba(0,0,0,.5)}
+    letter-spacing:.2em;padding:12px 26px;border-radius:999px;box-shadow:0 14px 34px rgba(226,35,26,.45);will-change:transform,opacity}
+
+  /* line-by-line masked headline reveal (AE lower-third style) */
+  .scene h2{margin-top:24px;font-size:90px;line-height:1.0;font-weight:900;letter-spacing:-.03em;text-shadow:0 6px 30px rgba(0,0,0,.5)}
+  .line{display:block;overflow:hidden}
+  .line .in{display:block;will-change:transform,filter,opacity}
   .scene h2 em{font-style:normal;color:#ff7a6e}
-  .scene .sub{margin-top:22px;font-size:34px;font-weight:600;color:rgba(255,255,255,.9);text-shadow:0 3px 16px rgba(0,0,0,.5)}
-  .scene .mock{margin-top:54px}
+
+  .scene .sub{margin-top:22px;font-size:33px;font-weight:600;color:rgba(255,255,255,.9);text-shadow:0 3px 16px rgba(0,0,0,.5);will-change:transform,opacity}
+  .scene .mock{margin-top:50px;perspective:1400px}
+  .scene .mock .tilt{will-change:transform;transform-style:preserve-3d}
 
   /* generic UI card */
-  .uicard{width:760px;background:#fff;color:#0f1b2e;border-radius:34px;padding:40px;
-    box-shadow:0 60px 130px rgba(0,0,0,.7);text-align:left}
+  .uicard{position:relative;width:760px;background:#fff;color:#0f1b2e;border-radius:34px;padding:40px;
+    box-shadow:0 60px 130px rgba(0,0,0,.7);text-align:left;overflow:hidden}
+  /* light sweep / sheen across the card */
+  .sheen{position:absolute;top:-40%;left:0;width:55%;height:180%;z-index:5;pointer-events:none;
+    background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.55) 50%,transparent 100%);
+    transform:translateX(-160%) skewX(-12deg);will-change:transform;mix-blend-mode:screen}
   .uihead{display:flex;align-items:center;gap:16px;margin-bottom:26px}
   .uihead .ic{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:34px;overflow:hidden;flex:none}
   .uihead .ic img{width:100%;height:100%;object-fit:cover}
   .uihead .t{font-size:34px;font-weight:800}
   .uihead .d{font-size:22px;color:#64748b;font-weight:600;margin-top:2px}
+  .pop{will-change:transform,opacity}
 
-  /* calendar mock */
   .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
   .cal .cell{height:74px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#475569}
   .cal .on{background:#1a4d8f;color:#fff}
   .cal .ev{background:#e2231a;color:#fff}
 
-  /* progress ring + bars */
   .row{display:flex;align-items:center;gap:26px;margin-top:8px}
   .ring{width:150px;height:150px;border-radius:50%;
     background:conic-gradient(#e2231a 0 72%, #e8edf3 72% 100%);display:flex;align-items:center;justify-content:center;flex:none}
@@ -73,22 +89,19 @@
   .big{font-size:64px;font-weight:900;letter-spacing:-.02em}
   .muted{color:#64748b;font-weight:600}
 
-  /* photo block inside cards (real image) */
   .photo{height:250px;border-radius:22px;position:relative;overflow:hidden;margin-bottom:22px;background:#1a4d8f;background-size:cover;background-position:center}
-  .photo .tag{position:absolute;left:20px;top:20px;z-index:2}
-  .photo .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
+  .photo .tag{position:absolute;left:20px;top:20px;z-index:3}
+  .photo .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
   .photo .play span{width:92px;height:92px;border-radius:50%;background:rgba(255,255,255,.92);color:#1a4d8f;
     display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 16px 40px rgba(0,0,0,.4)}
   .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35));z-index:1}
 
-  /* slot grid */
   .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   .slots .s{height:78px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800}
   .slots .free{background:#ecfdf3;color:#15803d}
   .slots .ev{background:#fee2e2;color:#b91c1c}
   .slots .sel{background:#1a4d8f;color:#fff}
 
-  /* chat */
   .chat{display:flex;flex-direction:column;gap:16px}
   .chatrow{display:flex;align-items:flex-end;gap:14px}
   .chatrow .av{width:64px;height:64px;border-radius:50%;overflow:hidden;flex:none;box-shadow:0 6px 18px rgba(0,0,0,.2)}
@@ -99,49 +112,66 @@
   .booked{margin-top:8px;display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800;color:#15803d}
 
   .calc{display:flex;flex-direction:column;gap:14px}
-  .calc .line{display:flex;justify-content:space-between;font-size:28px;font-weight:700;color:#334155}
+  .calc .line{display:flex;justify-content:space-between;font-size:28px;font-weight:700;color:#334155;overflow:visible}
   .calc .res{margin-top:10px;background:#0f1b2e;color:#fff;border-radius:18px;padding:24px 28px;display:flex;justify-content:space-between;align-items:center}
   .calc .res .big{font-size:56px}
 
-  /* intro */
-  #intro{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px;overflow:hidden}
-  #intro .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transform:scale(1.12)}
-  #intro .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,18,38,.66),rgba(8,18,38,.5) 45%,rgba(8,18,38,.82))}
-  #intro .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
-  #intro .kicker{font-size:30px;font-weight:800;letter-spacing:.36em;color:#ff9e95}
-  #intro .mark{margin-top:42px;width:168px;height:168px;border-radius:42px;
-    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);box-shadow:0 34px 90px rgba(0,0,0,.6)}
-  #intro h1{margin-top:46px;font-size:108px;font-weight:900;letter-spacing:-.03em;line-height:.95;text-shadow:0 8px 40px rgba(0,0,0,.55)}
-  #intro h1 span{color:#ff7a6e}
-  #intro p{margin-top:30px;font-size:42px;font-weight:600;color:rgba(255,255,255,.92);line-height:1.22;text-shadow:0 4px 20px rgba(0,0,0,.5)}
+  /* ---- intro ---- */
+  #intro{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px;overflow:hidden}
+  #intro .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transform:scale(1.16);will-change:transform}
+  #intro .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,18,38,.7),rgba(8,18,38,.52) 45%,rgba(8,18,38,.84))}
+  #intro .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;will-change:transform,filter,opacity}
+  #intro .kicker{font-size:28px;font-weight:800;letter-spacing:.4em;color:#ff9e95;will-change:transform,opacity}
+  #intro .ibal{margin-top:30px;width:150px;height:188px;filter:drop-shadow(0 26px 50px rgba(0,0,0,.55));will-change:transform}
+  #intro .logoWrap{margin-top:36px;overflow:hidden;will-change:clip-path}
+  #intro .logo{display:block;width:760px;max-width:82vw;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+  #intro p{margin-top:30px;font-size:40px;font-weight:600;color:rgba(255,255,255,.92);line-height:1.22;text-shadow:0 4px 20px rgba(0,0,0,.5);will-change:transform,opacity}
 
-  /* outro */
-  #outro{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 80px;overflow:hidden}
-  #outro .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transform:scale(1.12)}
-  #outro .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,18,38,.72),rgba(8,18,38,.6) 45%,rgba(8,18,38,.88))}
-  #outro .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
-  #outro .mark{width:140px;height:140px;border-radius:36px;
-    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);box-shadow:0 30px 80px rgba(0,0,0,.6);margin-bottom:42px}
-  #outro h1{font-size:100px;font-weight:900;letter-spacing:-.03em;line-height:1.0;text-shadow:0 8px 40px rgba(0,0,0,.55)}
-  #outro h1 span{color:#ff7a6e}
-  #outro p{margin-top:30px;font-size:38px;font-weight:600;color:rgba(255,255,255,.9);line-height:1.3;text-shadow:0 4px 18px rgba(0,0,0,.5)}
-  #outro .cta{margin-top:64px;background:#e2231a;color:#fff;font-size:40px;font-weight:900;
-    padding:34px 76px;border-radius:24px;box-shadow:0 26px 64px rgba(226,35,26,.55)}
-  #outro .handle{margin-top:40px;font-size:30px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.04em}
+  /* ---- outro ---- */
+  #outro{position:absolute;inset:0;z-index:11;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 80px;overflow:hidden}
+  #outro .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transform:scale(1.16);will-change:transform}
+  #outro .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,18,38,.76),rgba(8,18,38,.62) 45%,rgba(8,18,38,.9))}
+  #outro .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
+  #outro .obal{width:120px;height:150px;filter:drop-shadow(0 22px 44px rgba(0,0,0,.55));margin-bottom:28px;will-change:transform}
+  #outro .logo{display:block;width:680px;max-width:80vw;filter:drop-shadow(0 12px 34px rgba(0,0,0,.55));will-change:transform,opacity}
+  #outro p{margin-top:30px;font-size:36px;font-weight:600;color:rgba(255,255,255,.9);line-height:1.3;text-shadow:0 4px 18px rgba(0,0,0,.5);will-change:transform,opacity}
+  #outro .cta{margin-top:54px;background:#e2231a;color:#fff;font-size:40px;font-weight:900;
+    padding:32px 74px;border-radius:24px;box-shadow:0 26px 64px rgba(226,35,26,.55);will-change:transform}
+  #outro .handle{margin-top:36px;font-size:30px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.04em;will-change:opacity}
 
-  #prog{position:absolute;bottom:54px;left:80px;right:80px;display:flex;gap:10px;z-index:10}
+  #prog{position:absolute;bottom:54px;left:80px;right:80px;display:flex;gap:10px;z-index:12}
   #prog .seg{flex:1;height:9px;border-radius:6px;background:rgba(255,255,255,.22);overflow:hidden}
   #prog .seg i{display:block;height:100%;width:0;background:#fff}
 </style>
 </head>
 <body>
 <div id="stage">
+  <!-- balloon icon defined once -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <clipPath id="bclip" clipPathUnits="userSpaceOnUse">
+        <path d="M50 3 C22 3 6 27 6 53 C6 84 33 107 45 117 L55 117 C67 107 94 84 94 53 C94 27 78 3 50 3 Z"/>
+      </clipPath>
+      <symbol id="balloon" viewBox="0 0 100 132">
+        <g clip-path="url(#bclip)">
+          <rect x="0" y="0" width="100" height="40" fill="#e2231a"/>
+          <rect x="0" y="40" width="100" height="38" fill="#ffffff"/>
+          <rect x="0" y="78" width="100" height="44" fill="#13427d"/>
+        </g>
+        <path d="M50 3 C22 3 6 27 6 53 C6 84 33 107 45 117 L55 117 C67 107 94 84 94 53 C94 27 78 3 50 3 Z" fill="none" stroke="rgba(15,27,46,.12)" stroke-width="1.5"/>
+        <path d="M45 117 L55 117 L53.5 128 Q50 131 46.5 128 Z" fill="#0f1b2e"/>
+        <line x1="46" y1="116" x2="47" y2="120" stroke="#0f1b2e" stroke-width="1.4"/>
+        <line x1="54" y1="116" x2="53" y2="120" stroke="#0f1b2e" stroke-width="1.4"/>
+      </symbol>
+    </defs>
+  </svg>
+
   <div class="blob" id="b1"></div>
   <div class="blob" id="b2"></div>
   <div id="ghost">01</div>
 
   <div id="brand">
-    <div class="mark"></div>
+    <svg class="bmark" viewBox="0 0 100 132"><use href="#balloon"/></svg>
     <div class="name">RE/MAX EXCELLENCE<small>AGENT PORTAL</small></div>
   </div>
 
@@ -150,22 +180,23 @@
     <div class="bg" style="background-image:url('img/skyline.jpg')"></div>
     <div class="veil"></div>
     <div class="inner">
-      <span class="kick pop">ALL&#8209;IN&#8209;ONE</span>
-      <h2 class="pop">Your whole day,<br/><em>one login</em></h2>
-      <div class="sub pop">Calendar, training &amp; tasks at a glance</div>
-      <div class="mock pop">
+      <span class="kick">ALL&#8209;IN&#8209;ONE</span>
+      <h2><span class="line"><span class="in">Your whole day,</span></span><span class="line"><span class="in"><em>one login</em></span></span></h2>
+      <div class="sub">Calendar, training &amp; tasks at a glance</div>
+      <div class="mock"><div class="tilt">
         <div class="uicard">
-          <div class="uihead"><div class="ic" style="background:#dbeafe;color:#1d4ed8">&#128197;</div>
+          <div class="sheen"></div>
+          <div class="uihead pop"><div class="ic" style="background:#dbeafe;color:#1d4ed8">&#128197;</div>
             <div><div class="t">This week</div><div class="d">3 events &middot; 2 tasks due</div></div></div>
-          <div class="cal">
+          <div class="cal pop">
             <div class="cell">M</div><div class="cell">T</div><div class="cell on">W</div><div class="cell">T</div><div class="cell ev">F</div><div class="cell">S</div><div class="cell">S</div>
           </div>
-          <div class="row" style="margin-top:26px">
+          <div class="row pop" style="margin-top:26px">
             <div class="ring"><i>72%</i></div>
             <div style="flex:1"><div class="lbl">Training progress</div><div class="bar"><i style="width:72%"></i></div><div class="d">Almost there &mdash; 2 modules left</div></div>
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   </div>
 
@@ -174,20 +205,21 @@
     <div class="bg" style="background-image:url('img/interior1.jpg')"></div>
     <div class="veil"></div>
     <div class="inner">
-      <span class="kick pop">GROW FASTER</span>
-      <h2 class="pop">Training that<br/><em>pays off</em></h2>
-      <div class="sub pop">Video courses, quizzes &amp; certificates</div>
-      <div class="mock pop">
+      <span class="kick">GROW FASTER</span>
+      <h2><span class="line"><span class="in">Training that</span></span><span class="line"><span class="in"><em>pays off</em></span></span></h2>
+      <div class="sub">Video courses, quizzes &amp; certificates</div>
+      <div class="mock"><div class="tilt">
         <div class="uicard">
-          <div class="photo" style="background-image:url('img/interior1.jpg')"><span class="pill blue tag">&#9654; 12 min</span><div class="play"><span>&#9654;</span></div></div>
-          <div class="t" style="font-size:36px;font-weight:800">Listing Mastery 101</div>
-          <div class="bar"><i style="width:60%"></i></div>
-          <div class="row" style="justify-content:space-between">
+          <div class="sheen"></div>
+          <div class="photo pop" style="background-image:url('img/interior1.jpg')"><span class="pill blue tag">&#9654; 12 min</span><div class="play"><span>&#9654;</span></div></div>
+          <div class="t pop" style="font-size:36px;font-weight:800">Listing Mastery 101</div>
+          <div class="bar pop"><i style="width:60%"></i></div>
+          <div class="row pop" style="justify-content:space-between">
             <span class="muted" style="font-size:24px">6 of 10 modules</span>
             <span class="pill green">&#127891; Certificate</span>
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   </div>
 
@@ -196,19 +228,20 @@
     <div class="bg" style="background-image:url('img/home1.jpg')"></div>
     <div class="veil"></div>
     <div class="inner">
-      <span class="kick pop">WIN MORE DEALS</span>
-      <h2 class="pop">Inventory in<br/><em>your pocket</em></h2>
-      <div class="sub pop">Search, filter &amp; share pre&#8209;con in a tap</div>
-      <div class="mock pop">
+      <span class="kick">WIN MORE DEALS</span>
+      <h2><span class="line"><span class="in">Inventory in</span></span><span class="line"><span class="in"><em>your pocket</em></span></span></h2>
+      <div class="sub">Search, filter &amp; share pre&#8209;con in a tap</div>
+      <div class="mock"><div class="tilt">
         <div class="uicard">
-          <div class="photo" style="background-image:url('img/home2.jpg')"><span class="pill green tag">Now Selling</span></div>
-          <div class="t" style="font-size:36px;font-weight:800">Wilmot Condos &middot; Oakville</div>
-          <div class="row" style="justify-content:space-between;margin-top:16px">
+          <div class="sheen"></div>
+          <div class="photo pop" style="background-image:url('img/home2.jpg')"><span class="pill green tag">Now Selling</span></div>
+          <div class="t pop" style="font-size:36px;font-weight:800">Wilmot Condos &middot; Oakville</div>
+          <div class="row pop" style="justify-content:space-between;margin-top:16px">
             <span class="big" style="color:#e2231a">$560,973</span>
             <span class="pill amber">3% co&#8209;op</span>
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   </div>
 
@@ -217,20 +250,21 @@
     <div class="bg" style="background-image:url('img/interior1.jpg')"></div>
     <div class="veil"></div>
     <div class="inner">
-      <span class="kick pop">WORK SMARTER</span>
-      <h2 class="pop">Numbers,<br/><em>done for you</em></h2>
-      <div class="sub pop">HST, commission &amp; client worksheets</div>
-      <div class="mock pop">
+      <span class="kick">WORK SMARTER</span>
+      <h2><span class="line"><span class="in">Numbers,</span></span><span class="line"><span class="in"><em>done for you</em></span></span></h2>
+      <div class="sub">HST, commission &amp; client worksheets</div>
+      <div class="mock"><div class="tilt">
         <div class="uicard">
-          <div class="uihead"><div class="ic" style="background:#dcfce7;color:#15803d">&#129518;</div>
+          <div class="sheen"></div>
+          <div class="uihead pop"><div class="ic" style="background:#dcfce7;color:#15803d">&#129518;</div>
             <div><div class="t">Commission calculator</div><div class="d">Sale price $750,000 &middot; 2.5%</div></div></div>
           <div class="calc">
-            <div class="line"><span>Gross commission</span><span>$18,750</span></div>
-            <div class="line"><span>Brokerage split</span><span class="muted">90 / 10</span></div>
-            <div class="res"><span style="font-size:26px;font-weight:700">You keep</span><span class="big">$16,875</span></div>
+            <div class="line pop"><span>Gross commission</span><span>$18,750</span></div>
+            <div class="line pop"><span>Brokerage split</span><span class="muted">90 / 10</span></div>
+            <div class="res pop"><span style="font-size:26px;font-weight:700">You keep</span><span class="big">$16,875</span></div>
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   </div>
 
@@ -239,18 +273,19 @@
     <div class="bg" style="background-image:url('img/agent_man.jpg')"></div>
     <div class="veil"></div>
     <div class="inner">
-      <span class="kick pop">NEVER STUCK</span>
-      <h2 class="pop">Help in<br/><em>one tap</em></h2>
-      <div class="sub pop">Support tickets &amp; instant booking</div>
-      <div class="mock pop">
+      <span class="kick">NEVER STUCK</span>
+      <h2><span class="line"><span class="in">Help in</span></span><span class="line"><span class="in"><em>one tap</em></span></span></h2>
+      <div class="sub">Support tickets &amp; instant booking</div>
+      <div class="mock"><div class="tilt">
         <div class="uicard">
+          <div class="sheen"></div>
           <div class="chat">
-            <div class="chatrow"><div class="av"><img src="img/agent_woman.jpg" alt=""/></div><div class="msg them">Hey! How do I list a pre&#8209;con unit?</div></div>
-            <div class="msg me">Tap Listings &rarr; Share. Want me to book a quick call?</div>
-            <div class="booked">&#9989; Meeting booked &middot; Today 3:00 PM</div>
+            <div class="chatrow pop"><div class="av"><img src="img/agent_woman.jpg" alt=""/></div><div class="msg them">Hey! How do I list a pre&#8209;con unit?</div></div>
+            <div class="msg me pop">Tap Listings &rarr; Share. Want me to book a quick call?</div>
+            <div class="booked pop">&#9989; Meeting booked &middot; Today 3:00 PM</div>
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   </div>
 
@@ -259,65 +294,68 @@
     <div class="bg" style="background-image:url('img/home1.jpg')"></div>
     <div class="veil"></div>
     <div class="inner">
-      <span class="kick pop">PLUG &amp; PLAY</span>
-      <h2 class="pop">Book a boardroom<br/><em>in seconds</em></h2>
-      <div class="sub pop">Real rooms, real&#8209;time availability</div>
-      <div class="mock pop">
+      <span class="kick">PLUG &amp; PLAY</span>
+      <h2><span class="line"><span class="in">Book a boardroom</span></span><span class="line"><span class="in"><em>in seconds</em></span></span></h2>
+      <div class="sub">Real rooms, real&#8209;time availability</div>
+      <div class="mock"><div class="tilt">
         <div class="uicard">
-          <div class="uihead"><div class="ic" style="background:#fee2e2;color:#b91c1c">&#128682;</div>
+          <div class="sheen"></div>
+          <div class="uihead pop"><div class="ic" style="background:#fee2e2;color:#b91c1c">&#128682;</div>
             <div><div class="t">Mississauga &middot; Boardroom A</div><div class="d">Wednesday availability</div></div></div>
           <div class="slots">
-            <div class="s free">9</div><div class="s free">10</div><div class="s ev">11</div><div class="s free">12</div>
-            <div class="s free">1</div><div class="s sel">2 &#10003;</div><div class="s free">3</div><div class="s free">4</div>
+            <div class="s free pop">9</div><div class="s free pop">10</div><div class="s ev pop">11</div><div class="s free pop">12</div>
+            <div class="s free pop">1</div><div class="s sel pop">2 &#10003;</div><div class="s free pop">3</div><div class="s free pop">4</div>
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   </div>
 
+  <!-- INTRO -->
   <div id="intro">
     <div class="bg" style="background-image:url('img/home1.jpg')"></div>
     <div class="veil"></div>
     <div class="inner">
       <div class="kicker">WHEN YOU JOIN</div>
-      <div class="mark"></div>
-      <h1>RE/MAX<br/><span>Excellence</span></h1>
+      <svg class="ibal" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+      <div class="logoWrap"><img class="logo" src="img/logo.png" alt="RE/MAX Excellence"/></div>
       <p>You get tools that make<br/>your every day easier.</p>
     </div>
   </div>
 
+  <!-- OUTRO -->
   <div id="outro">
     <div class="bg" style="background-image:url('img/handshake.jpg')"></div>
     <div class="veil"></div>
     <div class="inner">
-      <div class="mark"></div>
-      <h1>Grow with<br/><span>RE/MAX Excellence</span></h1>
+      <svg class="obal" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+      <img class="logo" src="img/logo.png" alt="RE/MAX Excellence"/>
       <p>Training &middot; Listings &middot; Tools &middot; Support<br/>&mdash; all in one portal.</p>
       <div class="cta">Join our team</div>
       <div class="handle">joinremaxex.com</div>
     </div>
   </div>
 
+  <div id="vignette"></div>
   <div id="grain"></div>
   <div id="prog"></div>
 </div>
 
 <script>
   const SCENES = ["s0","s1","s2","s3","s4","s5"];
-  const INTRO = 3.0, FEAT = 2.7, OUTRO = 3.6;
+  const INTRO = 3.6, FEAT = 2.9, OUTRO = 4.2;
   const FSTART = INTRO;
   const OSTART = FSTART + SCENES.length * FEAT;
   const TOTAL = OSTART + OUTRO;
   window.__duration = TOTAL;
 
-  // Preload all photographic assets, then signal ready.
+  // Preload photographic + logo assets, then signal ready.
   const IMGS = ["skyline","interior1","home1","home2","agent_man","agent_woman","keys","handshake"]
-    .map(n => "img/" + n + ".jpg");
+    .map(n => "img/" + n + ".jpg").concat(["img/logo.png"]);
   let loaded = 0;
   window.__ready = false;
   function done(){ if (++loaded >= IMGS.length) window.__ready = true; }
   IMGS.forEach(src => { const im = new Image(); im.onload = done; im.onerror = done; im.src = src; });
-  // safety: never hang the renderer
   setTimeout(() => { window.__ready = true; }, 8000);
 
   const segCount = SCENES.length + 2;
@@ -329,46 +367,101 @@
     intro: document.getElementById("intro"), outro: document.getElementById("outro"),
     brand: document.getElementById("brand"), ghost: document.getElementById("ghost"),
     b1: document.getElementById("b1"), b2: document.getElementById("b2"),
+    bmark: document.querySelector("#brand .bmark"),
   };
   const scenes = SCENES.map((id)=>document.getElementById(id));
-  const sceneBgs = scenes.map((s)=>s.querySelector(".bg"));
-  const scenePops = scenes.map((s)=>[...s.querySelectorAll(".pop")]);
+  const sceneBgs   = scenes.map((s)=>s.querySelector(".bg"));
+  const sceneInner = scenes.map((s)=>s.querySelector(".inner"));
+  const sceneKick  = scenes.map((s)=>s.querySelector(".kick"));
+  const sceneLines = scenes.map((s)=>[...s.querySelectorAll(".line .in")]);
+  const sceneSub   = scenes.map((s)=>s.querySelector(".sub"));
+  const sceneTilt  = scenes.map((s)=>s.querySelector(".tilt"));
+  const sceneSheen = scenes.map((s)=>s.querySelector(".sheen"));
+  const scenePops  = scenes.map((s)=>[...s.querySelectorAll(".pop")]);
   const introBg = el.intro.querySelector(".bg");
   const outroBg = el.outro.querySelector(".bg");
+  const introInner = el.intro.querySelector(".inner");
+  const introKicker = el.intro.querySelector(".kicker");
+  const introBal = el.intro.querySelector(".ibal");
+  const introLogoWrap = el.intro.querySelector(".logoWrap");
+  const introP = el.intro.querySelector("p");
+  const outroInner = el.outro.querySelector(".inner");
+  const outroBal = el.outro.querySelector(".obal");
+  const outroLogo = el.outro.querySelector(".logo");
+  const outroP = el.outro.querySelector("p");
+  const outroCta = el.outro.querySelector(".cta");
+  const outroHandle = el.outro.querySelector(".handle");
+
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  const easeOut=t=>1-Math.pow(1-t,3);
+  const easeOutCubic=t=>1-Math.pow(1-t,3);
+  const easeInCubic=t=>t*t*t;
   const easeInOut=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const easeOutExpo=t=>t>=1?1:1-Math.pow(2,-10*t);
+  const easeOutBack=t=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);};
 
   function hideScene(i){ scenes[i].style.opacity=0; scenes[i].style.display="none"; }
 
   function animateScene(i, local){
     const s = scenes[i];
     s.style.display="flex";
-    const inAll = easeOut(clamp(local/0.14,0,1));
-    const outAll = easeInOut(clamp((local-0.88)/0.12,0,1));
-    s.style.opacity = inAll*(1-outAll);
-    s.style.transform = `scale(${0.985+0.015*inAll}) translateY(${-22*outAll}px)`;
-    // Ken Burns on the photo background (slow zoom + drift)
-    const z = 1.08 + 0.10*local;
-    const dx = (i%2===0?1:-1) * 26 * local;
-    sceneBgs[i].style.transform = `scale(${z}) translateX(${dx}px)`;
-    // staggered pops
-    const pops = scenePops[i];
-    const exit = outAll;
-    pops.forEach((p,idx)=>{
-      const delay = 0.06 + idx*0.07;
-      const a = easeOut(clamp((local-delay)/0.20,0,1));
-      const op = a*(1-exit);
-      const y = (1-a)*46 - exit*26;
-      p.style.opacity = op;
-      p.style.transform = `translateY(${y}px)`;
+    const inAll  = easeOutExpo(clamp(local/0.16,0,1));
+    const outAll = easeInCubic(clamp((local-0.86)/0.14,0,1));
+    s.style.opacity = clamp(inAll - outAll, 0, 1);
+
+    // camera push-in on entrance, push-out + motion blur on exit
+    const camScale = 1.06 - 0.06*inAll + 0.05*outAll;
+    const camBlur  = (1-inAll)*7 + outAll*9;
+    sceneInner[i].style.transform = `scale(${camScale.toFixed(4)}) translateY(${(-26*outAll).toFixed(1)}px)`;
+    sceneInner[i].style.filter = camBlur>0.4 ? `blur(${camBlur.toFixed(1)}px)` : "none";
+
+    // parallax Ken-Burns background (slow zoom, opposite drift to foreground)
+    const z = 1.12 + 0.10*local;
+    const dx = (i%2===0?1:-1) * 24 * (local-0.5);
+    sceneBgs[i].style.transform = `scale(${z.toFixed(4)}) translateX(${dx.toFixed(1)}px)`;
+
+    // kick badge: overshoot pop
+    const ak = easeOutBack(clamp((local-0.04)/0.34,0,1));
+    sceneKick[i].style.opacity = clamp(ak,0,1);
+    sceneKick[i].style.transform = `scale(${(0.6+0.4*ak).toFixed(3)})`;
+
+    // headline: line-by-line masked reveal with motion blur
+    sceneLines[i].forEach((ln,idx)=>{
+      const d = 0.12 + idx*0.11;
+      const a = easeOutCubic(clamp((local-d)/0.5,0,1));
+      ln.style.transform = `translateY(${((1-a)*112).toFixed(1)}%)`;
+      ln.style.filter = a<0.96 ? `blur(${((1-a)*9).toFixed(1)}px)` : "none";
+      ln.style.opacity = clamp(a*1.2,0,1);
+    });
+
+    // sub line: fade + rise
+    const asub = easeOutCubic(clamp((local-0.34)/0.4,0,1));
+    sceneSub[i].style.opacity = clamp(asub,0,1);
+    sceneSub[i].style.transform = `translateY(${((1-asub)*26).toFixed(1)}px)`;
+
+    // card: 3D tilt settle
+    const at = easeOutCubic(clamp((local-0.20)/0.55,0,1));
+    const ry = (1-at)*-15, rx = (1-at)*9, ty = (1-at)*64;
+    sceneTilt[i].style.transform = `translateY(${ty.toFixed(1)}px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+    sceneTilt[i].style.opacity = clamp(at*1.4,0,1);
+
+    // light sweep across the card (once)
+    const sw = easeInOut(clamp((local-0.30)/0.45,0,1));
+    sceneSheen[i].style.transform = `translateX(${(-160 + sw*420).toFixed(1)}%) skewX(-12deg)`;
+    sceneSheen[i].style.opacity = sw>0 && sw<1 ? 1 : 0;
+
+    // staggered card content pops
+    scenePops[i].forEach((p,idx)=>{
+      const d = 0.30 + idx*0.06;
+      const a = easeOutCubic(clamp((local-d)/0.34,0,1));
+      p.style.opacity = clamp(a,0,1);
+      p.style.transform = `translateY(${((1-a)*30).toFixed(1)}px)`;
     });
   }
 
   window.renderFrame = function(t){
     t = clamp(t,0,TOTAL-0.001);
-    el.b1.style.transform = `translate(${Math.sin(t*0.6)*44}px,${Math.cos(t*0.5)*34}px)`;
-    el.b2.style.transform = `translate(${Math.cos(t*0.4)*54}px,${Math.sin(t*0.45)*44}px)`;
+    el.b1.style.transform = `translate(${(Math.sin(t*0.6)*44).toFixed(1)}px,${(Math.cos(t*0.5)*34).toFixed(1)}px)`;
+    el.b2.style.transform = `translate(${(Math.cos(t*0.4)*54).toFixed(1)}px,${(Math.sin(t*0.45)*44).toFixed(1)}px)`;
 
     const segDur = [INTRO, ...SCENES.map(()=>FEAT), OUTRO];
     let acc=0;
@@ -378,33 +471,82 @@
     const inOutro = t >= OSTART;
     const inFeat = !inIntro && !inOutro;
 
-    // INTRO
+    // ---- INTRO: balloon floats up, logo wipes in ----
     if (inIntro){
-      const p=t/INTRO; const appear=easeOut(clamp(p/0.42,0,1)); const leave=easeInOut(clamp((p-0.82)/0.18,0,1));
-      el.intro.style.display="flex"; el.intro.style.opacity=appear*(1-leave);
-      el.intro.style.transform=`translateY(${-34*leave}px)`;
-      introBg.style.transform=`scale(${1.12+0.10*p})`;
-      el.intro.querySelector(".inner").style.transform=`scale(${0.84+0.16*appear-0.04*leave})`;
+      const p=t/INTRO;
+      const appear=easeOutExpo(clamp(p/0.4,0,1));
+      const leave=easeInCubic(clamp((p-0.82)/0.18,0,1));
+      el.intro.style.display="flex"; el.intro.style.opacity=clamp(appear-leave,0,1);
+      introBg.style.transform=`scale(${(1.16+0.10*p).toFixed(4)})`;
+      introInner.style.transform=`translateY(${(-30*leave).toFixed(1)}px)`;
+      introInner.style.filter = leave>0.02 ? `blur(${(leave*10).toFixed(1)}px)` : "none";
+
+      const ak=easeOutCubic(clamp(p/0.22,0,1));
+      introKicker.style.opacity=clamp(ak,0,1);
+      introKicker.style.transform=`translateY(${((1-ak)*-16).toFixed(1)}px)`;
+
+      // balloon rises with gentle bob + scale
+      const ab=easeOutBack(clamp((p-0.06)/0.40,0,1));
+      const bob=Math.sin(t*1.7)*6;
+      introBal.style.transform=`translateY(${((1-ab)*70 + bob).toFixed(1)}px) scale(${(0.5+0.5*ab).toFixed(3)})`;
+      introBal.style.opacity=clamp(ab*1.3,0,1);
+
+      // logo reveal via left-to-right clip wipe
+      const aw=easeOutCubic(clamp((p-0.34)/0.4,0,1));
+      introLogoWrap.style.clipPath=`inset(0 ${((1-aw)*100).toFixed(1)}% 0 0)`;
+
+      const ap=easeOutCubic(clamp((p-0.55)/0.35,0,1));
+      introP.style.opacity=clamp(ap,0,1);
+      introP.style.transform=`translateY(${((1-ap)*24).toFixed(1)}px)`;
     } else { el.intro.style.opacity=0; el.intro.style.display="none"; }
 
-    // OUTRO
+    // ---- OUTRO ----
     if (inOutro){
-      const p=(t-OSTART)/OUTRO; const appear=easeOut(clamp(p/0.4,0,1));
-      el.outro.style.display="flex"; el.outro.style.opacity=appear;
-      outroBg.style.transform=`scale(${1.12+0.10*p})`;
-      el.outro.querySelector(".inner").style.transform=`scale(${0.92+0.08*appear})`;
+      const p=(t-OSTART)/OUTRO;
+      const appear=easeOutExpo(clamp(p/0.34,0,1));
+      el.outro.style.display="flex"; el.outro.style.opacity=clamp(appear,0,1);
+      outroBg.style.transform=`scale(${(1.16+0.10*p).toFixed(4)})`;
+      outroInner.style.transform=`scale(${(0.94+0.06*appear).toFixed(3)})`;
+
+      const bob=Math.sin(t*1.7)*5;
+      const ab=easeOutBack(clamp(p/0.3,0,1));
+      outroBal.style.transform=`translateY(${((1-ab)*40 + bob).toFixed(1)}px) scale(${(0.6+0.4*ab).toFixed(3)})`;
+      outroBal.style.opacity=clamp(ab,0,1);
+
+      const al=easeOutCubic(clamp((p-0.12)/0.34,0,1));
+      outroLogo.style.opacity=clamp(al,0,1);
+      outroLogo.style.transform=`translateY(${((1-al)*26).toFixed(1)}px)`;
+
+      const apr=easeOutCubic(clamp((p-0.30)/0.3,0,1));
+      outroP.style.opacity=clamp(apr,0,1);
+      outroP.style.transform=`translateY(${((1-apr)*20).toFixed(1)}px)`;
+
+      // CTA pops with overshoot then gentle heartbeat pulse
+      const ac=easeOutBack(clamp((p-0.46)/0.28,0,1));
+      const pulse=1 + (p>0.74?0.04*Math.sin((t-OSTART)*5):0);
+      outroCta.style.opacity=clamp(ac,0,1);
+      outroCta.style.transform=`scale(${(0.7+0.3*ac).toFixed(3)}) scale(${pulse.toFixed(3)})`;
+
+      const ah=easeOutCubic(clamp((p-0.62)/0.3,0,1));
+      outroHandle.style.opacity=clamp(ah,0,1);
     } else { el.outro.style.opacity=0; el.outro.style.display="none"; }
 
+    // brand bar + ghost only during features; balloon gently bobs
     el.brand.style.opacity = inFeat ? 1 : 0;
     el.ghost.style.opacity = inFeat ? 1 : 0;
+    if (inFeat){
+      el.bmark.style.transform = `translateY(${(Math.sin(t*1.8)*4).toFixed(1)}px) rotate(${(Math.sin(t*0.9)*2).toFixed(2)}deg)`;
+    }
 
-    // FEATURE SCENES
+    // ---- FEATURE SCENES ----
     const activeIdx = inFeat ? clamp(Math.floor((t-FSTART)/FEAT),0,SCENES.length-1) : -1;
     for (let i=0;i<scenes.length;i++){
       if (i===activeIdx){
         const local=(t-FSTART - i*FEAT)/FEAT;
         animateScene(i, local);
+        const gp = easeOutCubic(clamp(local/0.3,0,1));
         el.ghost.textContent = "0"+(i+1);
+        el.ghost.style.transform = `translateY(${((1-gp)*40 - local*30).toFixed(1)}px) scale(${(0.96+0.06*local).toFixed(3)})`;
       } else hideScene(i);
     }
   };
