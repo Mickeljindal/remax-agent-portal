@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agent Portal — CRM Expansion · Client Pitch</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+    --brand:#1a4d8f; --accent:#e2231a; --bg:#f1f5f9; --card:#ffffff;
+    --grad: linear-gradient(135deg,#1a4d8f 0%,#0a2a52 100%);
+    --ai: linear-gradient(135deg,#7c3aed 0%,#2563eb 100%);
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;}
+  .deck{max-width:1180px; margin:0 auto; padding:28px 20px 80px}
+  .slide{position:relative; background:var(--card); border:1px solid var(--line);
+    border-radius:18px; padding:56px 60px; margin:0 auto 26px; min-height:620px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06); overflow:hidden; display:flex; flex-direction:column;}
+  .slide .num{position:absolute; top:22px; right:28px; font-size:12px; color:var(--muted); letter-spacing:.08em}
+  .kicker{display:inline-block; font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:14px}
+  h1{font-size:46px; line-height:1.08; letter-spacing:-.02em; margin-bottom:18px}
+  h2{font-size:32px; line-height:1.15; letter-spacing:-.01em; margin-bottom:10px}
+  h3{font-size:18px; margin-bottom:6px}
+  p{color:var(--muted); font-size:17px; line-height:1.6}
+  .lead{font-size:20px; color:#334155; max-width:820px}
+  .pill{display:inline-flex; align-items:center; gap:8px; background:#eef2f7; color:var(--brand);
+    font-weight:600; font-size:13px; padding:7px 13px; border-radius:999px}
+  .pill.ai{background:#ede9fe;color:#6d28d9}
+  .grid{display:grid; gap:18px; margin-top:26px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  .feature{background:#f8fafc; border:1px solid var(--line); border-radius:14px; padding:20px}
+  .feature .ic{width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    font-size:21px; margin-bottom:12px; background:rgba(26,77,143,.1)}
+  .feature .ic.ai{background:rgba(124,58,237,.12)}
+  .feature h3{font-size:16px; margin-bottom:5px} .feature p{font-size:14px; line-height:1.5}
+  ul.clean{list-style:none; margin-top:18px; display:grid; gap:12px}
+  ul.clean li{display:flex; gap:12px; font-size:17px; color:#334155; line-height:1.5}
+  ul.clean li::before{content:"\2713"; color:#16a34a; font-weight:800; flex:0 0 auto}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:42px; align-items:center; flex:1}
+  .center{display:flex; flex-direction:column; justify-content:center; flex:1}
+  .cover{background:var(--grad); color:#fff; border:none}
+  .cover h1{font-size:56px} .cover p{color:rgba(255,255,255,.85)} .cover .pill{background:rgba(255,255,255,.14); color:#fff}
+  .cover.ai{background:var(--ai)}
+  .logo{width:54px;height:54px;border-radius:14px;background:#fff;color:var(--brand);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;margin-bottom:26px}
+  .stat{font-size:44px; font-weight:800; color:var(--brand); letter-spacing:-.02em}
+  .stat small{display:block; font-size:14px; font-weight:600; color:var(--muted); margin-top:4px}
+  .badge-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:22px}
+  .tech{background:#0f172a; color:#e2e8f0; font-size:13px; font-weight:600; padding:8px 14px; border-radius:8px}
+  .foot{margin-top:auto; padding-top:26px; color:var(--muted); font-size:13px; display:flex; justify-content:space-between}
+  .cta{display:inline-block; margin-top:26px; background:var(--accent); color:#fff; font-weight:700;
+    padding:15px 30px; border-radius:12px; font-size:17px; text-decoration:none}
+  .flow{display:flex; align-items:stretch; gap:12px; margin-top:30px; flex-wrap:wrap}
+  .flow .step{background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:16px 18px; flex:1; min-width:150px}
+  .flow .step .ph{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
+  .controls{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:50}
+  .controls button{background:var(--ink); color:#fff; border:none; border-radius:10px; padding:10px 16px; font-size:14px; cursor:pointer; opacity:.85}
+  .controls button:hover{opacity:1}
+
+  /* ---------- UI MOCKUPS ---------- */
+  .mock{margin-top:8px; background:#0f172a; border-radius:18px; padding:22px; flex:1; display:flex; flex-direction:column; min-height:0}
+  .mock .winbar{display:flex; gap:8px; margin-bottom:16px}
+  .mock .winbar i{width:12px;height:12px;border-radius:50%;background:#475569}
+  .mock .winbar i:nth-child(1){background:#f87171}.mock .winbar i:nth-child(2){background:#fbbf24}.mock .winbar i:nth-child(3){background:#34d399}
+  .pane{background:#fff; border-radius:12px; padding:16px; flex:1; overflow:hidden}
+
+  /* kanban */
+  .kanban{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; height:100%}
+  .col{background:#f1f5f9; border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:8px}
+  .col .ch{font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:#475569; display:flex; justify-content:space-between; padding:2px 4px 6px}
+  .col .ch b{color:#fff; background:var(--brand); border-radius:999px; font-size:11px; padding:1px 8px}
+  .deal{background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 11px; box-shadow:0 2px 6px rgba(15,23,42,.05)}
+  .deal .nm{font-size:13px; font-weight:700; color:#0f172a}
+  .deal .meta{font-size:11px; color:var(--muted); margin-top:3px}
+  .deal .val{font-size:13px; font-weight:800; color:#15803d; margin-top:6px}
+  .deal .av{display:inline-flex; align-items:center; gap:5px; margin-top:7px; font-size:11px; color:var(--muted)}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .hot{border-left:3px solid var(--accent)}
+  .score{float:right;font-size:10px;font-weight:800;color:#b91c1c;background:#fee2e2;border-radius:6px;padding:1px 6px}
+
+  /* contact timeline */
+  .contact{display:grid; grid-template-columns:260px 1fr; gap:16px; height:100%}
+  .profile{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:18px}
+  .profile .ava{width:64px;height:64px;border-radius:50%;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800}
+  .profile h4{font-size:18px;margin:12px 0 2px}
+  .profile .role{font-size:12px;color:var(--muted)}
+  .kv{display:flex;justify-content:space-between;font-size:12px;color:#334155;padding:7px 0;border-bottom:1px dashed var(--line)}
+  .kv span:first-child{color:var(--muted)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;background:#dbeafe;color:#1d4ed8;border-radius:999px;padding:3px 9px;margin:3px 3px 0 0}
+  .timeline{position:relative;padding-left:22px}
+  .timeline::before{content:"";position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:var(--line)}
+  .tl{position:relative;margin-bottom:14px}
+  .tl::before{content:"";position:absolute;left:-19px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--brand);border:2px solid #fff}
+  .tl.ai::before{background:#7c3aed}.tl.win::before{background:#16a34a}
+  .tl .h{font-size:13px;font-weight:700;color:#0f172a}
+  .tl .b{font-size:12px;color:var(--muted);margin-top:2px}
+  .tl .ts{font-size:11px;color:#94a3b8}
+
+  /* AI assistant */
+  .ai-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:100%}
+  .ai-chat{background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .ai-chat .from{font-size:11px;font-weight:800;color:#7c3aed;letter-spacing:.08em}
+  .bub{font-size:13px;line-height:1.5;border-radius:12px;padding:11px 13px}
+  .bub.u{background:#1a4d8f;color:#fff;align-self:flex-end;max-width:85%}
+  .bub.a{background:#fff;border:1px solid #e9d5ff;color:#0f172a}
+  .draft{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+  .draft .subj{font-size:13px;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
+  .draft p{font-size:12.5px;line-height:1.55;color:#334155;margin-bottom:8px}
+  .chips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .chip{font-size:11px;font-weight:700;background:#ede9fe;color:#6d28d9;border-radius:999px;padding:5px 11px}
+
+  /* dashboard */
+  .dash{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto 1fr;gap:12px;height:100%}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+  .kpi .n{font-size:26px;font-weight:800;color:var(--brand)} .kpi .l{font-size:11px;color:var(--muted);margin-top:2px}
+  .kpi .up{font-size:11px;font-weight:700;color:#16a34a}
+  .chart{grid-column:span 2;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column}
+  .bars{display:flex;align-items:flex-end;gap:14px;flex:1;margin-top:10px}
+  .bars .bar{flex:1;background:linear-gradient(180deg,#2f86e0,#1a4d8f);border-radius:6px 6px 0 0}
+  .funnel{grid-column:span 2;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:7px;justify-content:center}
+  .fstage{height:26px;border-radius:6px;background:var(--brand);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;padding:0 10px}
+
+  @media print{
+    body{background:#fff}.controls{display:none}.deck{max-width:none; padding:0}
+    .slide{break-after:page; page-break-after:always; margin:0; border:none; border-radius:0; box-shadow:none; min-height:100vh}
+  }
+  @media (max-width:760px){
+    .slide{padding:34px 24px}.two,.g2,.g3,.g4{grid-template-columns:1fr}
+    h1{font-size:34px}.cover h1{font-size:40px}h2{font-size:26px}
+    .kanban{grid-template-columns:repeat(2,1fr)}.contact,.ai-wrap{grid-template-columns:1fr}.dash{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 1 — COVER -->
+  <section class="slide cover ai">
+    <span class="num">01</span>
+    <div class="center">
+      <div class="logo">A+</div>
+      <span class="kicker" style="color:#fff">Agent Portal · Next Chapter</span>
+      <h1>Add an AI CRM<br/>to the Agent Portal</h1>
+      <p class="lead" style="color:rgba(255,255,255,.92)">Give every agent a built-in client manager — capture leads, automate follow-up, and close more deals, all inside the portal they already use every day.</p>
+      <div class="badge-row">
+        <span class="pill">Contacts &amp; Pipeline</span>
+        <span class="pill">Automated Follow-up</span>
+        <span class="pill ai" style="background:rgba(255,255,255,.18);color:#fff">AI Assistant</span>
+        <span class="pill">Brokerage Analytics</span>
+      </div>
+    </div>
+    <div class="foot" style="color:rgba(255,255,255,.78); border-top:1px solid rgba(255,255,255,.18)">
+      <span>RE/MAX Excellence · Agent Portal</span><span>Concept &amp; roadmap for review</span>
+    </div>
+  </section>
+
+  <!-- 2 — THE GAP -->
+  <section class="slide">
+    <span class="num">02</span>
+    <span class="kicker">The Gap Today</span>
+    <h2>The portal equips agents — but doesn't manage their clients</h2>
+    <p class="lead">Agents are trained, have listings and tools in one place. Yet their actual book of business still lives in phone contacts, spreadsheets, and memory.</p>
+    <div class="grid g4">
+      <div class="feature"><div class="ic">&#128202;</div><h3>Leads scattered</h3><p>Contacts split across phone, email, and notes — no single view.</p></div>
+      <div class="feature"><div class="ic">&#9203;</div><h3>Slow follow-up</h3><p>Most deals are lost to missed or late follow-ups.</p></div>
+      <div class="feature"><div class="ic">&#129488;</div><h3>No pipeline view</h3><p>Hard to see which deals are hot or stalling.</p></div>
+      <div class="feature"><div class="ic">&#128065;</div><h3>No broker insight</h3><p>The brokerage can't see team pipeline or response times.</p></div>
+    </div>
+    <p class="lead" style="margin-top:26px">We already own the agent's daily login. Adding a CRM makes the portal indispensable.</p>
+  </section>
+
+  <!-- 3 — THE VISION -->
+  <section class="slide">
+    <span class="num">03</span>
+    <div class="two">
+      <div>
+        <span class="kicker">The Vision</span>
+        <h2>One portal — now it closes deals too</h2>
+        <ul class="clean">
+          <li>Every lead captured the moment it lands</li>
+          <li>A visual pipeline from first call to closing</li>
+          <li>Automated, on-brand follow-up so nothing slips</li>
+          <li>An AI assistant that drafts, summarizes &amp; prioritizes</li>
+          <li>Native to the portal — same login, same branding</li>
+        </ul>
+      </div>
+      <div>
+        <div class="grid g2" style="margin-top:0">
+          <div class="feature" style="text-align:center"><div class="stat">1</div><small style="color:var(--muted)">App agents already use</small></div>
+          <div class="feature" style="text-align:center"><div class="stat" style="color:#7c3aed">AI</div><small style="color:var(--muted)">Built-in assistant</small></div>
+          <div class="feature" style="text-align:center"><div class="stat">0</div><small style="color:var(--muted)">New logins to learn</small></div>
+          <div class="feature" style="text-align:center"><div class="stat">100%</div><small style="color:var(--muted)">Your data &amp; brand</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 — FEATURE OVERVIEW -->
+  <section class="slide">
+    <span class="num">04</span>
+    <span class="kicker">At A Glance</span>
+    <h2>Everything an agent needs to manage clients</h2>
+    <div class="grid g4">
+      <div class="feature"><div class="ic">&#128100;</div><h3>Contacts</h3><p>One timeline per buyer, seller, or investor.</p></div>
+      <div class="feature"><div class="ic">&#128203;</div><h3>Pipeline</h3><p>Drag deals through editable stages.</p></div>
+      <div class="feature"><div class="ic ai">&#10024;</div><h3>AI Lead Score</h3><p>Know who to call first, automatically.</p></div>
+      <div class="feature"><div class="ic">&#128231;</div><h3>Auto Follow-up</h3><p>Email/SMS drip sequences &amp; reminders.</p></div>
+      <div class="feature"><div class="ic ai">&#129302;</div><h3>AI Drafting</h3><p>Emails, texts &amp; call summaries in a click.</p></div>
+      <div class="feature"><div class="ic">&#128197;</div><h3>Tasks &amp; Calendar</h3><p>Showings &amp; follow-ups on one calendar.</p></div>
+      <div class="feature"><div class="ic">&#128241;</div><h3>Marketing</h3><p>Flyers &amp; just-sold posts from a listing.</p></div>
+      <div class="feature"><div class="ic">&#128200;</div><h3>Dashboards</h3><p>Agent &amp; brokerage pipeline analytics.</p></div>
+    </div>
+  </section>
+
+  <!-- 5 — MOCKUP: PIPELINE -->
+  <section class="slide">
+    <span class="num">05</span>
+    <span class="kicker">Product Concept · Pipeline</span>
+    <h2>A visual deal pipeline — drag, drop, done</h2>
+    <div class="mock">
+      <div class="winbar"><i></i><i></i><i></i></div>
+      <div class="pane">
+        <div class="kanban">
+          <div class="col">
+            <div class="ch">New Lead <b>4</b></div>
+            <div class="deal hot"><span class="score">98 HOT</span><div class="nm">Priya &amp; Sam</div><div class="meta">Pre-con · Oakville</div><div class="val">$560k</div></div>
+            <div class="deal"><div class="nm">Marcus Lee</div><div class="meta">Buyer · Condo</div><div class="val">$420k</div></div>
+            <div class="deal"><div class="nm">The Wus</div><div class="meta">Web inquiry</div><div class="val">$780k</div></div>
+          </div>
+          <div class="col">
+            <div class="ch">Contacted <b>3</b></div>
+            <div class="deal"><div class="nm">J. Okafor</div><div class="meta">Seller · Detached</div><div class="val">$1.2M</div></div>
+            <div class="deal hot"><span class="score">91 HOT</span><div class="nm">A. Ramirez</div><div class="meta">Investor</div><div class="val">$640k</div></div>
+          </div>
+          <div class="col">
+            <div class="ch">Showing <b>2</b></div>
+            <div class="deal"><div class="nm">D. Singh</div><div class="meta">2 showings booked</div><div class="val">$905k</div></div>
+          </div>
+          <div class="col">
+            <div class="ch">Offer <b>2</b></div>
+            <div class="deal"><div class="nm">The Bauers</div><div class="meta">Offer pending</div><div class="val">$1.05M</div></div>
+          </div>
+          <div class="col">
+            <div class="ch">Closed <b>5</b></div>
+            <div class="deal" style="border-left:3px solid #16a34a"><div class="nm">K. Adeyemi</div><div class="meta">&#10003; Firm</div><div class="val">$712k</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:13px">Stages are admin-editable — the same control pattern as the portal's pre-con statuses.</p>
+  </section>
+
+  <!-- 6 — MOCKUP: CONTACT TIMELINE -->
+  <section class="slide">
+    <span class="num">06</span>
+    <span class="kicker">Product Concept · Contact</span>
+    <h2>Every interaction, on one timeline</h2>
+    <div class="mock">
+      <div class="winbar"><i></i><i></i><i></i></div>
+      <div class="pane">
+        <div class="contact">
+          <div class="profile">
+            <div class="ava">PS</div>
+            <h4>Priya &amp; Sam</h4>
+            <div class="role">Buyer · First-time</div>
+            <div style="margin:12px 0">
+              <div class="kv"><span>Budget</span><span>$520k–$580k</span></div>
+              <div class="kv"><span>Area</span><span>Oakville</span></div>
+              <div class="kv"><span>Source</span><span>Pre-con worksheet</span></div>
+              <div class="kv"><span>AI score</span><span style="color:#b91c1c;font-weight:800">98 · Hot</span></div>
+            </div>
+            <span class="tag">Pre-con</span><span class="tag">Mortgage ready</span><span class="tag">Weekend tours</span>
+          </div>
+          <div class="timeline">
+            <div class="tl win"><div class="h">Worksheet submitted — Wilmot Condos</div><div class="b">Auto-created this contact &amp; deal.</div><div class="ts">Today · 9:12 AM</div></div>
+            <div class="tl ai"><div class="h">AI: drafted welcome email</div><div class="b">"Thanks for your interest in Wilmot Condos…" — sent.</div><div class="ts">Today · 9:13 AM</div></div>
+            <div class="tl"><div class="h">Call logged — 6 min</div><div class="b">Wants a weekend showing; pre-approved to $580k.</div><div class="ts">Today · 11:40 AM</div></div>
+            <div class="tl ai"><div class="h">AI summary &amp; next step</div><div class="b">Next best action: book Saturday tour, send 3 comparable units.</div><div class="ts">Today · 11:41 AM</div></div>
+            <div class="tl"><div class="h">Task — Send comparables</div><div class="b">Due tomorrow · reminder set.</div><div class="ts">Upcoming</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 — MOCKUP: AI ASSISTANT -->
+  <section class="slide">
+    <span class="num">07</span>
+    <span class="kicker">Product Concept · AI Assistant</span>
+    <h2>The AI does the busywork</h2>
+    <div class="mock" style="background:#1e1b4b">
+      <div class="winbar"><i></i><i></i><i></i></div>
+      <div class="pane">
+        <div class="ai-wrap">
+          <div class="ai-chat">
+            <div class="from">&#10024; PORTAL AI</div>
+            <div class="bub u">Draft a follow-up to Priya &amp; Sam after today's call.</div>
+            <div class="bub a">Done — friendly tone, references the weekend tour and their $580k budget. Want me to attach 3 comparable units?</div>
+            <div class="bub u">Yes, and remind me Friday.</div>
+            <div class="bub a">&#9989; Email drafted, 3 comps attached, reminder set for Fri 9 AM.</div>
+          </div>
+          <div class="draft">
+            <div class="subj">Subject: Your Oakville options + Saturday tour</div>
+            <p>Hi Priya &amp; Sam,</p>
+            <p>Great speaking today! Based on your $580k budget, I've lined up three Wilmot-area units that fit. I've also held a Saturday 11 AM tour slot for you.</p>
+            <p>Shall I confirm the time?</p>
+            <p style="color:#94a3b8">— Sent on your behalf · RE/MAX Excellence</p>
+            <div class="chips"><span class="chip">Make warmer</span><span class="chip">Shorten</span><span class="chip">Add comps</span><span class="chip">Send</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:13px">Drafting, call summaries, lead scoring &amp; "just-sold" posts — powered by an LLM behind our own server (keys never leave the brokerage).</p>
+  </section>
+
+  <!-- 8 — AUTOMATION -->
+  <section class="slide">
+    <span class="num">08</span>
+    <span class="kicker">Follow-up Engine</span>
+    <h2>No lead ever falls through the cracks</h2>
+    <div class="grid g3">
+      <div class="feature"><div class="ic">&#9889;</div><h3>Speed-to-lead</h3><p>The agent is pinged the second a new lead lands — first to respond wins.</p></div>
+      <div class="feature"><div class="ic">&#128259;</div><h3>Drip sequences</h3><p>Templated email/SMS steps fire automatically by stage or time.</p></div>
+      <div class="feature"><div class="ic">&#9200;</div><h3>Smart reminders</h3><p>"Call back in 3 days" tasks with overdue nudges.</p></div>
+      <div class="feature"><div class="ic">&#128221;</div><h3>Template library</h3><p>Brokerage-approved, on-brand messages ready to send.</p></div>
+      <div class="feature"><div class="ic ai">&#129518;</div><h3>Worksheet capture</h3><p>Existing pre-con worksheets auto-create a contact &amp; deal.</p></div>
+      <div class="feature"><div class="ic">&#128236;</div><h3>2-way messaging</h3><p>Email (and optional SMS via Twilio) logged to the timeline.</p></div>
+    </div>
+  </section>
+
+  <!-- 9 — MOCKUP: DASHBOARD -->
+  <section class="slide">
+    <span class="num">09</span>
+    <span class="kicker">Product Concept · Analytics</span>
+    <h2>Pipeline health for agents and the brokerage</h2>
+    <div class="mock">
+      <div class="winbar"><i></i><i></i><i></i></div>
+      <div class="pane">
+        <div class="dash">
+          <div class="kpi"><div class="n">$6.4M</div><div class="l">Pipeline value</div><div class="up">&#9650; 12%</div></div>
+          <div class="kpi"><div class="n">28</div><div class="l">Active deals</div><div class="up">&#9650; 4 new</div></div>
+          <div class="kpi"><div class="n">31%</div><div class="l">Conversion</div><div class="up">&#9650; 3%</div></div>
+          <div class="kpi"><div class="n">2m</div><div class="l">Avg. response</div><div class="up">&#9660; faster</div></div>
+          <div class="chart"><h3 style="font-size:13px">Deals closed / month</h3>
+            <div class="bars"><div class="bar" style="height:40%"></div><div class="bar" style="height:62%"></div><div class="bar" style="height:50%"></div><div class="bar" style="height:78%"></div><div class="bar" style="height:66%"></div><div class="bar" style="height:92%"></div></div>
+          </div>
+          <div class="funnel"><h3 style="font-size:13px">Pipeline funnel</h3>
+            <div class="fstage" style="width:100%">New Lead · 24</div>
+            <div class="fstage" style="width:80%;background:#2f6fc0">Contacted · 18</div>
+            <div class="fstage" style="width:58%;background:#3f86d6">Showing · 11</div>
+            <div class="fstage" style="width:38%;background:#5aa0e6">Offer · 7</div>
+            <div class="fstage" style="width:24%;background:#16a34a">Closed · 5</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — FITS ARCHITECTURE -->
+  <section class="slide">
+    <span class="num">10</span>
+    <span class="kicker">Why It's Low-Risk</span>
+    <h2>Built on the portal we already run</h2>
+    <div class="two">
+      <div>
+        <ul class="clean">
+          <li>Same React + TypeScript + Tailwind front end</li>
+          <li>Same Postgres database with per-agent security</li>
+          <li>Same Express server for email, AI calls &amp; webhooks</li>
+          <li>Reuses the calendar, calculators &amp; email settings</li>
+          <li>No new vendor lock-in — the brokerage owns all data</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feature"><div class="ic">&#128451;</div><h3>New data, cleanly scoped</h3>
+          <p style="margin-bottom:10px">Contacts, deals, stages, activities, tasks, templates &amp; automations — each agent sees only their own book; admins get the brokerage roll-up.</p>
+          <div class="badge-row">
+            <span class="tech">React</span><span class="tech">PostgreSQL</span><span class="tech">Node.js</span>
+            <span class="tech">LLM API</span><span class="tech">Twilio (opt.)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — ROADMAP -->
+  <section class="slide">
+    <span class="num">11</span>
+    <span class="kicker">Roadmap</span>
+    <h2>Ship value early, layer in AI</h2>
+    <div class="flow">
+      <div class="step"><div class="ph">Phase 1</div><h3>Foundation</h3><p>Contacts, pipeline, timeline, tasks, worksheet capture.</p></div>
+      <div class="step"><div class="ph">Phase 2</div><h3>Follow-up</h3><p>Templates, drips, reminders, speed-to-lead.</p></div>
+      <div class="step"><div class="ph">Phase 3</div><h3>AI Assistant</h3><p>Drafting, summaries, lead scoring.</p></div>
+      <div class="step"><div class="ph">Phase 4</div><h3>Marketing &amp; SMS</h3><p>Flyers, just-sold, 2-way texting.</p></div>
+      <div class="step"><div class="ph">Phase 5</div><h3>Analytics</h3><p>Agent + broker dashboards.</p></div>
+    </div>
+    <p class="lead" style="margin-top:28px">Phase 1 stands on its own — agents can run their whole book in the portal before any AI is added. AI is the fast-follow that creates the "wow."</p>
+  </section>
+
+  <!-- 12 — CLOSE -->
+  <section class="slide cover ai">
+    <span class="num">12</span>
+    <div class="center">
+      <span class="kicker" style="color:#fff">The Ask</span>
+      <h1 style="font-size:44px">Turn the portal into<br/>the agent's whole business</h1>
+      <div class="grid g2" style="margin-top:8px">
+        <ul class="clean">
+          <li style="color:#fff">A real recruiting edge: "free AI CRM included"</li>
+          <li style="color:#fff">Agents log in daily — not just for training</li>
+        </ul>
+        <ul class="clean">
+          <li style="color:#fff">Brokerage-wide pipeline visibility</li>
+          <li style="color:#fff">A new premium package &amp; revenue line</li>
+        </ul>
+      </div>
+      <a class="cta" href="#">Approve Phase 1 &amp; get the build estimate &rarr;</a>
+    </div>
+    <div class="foot" style="color:rgba(255,255,255,.78); border-top:1px solid rgba(255,255,255,.18)">
+      <span>RE/MAX Excellence · Agent Portal</span><span>Full plan: docs/CRM_EXPANSION_PLAN.md</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button onclick="window.print()">&#8595; Export PDF</button>
+  <button onclick="document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()">&#8599; Present</button>
+</div>
+</body>
+</html>

@@ -99,17 +99,34 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   Goal: a splashy 20-30s recruitment promo for social media to attract agents to
   RE/MAX Excellence ("when you join, you get tools that make your life easier").
   FIRST version used dense desktop screenshots scaled into a vertical frame — the
-  user rejected it as unreadable, no clear message, no attraction. CURRENT version is
-  a typography-led REDESIGN: purpose-drawn vector UI mockups (calendar, training ring,
-  listing card, commission calculator, chat, booking slot grid) with kinetic staggered
-  animations, brand intro/outro, wordmark, and ghost scene numbers — no raw
-  screenshots. Re-rendered: 685 frames, ~22.8s, ~8MB. The render script proactively
-  recycles Chrome every ~150 frames (headless crashes after ~600 screenshots) and
-  retries dropped frames. Needs Chrome at /Applications + ffmpeg + puppeteer-core.
-  NOTE: `scripts/` is gitignored, so render-reel.mjs changes are NOT committed — only
-  `docs/reel/reel.html` and `docs/Agent-Portal-Reel.mp4` get committed.
+  user rejected it as unreadable, no clear message, no attraction. SECOND version was
+  a typography-led redesign with purpose-drawn vector UI mockups (no screenshots).
+  CURRENT version adds REAL PHOTOGRAPHY: 8 Unsplash photos in `docs/reel/img/`
+  (home1, home2, interior1, agent_woman, agent_man, skyline, keys, handshake) used as
+  Ken-Burns backgrounds behind the vector UI mock cards. `handshake.jpg` backs the
+  outro. All 8 are referenced + preloaded in `reel.html`. Latest render: ~685 frames,
+  ~22.8s, ~22 MB MP4. The render script proactively recycles Chrome every ~150 frames
+  (headless crashes after ~600 screenshots) and retries dropped frames. Needs Chrome
+  at /Applications + ffmpeg + puppeteer-core.
+  NOTE: `scripts/` is gitignored, so render-reel.mjs / deck-to-pdf.mjs changes are NOT
+  committed — only `docs/reel/reel.html`, `docs/reel/img/*.jpg`, and
+  `docs/Agent-Portal-Reel.mp4` get committed.
+  GOTCHA: terminal output buffers can be STALE after a render — verify the MP4's
+  on-disk mtime is newer than the newest input image rather than trusting buffered logs.
   PENDING with user: the CTA site `joinremaxex.com` is a placeholder — confirm the
   real website/handle/phone; optionally add background music.
+
+## CRM expansion (PLAN + PITCH ONLY — not built)
+
+- Client wants to grow the portal into agent CRM features (inspired by novacrm.ai).
+  Explicitly NOT building it yet — only a plan + a pitch deck to sell the idea.
+- `docs/CRM_EXPANSION_PLAN.md` — why add CRM, NovaCRM reference, tailored feature set,
+  fit with the existing React/Supabase/Express stack, ~8 proposed `crm_*` tables,
+  5 delivery phases, risks.
+- `docs/CRM-Pitch-Deck.html` — 12-slide deck matching `docs/agent-portal-deck.html`
+  style, with drawn UI mockups (kanban pipeline, contact timeline, AI chat+draft,
+  analytics dashboard). Rendered to `docs/CRM-Pitch-Deck.pdf` via the (gitignored)
+  `scripts/deck-to-pdf.mjs` (now parameterized to take an input HTML + output PDF).
 
 ## Conventions
 
