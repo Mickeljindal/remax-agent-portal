@@ -117,13 +117,22 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   The render script proactively recycles Chrome every ~150 frames (headless crashes
   after ~600 screenshots) and retries dropped frames. Needs Chrome at /Applications +
   ffmpeg + puppeteer-core.
-  NOTE: `scripts/` is gitignored, so render-reel.mjs / deck-to-pdf.mjs changes are NOT
-  committed — only `docs/reel/reel.html`, `docs/reel/img/*.jpg`, `docs/reel/img/logo.png`,
-  and `docs/Agent-Portal-Reel.mp4` get committed.
+  MUSIC: the reel now has a background music bed. `scripts/generate-reel-music.mjs`
+  (gitignored) synthesizes an ORIGINAL, royalty-free uplifting track from pure math
+  (no samples → zero licensing risk): C-major I–V–vi–IV pad + sub-bass + building
+  arpeggio + soft 76bpm kick + shimmer + a noise riser into the outro, with fade
+  in/out, matched to the reel duration. `render-reel.mjs` now generates this WAV and
+  ffmpeg muxes it as an AAC 192k track during stitching (the WAV is a temp artifact,
+  deleted after; only the muxed MP4 ships). To swap in a real licensed track instead,
+  replace the music step / mux any MP3 over the video. Current MP4 ~21 MB, has audio.
+  NOTE: `scripts/` is gitignored, so render-reel.mjs / deck-to-pdf.mjs /
+  generate-reel-music.mjs changes are NOT committed — only `docs/reel/reel.html`,
+  `docs/reel/img/*.jpg`, `docs/reel/img/logo.png`, and `docs/Agent-Portal-Reel.mp4`
+  get committed.
   GOTCHA: terminal output buffers can be STALE after a render — verify the MP4's
   on-disk mtime is newer than the newest input image rather than trusting buffered logs.
-  PENDING with user: the CTA site `joinremaxex.com` is a placeholder — confirm the
-  real website/handle/phone; optionally add background music.
+  PENDING with user: the CTA site `joinremaxex.com` is still a placeholder — confirm
+  the real website/handle/phone so it can be swapped in and re-rendered.
 
 ## CRM expansion (PLAN + PITCH ONLY — not built)
 
