@@ -4,66 +4,114 @@
 <meta charset="utf-8" />
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  html,body{width:1080px;height:1920px;overflow:hidden;background:#0a1628}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#070f1f}
   #stage{
     position:relative;width:1080px;height:1920px;overflow:hidden;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:radial-gradient(120% 80% at 50% 0%, #1a4d8f 0%, #0e2c54 45%, #0a1628 100%);
+    color:#fff;
+    background:radial-gradient(130% 90% at 50% -5%, #1f5fb0 0%, #103163 42%, #0a1b39 72%, #070f1f 100%);
   }
-  /* moving accent blobs */
-  .blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55}
-  #b1{width:560px;height:560px;background:#e2231a;left:-160px;top:-120px}
-  #b2{width:620px;height:620px;background:#1f6fd6;right:-220px;bottom:120px}
-  #grain{position:absolute;inset:0;opacity:.06;
-    background-image:radial-gradient(#fff 1px,transparent 1px);background-size:6px 6px}
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
+  #b1{width:620px;height:620px;background:#e2231a;left:-180px;top:-140px}
+  #b2{width:680px;height:680px;background:#1f7fe0;right:-240px;bottom:60px}
+  #grain{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:6px 6px}
 
-  #brand{position:absolute;top:70px;left:0;right:0;text-align:center;color:#fff;z-index:6}
-  #brand .logo{display:inline-flex;align-items:center;gap:16px}
-  #brand .mark{width:64px;height:64px;border-radius:18px;
-    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);
-    display:flex;align-items:center;justify-content:center}
-  #brand .name{font-size:30px;font-weight:800;letter-spacing:.04em;text-align:left}
-  #brand .name small{display:block;font-size:15px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.22em}
+  /* giant ghost scene number */
+  #ghost{position:absolute;right:40px;top:300px;font-size:560px;font-weight:900;line-height:1;
+    color:rgba(255,255,255,.06);z-index:1;letter-spacing:-.04em}
 
-  /* feature card */
-  #card{position:absolute;left:80px;top:560px;width:920px;z-index:5;will-change:transform,opacity}
-  .window{background:#fff;border-radius:34px;overflow:hidden;box-shadow:0 50px 120px rgba(0,0,0,.55)}
-  .bar{height:64px;background:#f1f5f9;display:flex;align-items:center;gap:12px;padding:0 26px;border-bottom:1px solid #e2e8f0}
-  .dot{width:16px;height:16px;border-radius:50%}
-  .shot{width:920px;height:1040px;overflow:hidden;background:#fff}
-  .shot img{width:920px;display:block;will-change:transform}
+  /* persistent brand */
+  #brand{position:absolute;top:74px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:18px;z-index:7}
+  #brand .mark{width:58px;height:58px;border-radius:16px;
+    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  #brand .name{font-size:27px;font-weight:800;letter-spacing:.14em}
+  #brand .name small{display:block;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.32em}
 
-  #cap{position:absolute;left:80px;width:920px;top:300px;z-index:6;color:#fff;will-change:transform,opacity}
-  #cap .tag{display:inline-block;background:rgba(226,35,26,.92);
-    color:#fff;font-size:22px;font-weight:800;letter-spacing:.18em;padding:10px 22px;border-radius:999px}
-  #cap .title{margin-top:22px;font-size:62px;line-height:1.05;font-weight:800;letter-spacing:-.02em}
-  #cap .sub{margin-top:16px;font-size:30px;color:rgba(255,255,255,.85);font-weight:500}
+  /* feature scenes */
+  .scene{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 90px;text-align:center}
+  .scene .kick{display:inline-block;background:rgba(226,35,26,.95);color:#fff;font-size:24px;font-weight:800;
+    letter-spacing:.2em;padding:12px 26px;border-radius:999px;box-shadow:0 14px 34px rgba(226,35,26,.4)}
+  .scene h2{margin-top:26px;font-size:92px;line-height:.98;font-weight:900;letter-spacing:-.03em}
+  .scene h2 em{font-style:normal;color:#ff7a6e}
+  .scene .sub{margin-top:22px;font-size:34px;font-weight:600;color:rgba(255,255,255,.82)}
+  .scene .mock{margin-top:60px}
+
+  /* generic UI card */
+  .uicard{width:760px;background:#fff;color:#0f1b2e;border-radius:34px;padding:40px;
+    box-shadow:0 60px 130px rgba(0,0,0,.6);text-align:left}
+  .uihead{display:flex;align-items:center;gap:16px;margin-bottom:26px}
+  .uihead .ic{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:34px}
+  .uihead .t{font-size:34px;font-weight:800}
+  .uihead .d{font-size:22px;color:#64748b;font-weight:600;margin-top:2px}
+
+  /* calendar mock */
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+  .cal .cell{height:74px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#475569}
+  .cal .on{background:#1a4d8f;color:#fff}
+  .cal .ev{background:#e2231a;color:#fff}
+
+  /* progress ring + bars */
+  .row{display:flex;align-items:center;gap:26px;margin-top:8px}
+  .ring{width:150px;height:150px;border-radius:50%;
+    background:conic-gradient(#e2231a 0 72%, #e8edf3 72% 100%);display:flex;align-items:center;justify-content:center;flex:none}
+  .ring i{width:108px;height:108px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#0f1b2e;font-style:normal}
+  .bar{height:26px;border-radius:13px;background:#eef2f7;overflow:hidden;margin:14px 0}
+  .bar i{display:block;height:100%;border-radius:13px;background:linear-gradient(90deg,#1a4d8f,#2f86e0)}
+  .lbl{font-size:24px;font-weight:700;color:#334155}
+
+  .pill{display:inline-block;font-size:22px;font-weight:800;padding:8px 18px;border-radius:999px}
+  .pill.green{background:#dcfce7;color:#15803d}
+  .pill.blue{background:#dbeafe;color:#1d4ed8}
+  .pill.amber{background:#fef3c7;color:#b45309}
+
+  .big{font-size:64px;font-weight:900;letter-spacing:-.02em}
+  .muted{color:#64748b;font-weight:600}
+
+  /* listing image block */
+  .photo{height:240px;border-radius:22px;background:linear-gradient(135deg,#1a4d8f,#2f86e0);position:relative;overflow:hidden;margin-bottom:22px}
+  .photo .tag{position:absolute;left:20px;top:20px}
+
+  /* slot grid */
+  .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .slots .s{height:78px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800}
+  .slots .free{background:#ecfdf3;color:#15803d}
+  .slots .ev{background:#fee2e2;color:#b91c1c}
+  .slots .sel{background:#1a4d8f;color:#fff}
+
+  /* chat */
+  .chat{display:flex;flex-direction:column;gap:16px}
+  .msg{max-width:78%;padding:20px 24px;border-radius:22px;font-size:26px;font-weight:600}
+  .msg.them{background:#f1f5f9;color:#0f1b2e;border-bottom-left-radius:8px}
+  .msg.me{align-self:flex-end;background:#1a4d8f;color:#fff;border-bottom-right-radius:8px}
+  .booked{margin-top:8px;display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800;color:#15803d}
+
+  .calc{display:flex;flex-direction:column;gap:14px}
+  .calc .line{display:flex;justify-content:space-between;font-size:28px;font-weight:700;color:#334155}
+  .calc .res{margin-top:10px;background:#0f1b2e;color:#fff;border-radius:18px;padding:24px 28px;display:flex;justify-content:space-between;align-items:center}
+  .calc .res .big{font-size:56px}
 
   /* intro */
-  #intro{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:0 90px;will-change:transform,opacity}
-  #intro .kicker{font-size:30px;font-weight:800;letter-spacing:.34em;color:#ff6a5e}
-  #intro .mark{margin-top:40px;width:160px;height:160px;border-radius:40px;
-    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);
-    box-shadow:0 30px 80px rgba(0,0,0,.45)}
-  #intro h1{margin-top:44px;font-size:104px;font-weight:800;letter-spacing:-.02em;line-height:.98}
-  #intro h1 span{color:#ff6a5e}
-  #intro p{margin-top:30px;font-size:40px;color:rgba(255,255,255,.85);line-height:1.25;font-weight:600}
+  #intro{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px}
+  #intro .kicker{font-size:30px;font-weight:800;letter-spacing:.36em;color:#ff7a6e}
+  #intro .mark{margin-top:42px;width:168px;height:168px;border-radius:42px;
+    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);box-shadow:0 34px 90px rgba(0,0,0,.5)}
+  #intro h1{margin-top:46px;font-size:108px;font-weight:900;letter-spacing:-.03em;line-height:.95}
+  #intro h1 span{color:#ff7a6e}
+  #intro p{margin-top:30px;font-size:42px;font-weight:600;color:rgba(255,255,255,.86);line-height:1.22}
 
   /* outro */
-  #outro{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:0 80px;will-change:transform,opacity}
-  #outro .mark{width:130px;height:130px;border-radius:34px;
-    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);
-    box-shadow:0 26px 70px rgba(0,0,0,.45);margin-bottom:40px}
-  #outro h1{font-size:96px;font-weight:800;letter-spacing:-.02em;line-height:1.02}
-  #outro h1 span{color:#ff6a5e}
-  #outro p{margin-top:30px;font-size:36px;color:rgba(255,255,255,.85);line-height:1.3}
-  #outro .cta{margin-top:60px;background:#e2231a;color:#fff;font-size:38px;font-weight:800;
-    padding:32px 70px;border-radius:22px;box-shadow:0 24px 60px rgba(226,35,26,.45)}
-  #outro .handle{margin-top:38px;font-size:28px;color:rgba(255,255,255,.75);letter-spacing:.05em}
+  #outro{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 80px}
+  #outro .mark{width:140px;height:140px;border-radius:36px;
+    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);box-shadow:0 30px 80px rgba(0,0,0,.5);margin-bottom:42px}
+  #outro h1{font-size:100px;font-weight:900;letter-spacing:-.03em;line-height:1.0}
+  #outro h1 span{color:#ff7a6e}
+  #outro p{margin-top:30px;font-size:38px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.3}
+  #outro .cta{margin-top:64px;background:#e2231a;color:#fff;font-size:40px;font-weight:900;
+    padding:34px 76px;border-radius:24px;box-shadow:0 26px 64px rgba(226,35,26,.5)}
+  #outro .handle{margin-top:40px;font-size:30px;font-weight:700;color:rgba(255,255,255,.78);letter-spacing:.04em}
 
-  /* progress segments */
   #prog{position:absolute;bottom:54px;left:80px;right:80px;display:flex;gap:10px;z-index:10}
-  #prog .seg{flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.22);overflow:hidden}
+  #prog .seg{flex:1;height:9px;border-radius:6px;background:rgba(255,255,255,.22);overflow:hidden}
   #prog .seg i{display:block;height:100%;width:0;background:#fff}
 </style>
 </head>
@@ -72,20 +120,118 @@
   <div class="blob" id="b1"></div>
   <div class="blob" id="b2"></div>
   <div id="grain"></div>
+  <div id="ghost">01</div>
 
-  <div id="brand"><div class="logo"><div class="mark"></div>
-    <div class="name">RE/MAX EXCELLENCE<small>AGENT PORTAL</small></div></div></div>
+  <div id="brand">
+    <div class="mark"></div>
+    <div class="name">RE/MAX EXCELLENCE<small>AGENT PORTAL</small></div>
+  </div>
 
-  <div id="cap"><span class="tag" id="capTag">ALL-IN-ONE</span>
-    <div class="title" id="capTitle">Your whole day, one login</div>
-    <div class="sub" id="capSub">Calendar, training &amp; tasks at a glance</div></div>
+  <!-- SCENE 0: Dashboard -->
+  <div class="scene" id="s0">
+    <span class="kick pop">ALL&#8209;IN&#8209;ONE</span>
+    <h2 class="pop">Your whole day,<br/><em>one login</em></h2>
+    <div class="sub pop">Calendar, training &amp; tasks at a glance</div>
+    <div class="mock pop">
+      <div class="uicard">
+        <div class="uihead"><div class="ic" style="background:#dbeafe;color:#1d4ed8">📅</div>
+          <div><div class="t">This week</div><div class="d">3 events · 2 tasks due</div></div></div>
+        <div class="cal">
+          <div class="cell">M</div><div class="cell">T</div><div class="cell on pop">W</div><div class="cell">T</div><div class="cell ev pop">F</div><div class="cell">S</div><div class="cell">S</div>
+        </div>
+        <div class="row" style="margin-top:26px">
+          <div class="ring pop"><i>72%</i></div>
+          <div style="flex:1"><div class="lbl">Training progress</div><div class="bar"><i class="pop" style="width:72%"></i></div><div class="d">Almost there — 2 modules left</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <div id="card"><div class="window">
-    <div class="bar"><span class="dot" style="background:#ff5f57"></span>
-      <span class="dot" style="background:#febc2e"></span>
-      <span class="dot" style="background:#28c840"></span></div>
-    <div class="shot"><img id="shotImg" src="../screenshots/02-dashboard.png" /></div>
-  </div></div>
+  <!-- SCENE 1: Training -->
+  <div class="scene" id="s1">
+    <span class="kick pop">GROW FASTER</span>
+    <h2 class="pop">Training that<br/><em>pays off</em></h2>
+    <div class="sub pop">Video courses, quizzes &amp; certificates</div>
+    <div class="mock pop">
+      <div class="uicard">
+        <div class="photo pop"><span class="pill blue tag">▶ 12 min</span></div>
+        <div class="t" style="font-size:36px;font-weight:800">Listing Mastery 101</div>
+        <div class="bar"><i class="pop" style="width:60%"></i></div>
+        <div class="row" style="justify-content:space-between">
+          <span class="muted" style="font-size:24px">6 of 10 modules</span>
+          <span class="pill green pop">🎓 Certificate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 2: Listings -->
+  <div class="scene" id="s2">
+    <span class="kick pop">WIN MORE DEALS</span>
+    <h2 class="pop">Inventory in<br/><em>your pocket</em></h2>
+    <div class="sub pop">Search, filter &amp; share pre&#8209;con in a tap</div>
+    <div class="mock pop">
+      <div class="uicard">
+        <div class="photo pop"><span class="pill green tag">Now Selling</span></div>
+        <div class="t" style="font-size:36px;font-weight:800">Wilmot Condos · Oakville</div>
+        <div class="row" style="justify-content:space-between;margin-top:16px">
+          <span class="big" style="color:#e2231a">$560,973</span>
+          <span class="pill amber pop">3% co&#8209;op</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 3: Tools -->
+  <div class="scene" id="s3">
+    <span class="kick pop">WORK SMARTER</span>
+    <h2 class="pop">Numbers,<br/><em>done for you</em></h2>
+    <div class="sub pop">HST, commission &amp; client worksheets</div>
+    <div class="mock pop">
+      <div class="uicard">
+        <div class="uihead"><div class="ic" style="background:#dcfce7;color:#15803d">🧮</div>
+          <div><div class="t">Commission calculator</div><div class="d">Sale price $750,000 · 2.5%</div></div></div>
+        <div class="calc">
+          <div class="line"><span>Gross commission</span><span>$18,750</span></div>
+          <div class="line"><span>Brokerage split</span><span class="muted">90 / 10</span></div>
+          <div class="res"><span style="font-size:26px;font-weight:700">You keep</span><span class="big pop">$16,875</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 4: Support -->
+  <div class="scene" id="s4">
+    <span class="kick pop">NEVER STUCK</span>
+    <h2 class="pop">Help in<br/><em>one tap</em></h2>
+    <div class="sub pop">Support tickets &amp; instant booking</div>
+    <div class="mock pop">
+      <div class="uicard">
+        <div class="chat">
+          <div class="msg them pop">Hey! How do I list a pre&#8209;con unit?</div>
+          <div class="msg me pop">Tap Listings → Share. Want me to book a quick call?</div>
+          <div class="booked pop">✅ Meeting booked · Today 3:00 PM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 5: Offices -->
+  <div class="scene" id="s5">
+    <span class="kick pop">PLUG &amp; PLAY</span>
+    <h2 class="pop">Book a boardroom<br/><em>in seconds</em></h2>
+    <div class="sub pop">Real rooms, real&#8209;time availability</div>
+    <div class="mock pop">
+      <div class="uicard">
+        <div class="uihead"><div class="ic" style="background:#fee2e2;color:#b91c1c">🚪</div>
+          <div><div class="t">Mississauga · Boardroom A</div><div class="d">Wednesday availability</div></div></div>
+        <div class="slots">
+          <div class="s free">9</div><div class="s free pop">10</div><div class="s ev pop">11</div><div class="s free">12</div>
+          <div class="s free">1</div><div class="s sel pop">2 ✓</div><div class="s free">3</div><div class="s free">4</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div id="intro">
     <div class="kicker">WHEN YOU JOIN</div>
@@ -106,114 +252,92 @@
 </div>
 
 <script>
-  const FEATURES = [
-    { img:"02-dashboard.png", tag:"ALL-IN-ONE",   title:"Your whole day, one login", sub:"Calendar, training & tasks at a glance" },
-    { img:"03-courses.png",   tag:"GROW FASTER",  title:"Training that pays off",    sub:"Video courses, quizzes & certificates" },
-    { img:"04-listings.png",  tag:"WIN MORE",     title:"Pre-con at your fingertips",sub:"Search, filter & share in a tap" },
-    { img:"05-assets.png",    tag:"WORK SMARTER", title:"Calculators & client forms",sub:"HST, commission & worksheets, done" },
-    { img:"07-support.png",   tag:"NEVER STUCK",  title:"Help when you need it",     sub:"Support tickets + 1-tap booking" },
-    { img:"08-offices.png",   tag:"PLUG & PLAY",  title:"Book a boardroom in seconds", sub:"Offices ready when you are" },
-  ];
-
-  const INTRO = 3.0, FEAT = 2.4, OUTRO = 3.6;
+  const SCENES = ["s0","s1","s2","s3","s4","s5"];
+  const INTRO = 3.0, FEAT = 2.7, OUTRO = 3.6;
   const FSTART = INTRO;
-  const OSTART = FSTART + FEATURES.length * FEAT;
+  const OSTART = FSTART + SCENES.length * FEAT;
   const TOTAL = OSTART + OUTRO;
   window.__duration = TOTAL;
+  window.__ready = true; // no external images to preload now
 
-  // Build progress segments (intro + each feature + outro)
-  const segCount = FEATURES.length + 2;
+  const segCount = SCENES.length + 2;
   const prog = document.getElementById("prog");
   for (let i=0;i<segCount;i++){ const s=document.createElement("div"); s.className="seg"; s.innerHTML="<i></i>"; prog.appendChild(s); }
   const segs = [...prog.querySelectorAll(".seg i")];
 
-  // Preload all images
-  let ready = 0;
-  const imgs = FEATURES.map(f => { const im = new Image(); im.src = "../screenshots/"+f.img; im.onload=()=>{ready++; if(ready>=FEATURES.length) window.__ready=true;}; return im; });
-
   const el = {
     intro: document.getElementById("intro"), outro: document.getElementById("outro"),
-    card: document.getElementById("card"), cap: document.getElementById("cap"),
-    shot: document.getElementById("shotImg"), brand: document.getElementById("brand"),
-    capTag: document.getElementById("capTag"), capTitle: document.getElementById("capTitle"), capSub: document.getElementById("capSub"),
+    brand: document.getElementById("brand"), ghost: document.getElementById("ghost"),
     b1: document.getElementById("b1"), b2: document.getElementById("b2"),
   };
+  const scenes = SCENES.map((id)=>document.getElementById(id));
+  // collect .pop children per scene once
+  const scenePops = scenes.map((s)=>[...s.querySelectorAll(".pop")]);
+  const introPops = [el.intro];
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const easeOut=t=>1-Math.pow(1-t,3);
   const easeInOut=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 
+  function hideScene(i){ scenes[i].style.opacity=0; scenes[i].style.display="none"; }
+
+  function animateScene(i, local){
+    const s = scenes[i];
+    s.style.display="flex";
+    // scene-level subtle scale/lift
+    const inAll = easeOut(clamp(local/0.14,0,1));
+    const outAll = easeInOut(clamp((local-0.88)/0.12,0,1));
+    s.style.opacity = inAll*(1-outAll);
+    s.style.transform = `scale(${0.985+0.015*inAll}) translateY(${-22*outAll}px)`;
+    // staggered pops
+    const pops = scenePops[i];
+    const exit = outAll;
+    pops.forEach((p,idx)=>{
+      const delay = 0.06 + idx*0.07;
+      const a = easeOut(clamp((local-delay)/0.20,0,1));
+      const op = a*(1-exit);
+      const y = (1-a)*46 - exit*26;
+      p.style.opacity = op;
+      p.style.transform = `translateY(${y}px)`;
+    });
+  }
+
   window.renderFrame = function(t){
     t = clamp(t,0,TOTAL-0.001);
+    el.b1.style.transform = `translate(${Math.sin(t*0.6)*44}px,${Math.cos(t*0.5)*34}px)`;
+    el.b2.style.transform = `translate(${Math.cos(t*0.4)*54}px,${Math.sin(t*0.45)*44}px)`;
 
-    // ambient motion
-    el.b1.style.transform = `translate(${Math.sin(t*0.6)*40}px,${Math.cos(t*0.5)*30}px)`;
-    el.b2.style.transform = `translate(${Math.cos(t*0.4)*50}px,${Math.sin(t*0.45)*40}px)`;
-
-    // progress bar fill
-    const segDur = [INTRO, ...FEATURES.map(()=>FEAT), OUTRO];
+    const segDur = [INTRO, ...SCENES.map(()=>FEAT), OUTRO];
     let acc=0;
-    for(let i=0;i<segs.length;i++){
-      const start=acc, end=acc+segDur[i];
-      const p = clamp((t-start)/(end-start),0,1);
-      segs[i].style.width = (p*100)+"%";
-      acc=end;
-    }
+    for(let i=0;i<segs.length;i++){ const start=acc,end=acc+segDur[i]; segs[i].style.width=(clamp((t-start)/(end-start),0,1)*100)+"%"; acc=end; }
 
     const inIntro = t < INTRO;
     const inOutro = t >= OSTART;
     const inFeat = !inIntro && !inOutro;
 
-    // INTRO — pop in, hold, lift out
+    // INTRO
     if (inIntro){
-      const p = t/INTRO;
-      const appear = easeOut(clamp(p/0.42,0,1));
-      const leave = easeInOut(clamp((p-0.82)/0.18,0,1));
-      el.intro.style.opacity = appear*(1-leave);
-      el.intro.style.transform = `scale(${0.86+0.14*appear - 0.05*leave}) translateY(${-36*leave}px)`;
-      el.intro.style.display="flex";
+      const p=t/INTRO; const appear=easeOut(clamp(p/0.42,0,1)); const leave=easeInOut(clamp((p-0.82)/0.18,0,1));
+      el.intro.style.display="flex"; el.intro.style.opacity=appear*(1-leave);
+      el.intro.style.transform=`scale(${0.84+0.16*appear-0.05*leave}) translateY(${-34*leave}px)`;
     } else { el.intro.style.opacity=0; el.intro.style.display="none"; }
 
     // OUTRO
     if (inOutro){
-      const p = (t-OSTART)/OUTRO;
-      const appear = easeOut(clamp(p/0.4,0,1));
-      el.outro.style.opacity = appear;
-      el.outro.style.transform = `scale(${0.92+0.08*appear})`;
-      el.outro.style.display="flex";
+      const p=(t-OSTART)/OUTRO; const appear=easeOut(clamp(p/0.4,0,1));
+      el.outro.style.display="flex"; el.outro.style.opacity=appear; el.outro.style.transform=`scale(${0.92+0.08*appear})`;
     } else { el.outro.style.opacity=0; el.outro.style.display="none"; }
 
-    // BRAND wordmark visible only during features
     el.brand.style.opacity = inFeat ? 1 : 0;
+    el.ghost.style.opacity = inFeat ? 1 : 0;
 
-    // FEATURES
-    if (inFeat){
-      const idx = clamp(Math.floor((t-FSTART)/FEAT),0,FEATURES.length-1);
-      const local = (t-FSTART - idx*FEAT)/FEAT; // 0..1 within scene
-      const f = FEATURES[idx];
-      el.shot.src = "../screenshots/"+f.img;
-      el.capTag.textContent = f.tag;
-      el.capTitle.textContent = f.title;
-      el.capSub.textContent = f.sub;
-
-      const inP = easeOut(clamp(local/0.16,0,1));
-      const outP = easeInOut(clamp((local-0.84)/0.16,0,1));
-      const op = inP*(1-outP);
-
-      const cardY = (1-inP)*90 - outP*55;
-      const cardS = 0.94 + 0.06*inP;
-      el.card.style.opacity = op;
-      el.card.style.transform = `translateY(${cardY}px) scale(${cardS})`;
-
-      // slow vertical pan inside the window to feel alive
-      const panMax = Math.max(0, (el.shot.naturalHeight||1040) - 1040);
-      el.shot.style.transform = `translateY(${-Math.min(panMax,140)*local}px)`;
-
-      const capY = (1-easeOut(clamp((local-0.05)/0.18,0,1)))*44 - outP*44;
-      el.cap.style.opacity = op;
-      el.cap.style.transform = `translateY(${capY}px)`;
-    } else {
-      el.card.style.opacity = 0;
-      el.cap.style.opacity = 0;
+    // FEATURE SCENES
+    const activeIdx = inFeat ? clamp(Math.floor((t-FSTART)/FEAT),0,SCENES.length-1) : -1;
+    for (let i=0;i<scenes.length;i++){
+      if (i===activeIdx){
+        const local=(t-FSTART - i*FEAT)/FEAT;
+        animateScene(i, local);
+        el.ghost.textContent = "0"+(i+1);
+      } else hideScene(i);
     }
   };
 

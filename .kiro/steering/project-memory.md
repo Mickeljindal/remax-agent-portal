@@ -96,11 +96,20 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   Vimeo/other embeds still complete manually. Direct uploads track natively.
 - Promo reel: `docs/reel/reel.html` (vertical 1080x1920 HTML animation) +
   `scripts/render-reel.mjs` (puppeteer-core + ffmpeg → `docs/Agent-Portal-Reel.mp4`).
-  Reworked into a recruitment promo (~21s) to attract agents: intro "When you join
-  RE/MAX Excellence — tools that make your every day easier", 6 benefit-led feature
-  scenes from `docs/screenshots/`, recruitment outro CTA "Join our team".
-  Render script auto-relaunches Chrome + retries frames (headless drops targets after
-  ~600 screenshots). Needs Chrome at /Applications + ffmpeg + puppeteer-core.
+  Goal: a splashy 20-30s recruitment promo for social media to attract agents to
+  RE/MAX Excellence ("when you join, you get tools that make your life easier").
+  FIRST version used dense desktop screenshots scaled into a vertical frame — the
+  user rejected it as unreadable, no clear message, no attraction. CURRENT version is
+  a typography-led REDESIGN: purpose-drawn vector UI mockups (calendar, training ring,
+  listing card, commission calculator, chat, booking slot grid) with kinetic staggered
+  animations, brand intro/outro, wordmark, and ghost scene numbers — no raw
+  screenshots. Re-rendered: 685 frames, ~22.8s, ~8MB. The render script proactively
+  recycles Chrome every ~150 frames (headless crashes after ~600 screenshots) and
+  retries dropped frames. Needs Chrome at /Applications + ffmpeg + puppeteer-core.
+  NOTE: `scripts/` is gitignored, so render-reel.mjs changes are NOT committed — only
+  `docs/reel/reel.html` and `docs/Agent-Portal-Reel.mp4` get committed.
+  PENDING with user: the CTA site `joinremaxex.com` is a placeholder — confirm the
+  real website/handle/phone; optionally add background music.
 
 ## Conventions
 
@@ -110,6 +119,19 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
 
 ## Working agreement with the user
 
-- The user trusts me to proceed on local, reversible changes without stopping to
-  ask for permission on each step. Act autonomously; only pause for genuinely
-  destructive or high-risk actions (data loss, production, auth/security changes).
+- **THE USER TRUSTS ME 100% — DO NOT ASK FOR PERMISSION/CONFIRMATION ON EACH STEP.**
+  Do not stop to ask "should I proceed?", "want me to commit?", "is this okay?".
+  Just do the whole task end-to-end: edit code, run `npm run build`, run migrations
+  (`node scripts/run-migration.mjs <file>` — it has the DB connection built in),
+  commit, and push to `main`. Report the result AFTER it's done, not before.
+- "Please do everything yourself" — full autonomous execution is the default. Only
+  pause for genuinely destructive/irreversible production actions (dropping data,
+  deleting accounts, force-pushing, wiping the live DB). Local code edits, builds,
+  commits, pushes to main, and applying additive migrations are all pre-approved.
+- The user works on `main` directly — commit and push straight to `main`.
+- After every code change: `npm run build` to verify, then commit + push to main.
+- Keep explanations SIMPLE and SHORT — the user has said responses get "over complex."
+  Plain language, no jargon walls.
+- Migrations are applied to the live DB by me via the run-migration script. The user
+  still redeploys the server/site themselves (we have no hosting access).
+- Repo: https://github.com/Mickeljindal/remax-agent-portal.git
