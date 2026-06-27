@@ -11,7 +11,7 @@
     background:radial-gradient(120% 80% at 50% 0%, #1a4d8f 0%, #0e2c54 45%, #0a1628 100%);
   }
   /* moving accent blobs */
-  .blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5}
+  .blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55}
   #b1{width:560px;height:560px;background:#e2231a;left:-160px;top:-120px}
   #b2{width:620px;height:620px;background:#1f6fd6;right:-220px;bottom:120px}
   #grain{position:absolute;inset:0;opacity:.06;
@@ -19,9 +19,10 @@
 
   #brand{position:absolute;top:70px;left:0;right:0;text-align:center;color:#fff;z-index:6}
   #brand .logo{display:inline-flex;align-items:center;gap:16px}
-  #brand .mark{width:64px;height:64px;border-radius:18px;background:#fff;color:#1a4d8f;
-    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:34px}
-  #brand .name{font-size:30px;font-weight:800;letter-spacing:.04em}
+  #brand .mark{width:64px;height:64px;border-radius:18px;
+    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);
+    display:flex;align-items:center;justify-content:center}
+  #brand .name{font-size:30px;font-weight:800;letter-spacing:.04em;text-align:left}
   #brand .name small{display:block;font-size:15px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.22em}
 
   /* feature card */
@@ -33,27 +34,32 @@
   .shot img{width:920px;display:block;will-change:transform}
 
   #cap{position:absolute;left:80px;width:920px;top:300px;z-index:6;color:#fff;will-change:transform,opacity}
-  #cap .tag{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
-    color:#fff;font-size:22px;font-weight:700;letter-spacing:.18em;padding:10px 22px;border-radius:999px}
+  #cap .tag{display:inline-block;background:rgba(226,35,26,.92);
+    color:#fff;font-size:22px;font-weight:800;letter-spacing:.18em;padding:10px 22px;border-radius:999px}
   #cap .title{margin-top:22px;font-size:62px;line-height:1.05;font-weight:800;letter-spacing:-.02em}
-  #cap .sub{margin-top:16px;font-size:30px;color:rgba(255,255,255,.82);font-weight:500}
+  #cap .sub{margin-top:16px;font-size:30px;color:rgba(255,255,255,.85);font-weight:500}
 
   /* intro */
-  #intro{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;will-change:transform,opacity}
-  #intro .mark{width:150px;height:150px;border-radius:38px;background:#fff;color:#1a4d8f;
-    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:84px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
-  #intro h1{margin-top:46px;font-size:96px;font-weight:800;letter-spacing:-.02em;line-height:1}
-  #intro p{margin-top:24px;font-size:34px;color:rgba(255,255,255,.78);letter-spacing:.06em}
-  #intro .peek{margin-top:50px;font-size:26px;font-weight:700;letter-spacing:.28em;color:#ff6a5e}
+  #intro{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:0 90px;will-change:transform,opacity}
+  #intro .kicker{font-size:30px;font-weight:800;letter-spacing:.34em;color:#ff6a5e}
+  #intro .mark{margin-top:40px;width:160px;height:160px;border-radius:40px;
+    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);
+    box-shadow:0 30px 80px rgba(0,0,0,.45)}
+  #intro h1{margin-top:44px;font-size:104px;font-weight:800;letter-spacing:-.02em;line-height:.98}
+  #intro h1 span{color:#ff6a5e}
+  #intro p{margin-top:30px;font-size:40px;color:rgba(255,255,255,.85);line-height:1.25;font-weight:600}
 
   /* outro */
-  #outro{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;will-change:transform,opacity}
-  #outro h1{font-size:104px;font-weight:800;letter-spacing:-.02em;line-height:1.02}
+  #outro{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:0 80px;will-change:transform,opacity}
+  #outro .mark{width:130px;height:130px;border-radius:34px;
+    background:linear-gradient(180deg,#e2231a 0 33%,#fff 33% 66%,#1a4d8f 66% 100%);
+    box-shadow:0 26px 70px rgba(0,0,0,.45);margin-bottom:40px}
+  #outro h1{font-size:96px;font-weight:800;letter-spacing:-.02em;line-height:1.02}
   #outro h1 span{color:#ff6a5e}
-  #outro p{margin-top:30px;font-size:34px;color:rgba(255,255,255,.82)}
-  #outro .cta{margin-top:60px;background:#e2231a;color:#fff;font-size:34px;font-weight:800;
-    padding:30px 64px;border-radius:20px;box-shadow:0 24px 60px rgba(226,35,26,.4)}
-  #outro .handle{margin-top:40px;font-size:26px;color:rgba(255,255,255,.7);letter-spacing:.06em}
+  #outro p{margin-top:30px;font-size:36px;color:rgba(255,255,255,.85);line-height:1.3}
+  #outro .cta{margin-top:60px;background:#e2231a;color:#fff;font-size:38px;font-weight:800;
+    padding:32px 70px;border-radius:22px;box-shadow:0 24px 60px rgba(226,35,26,.45)}
+  #outro .handle{margin-top:38px;font-size:28px;color:rgba(255,255,255,.75);letter-spacing:.05em}
 
   /* progress segments */
   #prog{position:absolute;bottom:54px;left:80px;right:80px;display:flex;gap:10px;z-index:10}
@@ -67,11 +73,11 @@
   <div class="blob" id="b2"></div>
   <div id="grain"></div>
 
-  <div id="brand"><div class="logo"><div class="mark">A</div>
-    <div class="name">AGENT PORTAL<small>REMAX EXCELLENCE</small></div></div></div>
+  <div id="brand"><div class="logo"><div class="mark"></div>
+    <div class="name">RE/MAX EXCELLENCE<small>AGENT PORTAL</small></div></div></div>
 
-  <div id="cap"><span class="tag" id="capTag">DASHBOARD</span>
-    <div class="title" id="capTitle">Everything in one place</div>
+  <div id="cap"><span class="tag" id="capTag">ALL-IN-ONE</span>
+    <div class="title" id="capTitle">Your whole day, one login</div>
     <div class="sub" id="capSub">Calendar, training &amp; tasks at a glance</div></div>
 
   <div id="card"><div class="window">
@@ -82,17 +88,18 @@
   </div></div>
 
   <div id="intro">
-    <div class="mark">A</div>
-    <h1>Agent Portal</h1>
-    <p>Your brokerage, in one place</p>
-    <div class="peek">SNEAK PEEK</div>
+    <div class="kicker">WHEN YOU JOIN</div>
+    <div class="mark"></div>
+    <h1>RE/MAX<br/><span>Excellence</span></h1>
+    <p>You get tools that make<br/>your every day easier.</p>
   </div>
 
   <div id="outro">
-    <h1>One portal.<br/><span>Every agent.</span></h1>
-    <p>Training · Listings · Tools · Support</p>
-    <div class="cta">Coming soon</div>
-    <div class="handle">@yourbrokerage</div>
+    <div class="mark"></div>
+    <h1>Grow with<br/><span>RE/MAX Excellence</span></h1>
+    <p>Training · Listings · Tools · Support<br/>— all in one portal.</p>
+    <div class="cta">Join our team</div>
+    <div class="handle">joinremaxex.com</div>
   </div>
 
   <div id="prog"></div>
@@ -100,16 +107,15 @@
 
 <script>
   const FEATURES = [
-    { img:"02-dashboard.png", tag:"DASHBOARD", title:"Everything in one place", sub:"Calendar, training & tasks at a glance" },
-    { img:"03-courses.png",   tag:"TRAINING",  title:"Built-in learning",       sub:"Video courses, quizzes & certificates" },
-    { img:"04-listings.png",  tag:"LISTINGS",  title:"Pre-construction inventory", sub:"Search, filter & share in a tap" },
-    { img:"05-assets.png",    tag:"AGENT TOOLS", title:"Calculators & worksheets", sub:"HST, commission & client forms" },
-    { img:"06-vendors.png",   tag:"VENDORS",   title:"Approved vendors",        sub:"Trusted trades & services" },
-    { img:"07-support.png",   tag:"SUPPORT",   title:"Help & 1-tap booking",    sub:"Tickets + book a meeting instantly" },
-    { img:"08-offices.png",   tag:"OFFICES",   title:"Book a meeting room",     sub:"Reserve a room in seconds" },
+    { img:"02-dashboard.png", tag:"ALL-IN-ONE",   title:"Your whole day, one login", sub:"Calendar, training & tasks at a glance" },
+    { img:"03-courses.png",   tag:"GROW FASTER",  title:"Training that pays off",    sub:"Video courses, quizzes & certificates" },
+    { img:"04-listings.png",  tag:"WIN MORE",     title:"Pre-con at your fingertips",sub:"Search, filter & share in a tap" },
+    { img:"05-assets.png",    tag:"WORK SMARTER", title:"Calculators & client forms",sub:"HST, commission & worksheets, done" },
+    { img:"07-support.png",   tag:"NEVER STUCK",  title:"Help when you need it",     sub:"Support tickets + 1-tap booking" },
+    { img:"08-offices.png",   tag:"PLUG & PLAY",  title:"Book a boardroom in seconds", sub:"Offices ready when you are" },
   ];
 
-  const INTRO = 2.6, FEAT = 2.5, OUTRO = 2.8;
+  const INTRO = 3.0, FEAT = 2.4, OUTRO = 3.6;
   const FSTART = INTRO;
   const OSTART = FSTART + FEATURES.length * FEAT;
   const TOTAL = OSTART + OUTRO;
@@ -144,8 +150,6 @@
     el.b2.style.transform = `translate(${Math.cos(t*0.4)*50}px,${Math.sin(t*0.45)*40}px)`;
 
     // progress bar fill
-    let filled;
-    if (t < FSTART) filled = t/FSTART * 1; // segment 0 fills during intro
     const segDur = [INTRO, ...FEATURES.map(()=>FEAT), OUTRO];
     let acc=0;
     for(let i=0;i<segs.length;i++){
@@ -159,13 +163,13 @@
     const inOutro = t >= OSTART;
     const inFeat = !inIntro && !inOutro;
 
-    // INTRO
+    // INTRO — pop in, hold, lift out
     if (inIntro){
       const p = t/INTRO;
-      const appear = easeOut(clamp(p/0.5,0,1));
-      const leave = easeInOut(clamp((p-0.8)/0.2,0,1));
+      const appear = easeOut(clamp(p/0.42,0,1));
+      const leave = easeInOut(clamp((p-0.82)/0.18,0,1));
       el.intro.style.opacity = appear*(1-leave);
-      el.intro.style.transform = `scale(${0.9+0.1*appear - 0.04*leave}) translateY(${-30*leave}px)`;
+      el.intro.style.transform = `scale(${0.86+0.14*appear - 0.05*leave}) translateY(${-36*leave}px)`;
       el.intro.style.display="flex";
     } else { el.intro.style.opacity=0; el.intro.style.display="none"; }
 
@@ -174,7 +178,7 @@
       const p = (t-OSTART)/OUTRO;
       const appear = easeOut(clamp(p/0.4,0,1));
       el.outro.style.opacity = appear;
-      el.outro.style.transform = `scale(${0.94+0.06*appear})`;
+      el.outro.style.transform = `scale(${0.92+0.08*appear})`;
       el.outro.style.display="flex";
     } else { el.outro.style.opacity=0; el.outro.style.display="none"; }
 
@@ -191,20 +195,20 @@
       el.capTitle.textContent = f.title;
       el.capSub.textContent = f.sub;
 
-      const inP = easeOut(clamp(local/0.18,0,1));
-      const outP = easeInOut(clamp((local-0.82)/0.18,0,1));
+      const inP = easeOut(clamp(local/0.16,0,1));
+      const outP = easeInOut(clamp((local-0.84)/0.16,0,1));
       const op = inP*(1-outP);
 
-      const cardY = (1-inP)*80 - outP*50;
-      const cardS = 0.95 + 0.05*inP;
+      const cardY = (1-inP)*90 - outP*55;
+      const cardS = 0.94 + 0.06*inP;
       el.card.style.opacity = op;
       el.card.style.transform = `translateY(${cardY}px) scale(${cardS})`;
 
       // slow vertical pan inside the window to feel alive
       const panMax = Math.max(0, (el.shot.naturalHeight||1040) - 1040);
-      el.shot.style.transform = `translateY(${-Math.min(panMax,120)*local}px)`;
+      el.shot.style.transform = `translateY(${-Math.min(panMax,140)*local}px)`;
 
-      const capY = (1-easeOut(clamp((local-0.05)/0.18,0,1)))*40 - outP*40;
+      const capY = (1-easeOut(clamp((local-0.05)/0.18,0,1)))*44 - outP*44;
       el.cap.style.opacity = op;
       el.cap.style.transform = `translateY(${capY}px)`;
     } else {

@@ -94,6 +94,13 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   (`loadYouTubeIframeApi`/`getYouTubeId` + YT branch in `VideoPlayer.tsx`,
   global typings in `src/types/youtube.d.ts`); auto-completes at ~90% watched.
   Vimeo/other embeds still complete manually. Direct uploads track natively.
+- Promo reel: `docs/reel/reel.html` (vertical 1080x1920 HTML animation) +
+  `scripts/render-reel.mjs` (puppeteer-core + ffmpeg → `docs/Agent-Portal-Reel.mp4`).
+  Reworked into a recruitment promo (~21s) to attract agents: intro "When you join
+  RE/MAX Excellence — tools that make your every day easier", 6 benefit-led feature
+  scenes from `docs/screenshots/`, recruitment outro CTA "Join our team".
+  Render script auto-relaunches Chrome + retries frames (headless drops targets after
+  ~600 screenshots). Needs Chrome at /Applications + ffmpeg + puppeteer-core.
 
 ## Conventions
 
