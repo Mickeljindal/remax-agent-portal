@@ -24,70 +24,98 @@ the same branded app they already log into.
 
 ---
 
-## 2. What NovaCRM-style products do (our reference)
+## 2. What NovaCRM does (our reference benchmark)
 
-Modern AI real-estate CRMs converge on the same core (paraphrased from public
-product descriptions; content rephrased for compliance):
+NovaCRM.ai is an AI-first real-estate CRM. Studying its public product material, its
+pillars are (paraphrased; content rephrased for compliance):
 
-- Contact & lead management with a single timeline per person.
-- Visual sales pipeline (drag deals between stages).
-- AI lead scoring and prioritization (who to call first).
-- Automated, multi-channel follow-up (email + SMS sequences).
-- An AI assistant that drafts emails, summarizes calls, and creates marketing
-  collateral (flyers, "just sold" reports, property comparisons).
-- Calendar/email sync and speed-to-lead dashboards.
-- Reporting and analytics.
+- **Avon AI** — a branded AI assistant that, through a chat interface, generates
+  marketing collateral on the fly: property flyers, "just sold" reports, and
+  property comparisons.
+- **Agentic AI** — autonomous agents that classify and score leads (semantic search),
+  compose emails, summarize calls, and advance the pipeline with minimal manual work.
+- **Lead generation** — built-in landing pages and IDX "squeeze" pages so agents
+  capture leads directly into the CRM, plus the usual web-inquiry capture.
+- **Contacts, pipelines & deal tracking** — a single record per person and a visual
+  pipeline, with documented interactions and secure, role-based workflows.
+- **Email marketing** — tailored campaigns, professional templates, and engagement
+  analytics (opens, clicks, replies).
+- **Proposals & document e-signing** — send and get documents signed inside the CRM.
+- **Reporting & dashboards** — pipeline health, speed-to-lead, and team analytics.
 
 Sources: [NovaCRM.ai](https://novacrm.ai/), [NovaCRM (innovaas)](https://novacrm.innovaas.co/),
+[NOVACRM reviews — Slashdot](https://features.slashdot.org/software/p/NOVA-CRM/),
+[NovaCRM agentic intelligence](https://app.riphere.com/),
 [HubSpot — AI CRMs for real estate](https://blog.hubspot.com/sales/ai-crm-real-estate).
 *Content was rephrased for compliance with licensing restrictions.*
 
-We adopt this proven shape and tailor it to our portal and to pre-construction +
-resale workflows the brokerage already runs.
+We adopt this proven shape — **especially the Avon-style AI marketing studio, the
+lead-capture pages, and e-signing**, which our current portal does not have — and
+tailor it to the pre-construction + resale workflows the brokerage already runs
+(worksheets, listings, commission calculators, DB-driven email).
 
 ---
 
 ## 3. Proposed feature set (tailored to RE/MAX Excellence)
 
-### 3.1 Contacts & Leads
+### 3.1 Lead capture & generation  *(NovaCRM parity — new to our portal)*
+- Public **lead-capture pages** per listing / pre-con project: a branded landing page
+  with a capture form that drops the lead straight into the CRM (extends the existing
+  pre-con worksheet idea into a reusable, agent-shareable page).
+- IDX/"squeeze" style sign-up for property alerts and saved searches.
+- Web inquiry + worksheet auto-capture; QR codes for open houses.
+- Every captured lead is owned by the sharing agent and timestamped for speed-to-lead.
+
+### 3.2 Contacts & Leads
 - Unified contact record: buyer/seller/investor, source, tags, budget, preferred areas.
 - Activity timeline: calls, emails, texts, notes, showings, worksheet submissions.
-- Auto-capture: a new pre-con **worksheet** or website inquiry creates/links a contact.
 - Duplicate detection and merge.
 
-### 3.2 Pipeline (Deals)
+### 3.3 Pipeline (Deals)
 - Visual kanban: New Lead → Contacted → Nurturing → Showing → Offer → Closed.
 - Stages admin-editable (same pattern as `precon_statuses`).
 - Each deal links to a contact and optionally a listing / pre-con project.
 - Expected close date, value, and commission estimate (reuse existing calculators).
 
-### 3.3 Smart follow-up & automation
+### 3.4 AI marketing studio  *(NovaCRM's "Avon AI" — new to our portal)*
+- A chat interface that generates collateral from a listing or pre-con project in
+  seconds: **property flyers, "just listed / just sold" posts, and side-by-side
+  property comparisons** — using the listing data and images the portal already holds.
+- One-click export to PDF/image, on RE/MAX Excellence brand.
+- Implemented via an LLM + templated render behind our server (keys server-side).
+
+### 3.5 Agentic AI assistant
+- Classify and **score incoming leads** (who to call first) from their profile + activity.
+- Draft follow-up emails/texts in the agent's voice from the contact's history.
+- Summarize a long note or call log into next steps.
+- Suggest the next best action; optionally auto-advance a deal (with agent approval).
+
+### 3.6 Smart follow-up & automation
 - Reminder tasks ("call back in 3 days") with due-date nudges.
 - Drip sequences: templated email/SMS steps triggered by stage or time.
 - "Speed-to-lead" alert: notify the agent the moment a new lead lands.
 
-### 3.4 AI assistant (the NovaCRM-style hook)
-- Draft a follow-up email/text in the agent's voice from the contact's history.
-- Summarize a long note or call log into next steps.
-- Generate a one-page property flyer or "just listed / just sold" post from a listing.
-- Suggest the next best action and rank today's hottest leads (AI lead score).
-- Implemented via an LLM API (e.g., OpenAI) behind our server, keys server-side.
+### 3.7 Email campaigns & communication  *(extends our existing email infra)*
+- Bulk/segmented **email campaigns** with professional templates and **engagement
+  analytics** (opens, clicks, replies) — built on the portal's DB-driven email system.
+- Email send/receive logged to the timeline (inbound parse).
+- Optional SMS via Twilio; click-to-call logging; optional power-dialer integration.
 
-### 3.5 Communication
-- Email send/receive logged to the timeline (via the existing email infra + inbound parse).
-- Optional SMS via Twilio.
-- Click-to-call logging; templates library.
+### 3.8 Proposals & document e-signing  *(NovaCRM parity — new to our portal)*
+- Send buyer-rep agreements, worksheets, and offers for **e-signature** inside the CRM.
+- Status tracking (sent / viewed / signed) on the contact timeline.
+- Reuses the existing private upload/storage infra for signed documents.
 
-### 3.6 Calendar & tasks
+### 3.9 Calendar & tasks
 - Reuse FullCalendar: showings, follow-ups, and closings on the agent calendar.
 - Task list with priorities and overdue highlighting.
 
-### 3.7 Dashboards & reporting
+### 3.10 Dashboards & reporting
 - Agent: pipeline value, conversion rate, tasks due, leads needing attention.
 - Admin/broker: team pipeline, source ROI, response times, leaderboard.
 
-### 3.8 Admin controls (consistent with the portal)
-- Editable stages, sources, tags, templates, and automation rules.
+### 3.11 Admin controls (consistent with the portal)
+- Editable stages, sources, tags, templates, capture pages, and automation rules.
 - Per-agent data isolation via row-level security; brokerage roll-up for admins.
 - Toggle the whole CRM module on/off per package.
 
@@ -115,6 +143,9 @@ The CRM reuses what we already run — no new stack:
 - `crm_templates` — email/SMS templates.
 - `crm_automations` — trigger → action rules.
 - `crm_messages` — sent/received email/SMS log.
+- `crm_capture_pages` — agent lead-capture/landing pages (slug, listing_id, fields…).
+- `crm_campaigns` — bulk email campaigns + per-recipient engagement (opens, clicks).
+- `crm_documents` — proposals/agreements sent for e-signature (status, signed_url).
 
 All scoped by `owner_id` with RLS so agents only see their own book; admins get a
 brokerage view. (Note: tighten the existing `INSERT WITH CHECK (true)` policies as
@@ -128,17 +159,20 @@ part of this work — see code analysis.)
 Contacts, deals kanban, activity timeline, manual tasks, worksheet→contact capture.
 Outcome: agents can run their book inside the portal.
 
-**Phase 2 — Follow-up engine**
-Templates, drip sequences, reminders, speed-to-lead alerts, email logging.
-Outcome: no lead falls through the cracks.
+**Phase 2 — Lead capture & follow-up engine**
+Lead-capture/landing pages, templates, drip sequences, reminders, speed-to-lead
+alerts, email logging.
+Outcome: new leads flow in and no follow-up falls through the cracks.
 
-**Phase 3 — AI assistant**
-Email/text drafting, note/call summaries, AI lead scoring, next-best-action.
-Outcome: the "NovaCRM" wow factor.
+**Phase 3 — AI assistant & marketing studio**
+Avon-style AI marketing studio (flyers, just-sold, comparisons), lead scoring,
+email/text drafting, call/note summaries, next-best-action.
+Outcome: the "NovaCRM" wow factor — collateral and follow-up in one click.
 
-**Phase 4 — Marketing & comms**
-Flyer / just-sold generator, SMS (Twilio), inbound email parsing.
-Outcome: marketing collateral and 2-way messaging in one place.
+**Phase 4 — Campaigns, comms & e-signing**
+Email campaigns with engagement analytics, SMS (Twilio)/dialer, inbound email
+parsing, proposals & document e-signature.
+Outcome: full two-way communication and paperwork close-out in the portal.
 
 **Phase 5 — Analytics & brokerage roll-up**
 Agent + broker dashboards, source ROI, leaderboards, exports.

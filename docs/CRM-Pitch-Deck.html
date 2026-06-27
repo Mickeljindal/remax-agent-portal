@@ -37,6 +37,7 @@
     font-size:21px; margin-bottom:12px; background:rgba(26,77,143,.1)}
   .feature .ic.ai{background:rgba(124,58,237,.12)}
   .feature h3{font-size:16px; margin-bottom:5px} .feature p{font-size:14px; line-height:1.5}
+  .feature .new{float:right;font-size:10px;font-weight:800;letter-spacing:.06em;color:#15803d;background:#dcfce7;border-radius:6px;padding:2px 7px}
   ul.clean{list-style:none; margin-top:18px; display:grid; gap:12px}
   ul.clean li{display:flex; gap:12px; font-size:17px; color:#334155; line-height:1.5}
   ul.clean li::before{content:"\2713"; color:#16a34a; font-weight:800; flex:0 0 auto}
@@ -55,11 +56,13 @@
   .cta{display:inline-block; margin-top:26px; background:var(--accent); color:#fff; font-weight:700;
     padding:15px 30px; border-radius:12px; font-size:17px; text-decoration:none}
   .flow{display:flex; align-items:stretch; gap:12px; margin-top:30px; flex-wrap:wrap}
-  .flow .step{background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:16px 18px; flex:1; min-width:150px}
+  .flow .step{background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:16px 18px; flex:1; min-width:140px}
   .flow .step .ph{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
   .controls{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:50}
   .controls button{background:var(--ink); color:#fff; border:none; border-radius:10px; padding:10px 16px; font-size:14px; cursor:pointer; opacity:.85}
   .controls button:hover{opacity:1}
+  .src{font-size:11px;color:#94a3b8;margin-top:auto;padding-top:18px}
+  .src a{color:#94a3b8}
 
   /* ---------- UI MOCKUPS ---------- */
   .mock{margin-top:8px; background:#0f172a; border-radius:18px; padding:22px; flex:1; display:flex; flex-direction:column; min-height:0}
@@ -77,7 +80,6 @@
   .deal .nm{font-size:13px; font-weight:700; color:#0f172a}
   .deal .meta{font-size:11px; color:var(--muted); margin-top:3px}
   .deal .val{font-size:13px; font-weight:800; color:#15803d; margin-top:6px}
-  .deal .av{display:inline-flex; align-items:center; gap:5px; margin-top:7px; font-size:11px; color:var(--muted)}
   .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
   .hot{border-left:3px solid var(--accent)}
   .score{float:right;font-size:10px;font-weight:800;color:#b91c1c;background:#fee2e2;border-radius:6px;padding:1px 6px}
@@ -113,6 +115,35 @@
   .chips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .chip{font-size:11px;font-weight:700;background:#ede9fe;color:#6d28d9;border-radius:999px;padding:5px 11px}
 
+  /* lead capture page */
+  .capture{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;height:100%}
+  .lp{border-radius:12px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}
+  .lp .hero{background:linear-gradient(180deg,rgba(10,42,82,.15),rgba(10,42,82,.75)),url('reel/img/home1.jpg');background-size:cover;background-position:center;flex:1;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;color:#fff}
+  .lp .hero .badge{align-self:flex-start;background:var(--accent);font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:6px}
+  .lp .hero h4{font-size:19px;margin-top:8px;color:#fff}
+  .lp .hero .pr{font-size:14px;font-weight:700;color:#fff;opacity:.9}
+  .lp .body{background:#fff;padding:14px}
+  .lp .body .row{height:30px;background:#f1f5f9;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;display:flex;align-items:center;padding:0 10px;font-size:11px;color:#94a3b8}
+  .lp .body .submit{height:34px;background:var(--accent);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-top:4px}
+  .cap-side{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .cap-side .lab{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#475569}
+  .cap-row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+  .cap-row .d{width:9px;height:9px;border-radius:50%;background:#16a34a}
+  .cap-row .t{font-size:12px;color:#0f172a;font-weight:600}
+  .cap-row .s{font-size:11px;color:var(--muted);margin-left:auto}
+
+  /* AI marketing studio */
+  .studio{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:100%}
+  .flyer{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+  .flyer .img{background:linear-gradient(180deg,rgba(10,42,82,.05),rgba(10,42,82,.45)),url('reel/img/home2.jpg');background-size:cover;background-position:center;height:120px;position:relative}
+  .flyer .sold{position:absolute;top:10px;left:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;padding:4px 10px;border-radius:6px;transform:rotate(-3deg)}
+  .flyer .info{padding:14px}
+  .flyer .info h4{font-size:16px}
+  .flyer .info .pr{font-size:18px;font-weight:800;color:#15803d;margin:4px 0}
+  .flyer .info .stats{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:6px}
+  .flyer .info .agent{display:flex;align-items:center;gap:8px;margin-top:12px;border-top:1px solid var(--line);padding-top:10px;font-size:11px;color:#334155}
+  .flyer .info .agent .a{width:26px;height:26px;border-radius:50%;background:var(--grad)}
+
   /* dashboard */
   .dash{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto 1fr;gap:12px;height:100%}
   .kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
@@ -131,7 +162,7 @@
   @media (max-width:760px){
     .slide{padding:34px 24px}.two,.g2,.g3,.g4{grid-template-columns:1fr}
     h1{font-size:34px}.cover h1{font-size:40px}h2{font-size:26px}
-    .kanban{grid-template-columns:repeat(2,1fr)}.contact,.ai-wrap{grid-template-columns:1fr}.dash{grid-template-columns:repeat(2,1fr)}
+    .kanban{grid-template-columns:repeat(2,1fr)}.contact,.ai-wrap,.capture,.studio{grid-template-columns:1fr}.dash{grid-template-columns:repeat(2,1fr)}
   }
 </style>
 </head>
@@ -145,12 +176,13 @@
       <div class="logo">A+</div>
       <span class="kicker" style="color:#fff">Agent Portal · Next Chapter</span>
       <h1>Add an AI CRM<br/>to the Agent Portal</h1>
-      <p class="lead" style="color:rgba(255,255,255,.92)">Give every agent a built-in client manager — capture leads, automate follow-up, and close more deals, all inside the portal they already use every day.</p>
+      <p class="lead" style="color:rgba(255,255,255,.92)">Capture leads, automate follow-up, generate marketing with AI, and close more deals — all inside the branded portal agents already use every day.</p>
       <div class="badge-row">
-        <span class="pill">Contacts &amp; Pipeline</span>
-        <span class="pill">Automated Follow-up</span>
-        <span class="pill ai" style="background:rgba(255,255,255,.18);color:#fff">AI Assistant</span>
-        <span class="pill">Brokerage Analytics</span>
+        <span class="pill">Lead Capture</span>
+        <span class="pill">Pipeline</span>
+        <span class="pill ai" style="background:rgba(255,255,255,.18);color:#fff">AI Marketing Studio</span>
+        <span class="pill">E-Sign</span>
+        <span class="pill">Analytics</span>
       </div>
     </div>
     <div class="foot" style="color:rgba(255,255,255,.78); border-top:1px solid rgba(255,255,255,.18)">
@@ -163,7 +195,7 @@
     <span class="num">02</span>
     <span class="kicker">The Gap Today</span>
     <h2>The portal equips agents — but doesn't manage their clients</h2>
-    <p class="lead">Agents are trained, have listings and tools in one place. Yet their actual book of business still lives in phone contacts, spreadsheets, and memory.</p>
+    <p class="lead">Agents are trained, with listings and tools in one place. Yet their actual book of business still lives in phone contacts, spreadsheets, and memory.</p>
     <div class="grid g4">
       <div class="feature"><div class="ic">&#128202;</div><h3>Leads scattered</h3><p>Contacts split across phone, email, and notes — no single view.</p></div>
       <div class="feature"><div class="ic">&#9203;</div><h3>Slow follow-up</h3><p>Most deals are lost to missed or late follow-ups.</p></div>
@@ -173,25 +205,46 @@
     <p class="lead" style="margin-top:26px">We already own the agent's daily login. Adding a CRM makes the portal indispensable.</p>
   </section>
 
-  <!-- 3 — THE VISION -->
+  <!-- 3 — BENCHMARK: NOVACRM -->
   <section class="slide">
     <span class="num">03</span>
+    <span class="kicker">Benchmark</span>
+    <h2>What an AI-first CRM like NovaCRM delivers</h2>
+    <p class="lead">NovaCRM.ai sets the bar for AI real-estate CRMs. We match its proven pillars — and tailor them to our pre-construction and resale workflows.</p>
+    <div class="grid g3">
+      <div class="feature"><div class="ic ai">&#10024;</div><h3>"Avon AI" studio</h3><p>Chat that generates flyers, just-sold reports &amp; property comparisons on the go.</p></div>
+      <div class="feature"><div class="ic ai">&#129302;</div><h3>Agentic AI</h3><p>Classifies &amp; scores leads, drafts emails, summarizes calls, advances the pipeline.</p></div>
+      <div class="feature"><div class="ic">&#129517;</div><h3>Lead generation</h3><p>Landing &amp; IDX squeeze pages that capture leads straight into the CRM.</p></div>
+      <div class="feature"><div class="ic">&#128231;</div><h3>Email marketing</h3><p>Templated campaigns with open, click &amp; engagement analytics.</p></div>
+      <div class="feature"><div class="ic">&#9997;</div><h3>Proposals &amp; e-sign</h3><p>Send and get documents signed inside the CRM.</p></div>
+      <div class="feature"><div class="ic">&#128200;</div><h3>Pipeline &amp; reporting</h3><p>Visual deal tracking with speed-to-lead and team dashboards.</p></div>
+    </div>
+    <p class="src">Sources, paraphrased &amp; rephrased for compliance:
+      <a href="https://novacrm.ai/">novacrm.ai</a> ·
+      <a href="https://novacrm.innovaas.co/">novacrm.innovaas.co</a> ·
+      <a href="https://features.slashdot.org/software/p/NOVA-CRM/">NOVACRM reviews</a>.
+    </p>
+  </section>
+
+  <!-- 4 — THE VISION -->
+  <section class="slide">
+    <span class="num">04</span>
     <div class="two">
       <div>
         <span class="kicker">The Vision</span>
-        <h2>One portal — now it closes deals too</h2>
+        <h2>One portal — now it grows the book too</h2>
         <ul class="clean">
-          <li>Every lead captured the moment it lands</li>
+          <li>Capture leads from shareable, branded pages</li>
           <li>A visual pipeline from first call to closing</li>
-          <li>Automated, on-brand follow-up so nothing slips</li>
-          <li>An AI assistant that drafts, summarizes &amp; prioritizes</li>
-          <li>Native to the portal — same login, same branding</li>
+          <li>AI that drafts, scores, summarizes &amp; prioritizes</li>
+          <li>An AI studio that makes flyers &amp; just-sold posts</li>
+          <li>Send &amp; e-sign agreements without leaving the app</li>
         </ul>
       </div>
       <div>
         <div class="grid g2" style="margin-top:0">
           <div class="feature" style="text-align:center"><div class="stat">1</div><small style="color:var(--muted)">App agents already use</small></div>
-          <div class="feature" style="text-align:center"><div class="stat" style="color:#7c3aed">AI</div><small style="color:var(--muted)">Built-in assistant</small></div>
+          <div class="feature" style="text-align:center"><div class="stat" style="color:#7c3aed">AI</div><small style="color:var(--muted)">Built-in assistant + studio</small></div>
           <div class="feature" style="text-align:center"><div class="stat">0</div><small style="color:var(--muted)">New logins to learn</small></div>
           <div class="feature" style="text-align:center"><div class="stat">100%</div><small style="color:var(--muted)">Your data &amp; brand</small></div>
         </div>
@@ -199,26 +252,65 @@
     </div>
   </section>
 
-  <!-- 4 — FEATURE OVERVIEW -->
+  <!-- 5 — FEATURE OVERVIEW -->
   <section class="slide">
-    <span class="num">04</span>
+    <span class="num">05</span>
     <span class="kicker">At A Glance</span>
-    <h2>Everything an agent needs to manage clients</h2>
+    <h2>Everything an agent needs to capture, nurture &amp; close</h2>
     <div class="grid g4">
+      <div class="feature"><span class="new">NEW</span><div class="ic">&#129517;</div><h3>Lead Capture Pages</h3><p>Branded landing / IDX pages feed the CRM.</p></div>
       <div class="feature"><div class="ic">&#128100;</div><h3>Contacts</h3><p>One timeline per buyer, seller, or investor.</p></div>
       <div class="feature"><div class="ic">&#128203;</div><h3>Pipeline</h3><p>Drag deals through editable stages.</p></div>
       <div class="feature"><div class="ic ai">&#10024;</div><h3>AI Lead Score</h3><p>Know who to call first, automatically.</p></div>
-      <div class="feature"><div class="ic">&#128231;</div><h3>Auto Follow-up</h3><p>Email/SMS drip sequences &amp; reminders.</p></div>
+      <div class="feature"><span class="new">NEW</span><div class="ic ai">&#127912;</div><h3>AI Marketing Studio</h3><p>Flyers &amp; just-sold posts from a listing.</p></div>
       <div class="feature"><div class="ic ai">&#129302;</div><h3>AI Drafting</h3><p>Emails, texts &amp; call summaries in a click.</p></div>
+      <div class="feature"><div class="ic">&#128231;</div><h3>Auto Follow-up</h3><p>Email/SMS drips, reminders &amp; speed-to-lead.</p></div>
+      <div class="feature"><div class="ic">&#128202;</div><h3>Email Campaigns</h3><p>Bulk sends with open &amp; click analytics.</p></div>
+      <div class="feature"><span class="new">NEW</span><div class="ic">&#9997;</div><h3>Proposals &amp; E-Sign</h3><p>Send &amp; sign agreements in-app.</p></div>
       <div class="feature"><div class="ic">&#128197;</div><h3>Tasks &amp; Calendar</h3><p>Showings &amp; follow-ups on one calendar.</p></div>
-      <div class="feature"><div class="ic">&#128241;</div><h3>Marketing</h3><p>Flyers &amp; just-sold posts from a listing.</p></div>
+      <div class="feature"><div class="ic">&#128222;</div><h3>Calls &amp; SMS</h3><p>Click-to-call &amp; texting logged to the timeline.</p></div>
       <div class="feature"><div class="ic">&#128200;</div><h3>Dashboards</h3><p>Agent &amp; brokerage pipeline analytics.</p></div>
     </div>
   </section>
 
-  <!-- 5 — MOCKUP: PIPELINE -->
+  <!-- 6 — MOCKUP: LEAD CAPTURE -->
   <section class="slide">
-    <span class="num">05</span>
+    <span class="num">06</span>
+    <span class="kicker">Product Concept · Lead Generation</span>
+    <h2>Shareable capture pages that fill the pipeline</h2>
+    <div class="mock">
+      <div class="winbar"><i></i><i></i><i></i></div>
+      <div class="pane">
+        <div class="capture">
+          <div class="lp">
+            <div class="hero">
+              <span class="badge">JUST LISTED</span>
+              <h4>Wilmot Condos — Oakville</h4>
+              <span class="pr">From $529,900 · 1–3 Bed</span>
+            </div>
+            <div class="body">
+              <div class="row">Full name</div>
+              <div class="row">Email address</div>
+              <div class="row">Phone</div>
+              <div class="submit">Get floor plans &amp; pricing &rarr;</div>
+            </div>
+          </div>
+          <div class="cap-side">
+            <span class="lab">Leads captured · live</span>
+            <div class="cap-row"><span class="d"></span><span class="t">Priya &amp; Sam</span><span class="s">just now</span></div>
+            <div class="cap-row"><span class="d"></span><span class="t">Marcus Lee</span><span class="s">3 min ago</span></div>
+            <div class="cap-row"><span class="d"></span><span class="t">The Wus</span><span class="s">18 min ago</span></div>
+            <div class="cap-row" style="background:#faf5ff;border-color:#e9d5ff"><span class="d" style="background:#7c3aed"></span><span class="t">AI auto-replied &amp; scored each lead</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:13px">Each page is tied to a listing or pre-con project; submissions create a contact + deal and trigger an instant AI reply — extending the portal's existing worksheet capture.</p>
+  </section>
+
+  <!-- 7 — MOCKUP: PIPELINE -->
+  <section class="slide">
+    <span class="num">07</span>
     <span class="kicker">Product Concept · Pipeline</span>
     <h2>A visual deal pipeline — drag, drop, done</h2>
     <div class="mock">
@@ -254,9 +346,9 @@
     <p style="margin-top:14px;font-size:13px">Stages are admin-editable — the same control pattern as the portal's pre-con statuses.</p>
   </section>
 
-  <!-- 6 — MOCKUP: CONTACT TIMELINE -->
+  <!-- 8 — MOCKUP: CONTACT TIMELINE -->
   <section class="slide">
-    <span class="num">06</span>
+    <span class="num">08</span>
     <span class="kicker">Product Concept · Contact</span>
     <h2>Every interaction, on one timeline</h2>
     <div class="mock">
@@ -270,34 +362,65 @@
             <div style="margin:12px 0">
               <div class="kv"><span>Budget</span><span>$520k–$580k</span></div>
               <div class="kv"><span>Area</span><span>Oakville</span></div>
-              <div class="kv"><span>Source</span><span>Pre-con worksheet</span></div>
+              <div class="kv"><span>Source</span><span>Capture page</span></div>
               <div class="kv"><span>AI score</span><span style="color:#b91c1c;font-weight:800">98 · Hot</span></div>
             </div>
             <span class="tag">Pre-con</span><span class="tag">Mortgage ready</span><span class="tag">Weekend tours</span>
           </div>
           <div class="timeline">
-            <div class="tl win"><div class="h">Worksheet submitted — Wilmot Condos</div><div class="b">Auto-created this contact &amp; deal.</div><div class="ts">Today · 9:12 AM</div></div>
-            <div class="tl ai"><div class="h">AI: drafted welcome email</div><div class="b">"Thanks for your interest in Wilmot Condos…" — sent.</div><div class="ts">Today · 9:13 AM</div></div>
+            <div class="tl win"><div class="h">Captured — Wilmot Condos page</div><div class="b">Auto-created this contact &amp; deal.</div><div class="ts">Today · 9:12 AM</div></div>
+            <div class="tl ai"><div class="h">AI: drafted &amp; sent welcome email</div><div class="b">"Thanks for your interest in Wilmot Condos…"</div><div class="ts">Today · 9:13 AM</div></div>
             <div class="tl"><div class="h">Call logged — 6 min</div><div class="b">Wants a weekend showing; pre-approved to $580k.</div><div class="ts">Today · 11:40 AM</div></div>
             <div class="tl ai"><div class="h">AI summary &amp; next step</div><div class="b">Next best action: book Saturday tour, send 3 comparable units.</div><div class="ts">Today · 11:41 AM</div></div>
-            <div class="tl"><div class="h">Task — Send comparables</div><div class="b">Due tomorrow · reminder set.</div><div class="ts">Upcoming</div></div>
+            <div class="tl"><div class="h">Buyer rep agreement — sent for e-sign</div><div class="b">Status: viewed · awaiting signature.</div><div class="ts">Upcoming</div></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 7 — MOCKUP: AI ASSISTANT -->
+  <!-- 9 — MOCKUP: AI MARKETING STUDIO -->
   <section class="slide">
-    <span class="num">07</span>
-    <span class="kicker">Product Concept · AI Assistant</span>
+    <span class="num">09</span>
+    <span class="kicker">Product Concept · AI Marketing Studio</span>
+    <h2>Marketing collateral in one sentence</h2>
+    <div class="mock" style="background:#1e1b4b">
+      <div class="winbar"><i></i><i></i><i></i></div>
+      <div class="pane">
+        <div class="studio">
+          <div class="ai-chat">
+            <div class="from">&#127912; PORTAL AI STUDIO</div>
+            <div class="bub u">Make a "just sold" post for 24 Maple Ave.</div>
+            <div class="bub a">Done — pulled the photos, price and stats from the listing. Want a square version for Instagram too?</div>
+            <div class="bub u">Yes, and a 1-page PDF flyer.</div>
+            <div class="bub a">&#9989; Created: social post, IG square &amp; print-ready flyer — all on RE/MAX Excellence brand.</div>
+          </div>
+          <div class="flyer">
+            <div class="img"><span class="sold">JUST SOLD</span></div>
+            <div class="info">
+              <h4>24 Maple Ave, Mississauga</h4>
+              <div class="pr">Sold · $1,140,000</div>
+              <div class="stats"><span>4 Bed</span><span>3 Bath</span><span>Sold in 6 days</span></div>
+              <div class="agent"><span class="a"></span><span>Listed &amp; sold by your RE/MAX Excellence agent</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:13px">Mirrors NovaCRM's "Avon AI" — flyers, just-sold reports &amp; property comparisons — generated from the listing data &amp; images the portal already stores.</p>
+  </section>
+
+  <!-- 10 — MOCKUP: AI ASSISTANT -->
+  <section class="slide">
+    <span class="num">10</span>
+    <span class="kicker">Product Concept · Agentic AI</span>
     <h2>The AI does the busywork</h2>
     <div class="mock" style="background:#1e1b4b">
       <div class="winbar"><i></i><i></i><i></i></div>
       <div class="pane">
         <div class="ai-wrap">
           <div class="ai-chat">
-            <div class="from">&#10024; PORTAL AI</div>
+            <div class="from">&#129302; PORTAL AI</div>
             <div class="bub u">Draft a follow-up to Priya &amp; Sam after today's call.</div>
             <div class="bub a">Done — friendly tone, references the weekend tour and their $580k budget. Want me to attach 3 comparable units?</div>
             <div class="bub u">Yes, and remind me Friday.</div>
@@ -314,27 +437,27 @@
         </div>
       </div>
     </div>
-    <p style="margin-top:14px;font-size:13px">Drafting, call summaries, lead scoring &amp; "just-sold" posts — powered by an LLM behind our own server (keys never leave the brokerage).</p>
+    <p style="margin-top:14px;font-size:13px">Lead classification, scoring, drafting &amp; call summaries — powered by an LLM behind our own server (keys never leave the brokerage).</p>
   </section>
 
-  <!-- 8 — AUTOMATION -->
+  <!-- 11 — AUTOMATION & COMMS -->
   <section class="slide">
-    <span class="num">08</span>
-    <span class="kicker">Follow-up Engine</span>
+    <span class="num">11</span>
+    <span class="kicker">Follow-up &amp; Communication Engine</span>
     <h2>No lead ever falls through the cracks</h2>
     <div class="grid g3">
       <div class="feature"><div class="ic">&#9889;</div><h3>Speed-to-lead</h3><p>The agent is pinged the second a new lead lands — first to respond wins.</p></div>
       <div class="feature"><div class="ic">&#128259;</div><h3>Drip sequences</h3><p>Templated email/SMS steps fire automatically by stage or time.</p></div>
       <div class="feature"><div class="ic">&#9200;</div><h3>Smart reminders</h3><p>"Call back in 3 days" tasks with overdue nudges.</p></div>
-      <div class="feature"><div class="ic">&#128221;</div><h3>Template library</h3><p>Brokerage-approved, on-brand messages ready to send.</p></div>
-      <div class="feature"><div class="ic ai">&#129518;</div><h3>Worksheet capture</h3><p>Existing pre-con worksheets auto-create a contact &amp; deal.</p></div>
-      <div class="feature"><div class="ic">&#128236;</div><h3>2-way messaging</h3><p>Email (and optional SMS via Twilio) logged to the timeline.</p></div>
+      <div class="feature"><div class="ic">&#128202;</div><h3>Campaign analytics</h3><p>Bulk email with open, click &amp; reply tracking per recipient.</p></div>
+      <div class="feature"><div class="ic">&#128222;</div><h3>Calls &amp; 2-way SMS</h3><p>Click-to-call &amp; texting (Twilio) logged to the timeline.</p></div>
+      <div class="feature"><div class="ic">&#9997;</div><h3>E-sign &amp; proposals</h3><p>Agreements sent, viewed &amp; signed — status on the timeline.</p></div>
     </div>
   </section>
 
-  <!-- 9 — MOCKUP: DASHBOARD -->
+  <!-- 12 — MOCKUP: DASHBOARD -->
   <section class="slide">
-    <span class="num">09</span>
+    <span class="num">12</span>
     <span class="kicker">Product Concept · Analytics</span>
     <h2>Pipeline health for agents and the brokerage</h2>
     <div class="mock">
@@ -360,9 +483,9 @@
     </div>
   </section>
 
-  <!-- 10 — FITS ARCHITECTURE -->
+  <!-- 13 — FITS ARCHITECTURE -->
   <section class="slide">
-    <span class="num">10</span>
+    <span class="num">13</span>
     <span class="kicker">Why It's Low-Risk</span>
     <h2>Built on the portal we already run</h2>
     <div class="two">
@@ -377,34 +500,34 @@
       </div>
       <div>
         <div class="feature"><div class="ic">&#128451;</div><h3>New data, cleanly scoped</h3>
-          <p style="margin-bottom:10px">Contacts, deals, stages, activities, tasks, templates &amp; automations — each agent sees only their own book; admins get the brokerage roll-up.</p>
+          <p style="margin-bottom:10px">Contacts, deals, stages, activities, tasks, templates, capture pages, campaigns &amp; documents — each agent sees only their own book; admins get the brokerage roll-up.</p>
           <div class="badge-row">
             <span class="tech">React</span><span class="tech">PostgreSQL</span><span class="tech">Node.js</span>
-            <span class="tech">LLM API</span><span class="tech">Twilio (opt.)</span>
+            <span class="tech">LLM API</span><span class="tech">E-Sign</span><span class="tech">Twilio (opt.)</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 11 — ROADMAP -->
+  <!-- 14 — ROADMAP -->
   <section class="slide">
-    <span class="num">11</span>
+    <span class="num">14</span>
     <span class="kicker">Roadmap</span>
     <h2>Ship value early, layer in AI</h2>
     <div class="flow">
-      <div class="step"><div class="ph">Phase 1</div><h3>Foundation</h3><p>Contacts, pipeline, timeline, tasks, worksheet capture.</p></div>
-      <div class="step"><div class="ph">Phase 2</div><h3>Follow-up</h3><p>Templates, drips, reminders, speed-to-lead.</p></div>
-      <div class="step"><div class="ph">Phase 3</div><h3>AI Assistant</h3><p>Drafting, summaries, lead scoring.</p></div>
-      <div class="step"><div class="ph">Phase 4</div><h3>Marketing &amp; SMS</h3><p>Flyers, just-sold, 2-way texting.</p></div>
+      <div class="step"><div class="ph">Phase 1</div><h3>Foundation</h3><p>Contacts, pipeline, timeline, tasks.</p></div>
+      <div class="step"><div class="ph">Phase 2</div><h3>Capture &amp; Follow-up</h3><p>Lead pages, drips, reminders, speed-to-lead.</p></div>
+      <div class="step"><div class="ph">Phase 3</div><h3>AI &amp; Studio</h3><p>Drafting, scoring, flyers &amp; just-sold.</p></div>
+      <div class="step"><div class="ph">Phase 4</div><h3>Campaigns &amp; E-Sign</h3><p>Analytics, SMS, proposals &amp; signing.</p></div>
       <div class="step"><div class="ph">Phase 5</div><h3>Analytics</h3><p>Agent + broker dashboards.</p></div>
     </div>
-    <p class="lead" style="margin-top:28px">Phase 1 stands on its own — agents can run their whole book in the portal before any AI is added. AI is the fast-follow that creates the "wow."</p>
+    <p class="lead" style="margin-top:28px">Phase 1 stands on its own — agents can run their whole book in the portal before any AI is added. AI and the marketing studio are the fast-follow that creates the "wow."</p>
   </section>
 
-  <!-- 12 — CLOSE -->
+  <!-- 15 — CLOSE -->
   <section class="slide cover ai">
-    <span class="num">12</span>
+    <span class="num">15</span>
     <div class="center">
       <span class="kicker" style="color:#fff">The Ask</span>
       <h1 style="font-size:44px">Turn the portal into<br/>the agent's whole business</h1>

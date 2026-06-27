@@ -138,13 +138,27 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
 
 - Client wants to grow the portal into agent CRM features (inspired by novacrm.ai).
   Explicitly NOT building it yet — only a plan + a pitch deck to sell the idea.
-- `docs/CRM_EXPANSION_PLAN.md` — why add CRM, NovaCRM reference, tailored feature set,
-  fit with the existing React/Supabase/Express stack, ~8 proposed `crm_*` tables,
-  5 delivery phases, risks.
-- `docs/CRM-Pitch-Deck.html` — 12-slide deck matching `docs/agent-portal-deck.html`
-  style, with drawn UI mockups (kanban pipeline, contact timeline, AI chat+draft,
-  analytics dashboard). Rendered to `docs/CRM-Pitch-Deck.pdf` via the (gitignored)
-  `scripts/deck-to-pdf.mjs` (now parameterized to take an input HTML + output PDF).
+- NovaCRM.ai feature understanding (researched, paraphrased): its pillars are
+  **"Avon AI"** (chat that generates flyers / just-sold reports / property
+  comparisons), **agentic AI** (classify + score leads via semantic search, draft
+  emails, summarize calls, advance the pipeline), **lead-generation pages**
+  (landing / IDX squeeze pages), **email marketing** with engagement analytics,
+  **proposals + document e-signing**, and pipeline/reporting dashboards. The earlier
+  draft MISSED lead-capture pages, the AI marketing studio, e-sign, and campaign
+  analytics — these were added in the rebuild.
+- `docs/CRM_EXPANSION_PLAN.md` — why add CRM, NovaCRM benchmark, tailored feature set
+  (now incl. §3.1 lead capture/generation pages, §3.4 AI marketing studio, §3.7 email
+  campaigns + analytics, §3.8 proposals & e-sign), fit with the React/Supabase/Express
+  stack, ~11 proposed `crm_*` tables (added crm_capture_pages, crm_campaigns,
+  crm_documents), 5 delivery phases, risks.
+- `docs/CRM-Pitch-Deck.html` — 15-slide deck matching `docs/agent-portal-deck.html`
+  style. Slides: cover, the gap, NovaCRM benchmark (cited), vision, 12-feature grid,
+  + UI mockups for lead-capture pages, kanban pipeline, contact timeline, AI marketing
+  studio (Avon-style), agentic AI assistant, follow-up/comms engine, analytics
+  dashboard, architecture, roadmap, close. Mockups use the reel photos via
+  `reel/img/*.jpg` (deck lives in `docs/`, so paths are `reel/img/...`). Rendered to
+  `docs/CRM-Pitch-Deck.pdf` (15 pages) via the (gitignored) `scripts/deck-to-pdf.mjs`
+  (parameterized: input HTML + output PDF).
 
 ## Conventions
 
