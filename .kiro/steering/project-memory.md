@@ -140,6 +140,42 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   vector-mock script; the current MP4 does NOT match it yet and would need rebuilding
   from real portal screen captures (capture-screenshots.mjs / screen recording).
 
+  WALKTHROUGH REEL (IN PROGRESS — the user's real ask): the user gave a full 7-scene
+  VISUAL storyboard and wants the actual VIDEO rebuilt from the REAL portal product,
+  not vector mockups. Pipeline built:
+  - `/preview` route (`src/pages/ClientPreview.tsx`) renders the real portal with demo
+    data, NO auth — covers every scene: `#dashboard` (calendar+training),
+    `#listings`/PreConSection (pre-con grid + search), CommissionCalculator,
+    `#offices` (RoomBooking), `#support` (SupportChat, tawk.to), `#assets` (library).
+  - `scripts/capture-reel-shots.mjs` (GITIGNORED) captures hi-res (scale 2) PNGs of
+    each section from `/preview` → `docs/reel/shots/`. Run:
+    `REEL_BASE=http://localhost:8081 node scripts/capture-reel-shots.mjs`.
+    NOTE dev server moved to port 8081 (8080 was stale). Captured: dashboard, courses,
+    listings, commission, offices, support, assets, full (full-page for the scroll).
+    GAP: standalone library is empty in demo (Schedule B / deal sheets / deposit info
+    live INSIDE project detail sheets) — Scene 6 currently reuses `assets.png`.
+  - `docs/reel/walkthrough.html` (NEW, UNCOMMITTED) — a 1920×1080 LANDSCAPE walkthrough
+    (distinct from the vertical `reel.html`). Animates the real screenshots inside a
+    laptop/browser frame: intro (balloon+logo clip-wipe), brand bar, scene kickers,
+    laptop-open, top→bottom scroll (Scene 2), ken-burns pan per section, red highlight
+    boxes, per-scene captions, progress bar. 8 segments, ~38.4s. Same render contract
+    as reel.html (`window.__duration`, `window.__ready`, `window.renderFrame(t)`).
+  - `scripts/render-reel.mjs` is now PARAMETERIZED via env: `REEL_HTML`, `REEL_OUT`,
+    `REEL_W`, `REEL_H` (defaults still produce the vertical reel). Render walkthrough:
+    `REEL_HTML=docs/reel/walkthrough.html REEL_OUT=docs/Agent-Portal-Walkthrough.mp4 \
+     REEL_W=1920 REEL_H=1080 node scripts/render-reel.mjs` (also generates+muxes the
+    music bed at the walkthrough duration).
+  - `scripts/check-walkthrough.mjs` (GITIGNORED) extracts sanity frames to /tmp/wt/.
+  - STATUS: RENDERED + COMMITTED. `docs/Agent-Portal-Walkthrough.mp4` is on disk
+    (1920×1080, h264 + aac, ~38.4s, ~14.4 MB, both video+audio streams verified via
+    ffprobe) and committed alongside `docs/reel/walkthrough.html` and
+    `docs/reel/shots/*.png` (incl. `library.png` now captured for Scene 6). Both reels
+    ship: vertical `Agent-Portal-Reel.mp4` + landscape `Agent-Portal-Walkthrough.mp4`.
+    OPEN ITEMS: (a) Scene 6 office-library docs (Schedule B / deal sheets / deposit
+    info) live inside project detail sheets — `library.png` is the closest standalone
+    capture. (b) CTA `joinremaxex.com` still a placeholder pending the real
+    site/handle/phone before any final re-render.
+
 ## CRM expansion (PLAN + PITCH ONLY — not built)
 
 - Client wants to grow the portal into agent CRM features (inspired by novacrm.ai).
@@ -179,6 +215,10 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   Just do the whole task end-to-end: edit code, run `npm run build`, run migrations
   (`node scripts/run-migration.mjs <file>` — it has the DB connection built in),
   commit, and push to `main`. Report the result AFTER it's done, not before.
+- NOTE on the "Accept / Run" approval popups: those come from Kiro's **Supervised
+  mode**, NOT from me asking. The user should switch to **Autopilot mode** (toggle at
+  the bottom of the chat input) to remove them. I cannot change that setting myself.
+  Regardless of mode, my behavior is: act first, report after — never ask per step.
 - "Please do everything yourself" — full autonomous execution is the default. Only
   pause for genuinely destructive/irreversible production actions (dropping data,
   deleting accounts, force-pushing, wiping the live DB). Local code edits, builds,

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=1920,height=1080"/>
+<title>RE/MAX Excellence — Agent Portal Walkthrough</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:#0a1526;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  #stage{position:relative;width:1920px;height:1080px;overflow:hidden;
+    background:radial-gradient(120% 120% at 50% 0%, #16315c 0%, #0a1526 60%, #060d1a 100%)}
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;will-change:transform}
+  #b1{width:760px;height:760px;left:-180px;top:-220px;background:rgba(226,35,26,.30)}
+  #b2{width:820px;height:820px;right:-220px;bottom:-260px;background:rgba(0,61,165,.34)}
+
+  /* brand bar */
+  #brand{position:absolute;left:56px;top:42px;display:flex;align-items:center;gap:16px;z-index:40;opacity:0;will-change:opacity,transform}
+  #brand .bmark{width:46px;height:60px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+  #brand .name{color:#fff;font-weight:900;font-size:25px;letter-spacing:.02em;line-height:1}
+  #brand .name small{display:block;font-size:13px;font-weight:700;letter-spacing:.34em;color:#9fb4d6;margin-top:5px}
+
+  /* scene kicker */
+  #kicker{position:absolute;left:56px;top:140px;z-index:40;opacity:0;will-change:opacity,transform}
+  #kicker .k{display:inline-block;background:rgba(226,35,26,.95);color:#fff;font-weight:900;letter-spacing:.14em;
+    font-size:19px;padding:9px 18px;border-radius:8px;box-shadow:0 8px 26px rgba(226,35,26,.4)}
+
+  /* laptop / browser frame */
+  #laptop{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:1540px;z-index:20;
+    will-change:transform,opacity;opacity:0}
+  .win{background:#0e1a2e;border:1px solid rgba(255,255,255,.08);border-radius:18px 18px 14px 14px;
+    box-shadow:0 50px 120px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);overflow:hidden}
+  .bar{height:52px;background:linear-gradient(#1b2c49,#16243d);display:flex;align-items:center;padding:0 20px;gap:9px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .bar i{width:14px;height:14px;border-radius:50%}
+  .bar i:nth-child(1){background:#ff5f57}.bar i:nth-child(2){background:#febc2e}.bar i:nth-child(3){background:#28c840}
+  .bar .url{margin-left:22px;flex:1;max-width:560px;height:30px;background:#0c1626;border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;display:flex;align-items:center;padding:0 16px;color:#8aa3c8;font-size:14px;font-weight:600;gap:9px}
+  .bar .url .lock{color:#28c840;font-size:12px}
+  .screen{position:relative;width:100%;height:812px;background:#fff;overflow:hidden}
+  .shot{position:absolute;left:0;top:0;width:100%;display:block;opacity:0;will-change:transform,opacity}
+  .veilglass{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(0,0,0,.06));z-index:5}
+  .hl{position:absolute;border:3px solid #e2231a;border-radius:12px;box-shadow:0 0 0 4px rgba(226,35,26,.22);opacity:0;z-index:6;will-change:opacity,transform}
+  /* laptop base */
+  #base{position:absolute;left:50%;top:calc(54% + 432px);transform:translateX(-50%);width:1700px;height:26px;z-index:19;opacity:0;
+    background:linear-gradient(#cdd6e4,#9fb0c8);border-radius:0 0 22px 22px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+  #base::after{content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);width:220px;height:9px;background:#7e90ab;border-radius:0 0 12px 12px}
+
+  /* intro / outro center */
+  #intro{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;will-change:opacity}
+  #intro .ibal{width:120px;height:158px;margin-bottom:8px;filter:drop-shadow(0 14px 30px rgba(0,0,0,.5))}
+  #intro .logoWrap{overflow:hidden;display:inline-block}
+  #intro .logo{height:120px;display:block}
+  #intro h1{color:#fff;font-size:62px;font-weight:900;letter-spacing:-.02em;margin-top:26px;text-shadow:0 8px 30px rgba(0,0,0,.5)}
+  #intro h1 em{font-style:normal;color:#ff7a6e}
+
+  /* caption */
+  #cap{position:absolute;left:50%;bottom:46px;transform:translateX(-50%);z-index:45;width:1500px;text-align:center;opacity:0;will-change:opacity,transform}
+  #cap .t{display:inline-block;background:rgba(8,16,30,.74);color:#fff;font-size:30px;font-weight:700;line-height:1.35;
+    padding:16px 30px;border-radius:16px;backdrop-filter:blur(8px);box-shadow:0 16px 50px rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08)}
+  #cap .t em{font-style:normal;color:#ff8f84}
+
+  #progress{position:absolute;left:0;bottom:0;height:5px;background:linear-gradient(90deg,#e2231a,#ff7a6e);z-index:60;width:0}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="blob" id="b1"></div>
+  <div class="blob" id="b2"></div>
+
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="balloon" viewBox="0 0 100 132">
+      <defs><clipPath id="bclip"><path d="M50 3 C22 3 6 27 6 53 C6 84 33 107 45 117 L55 117 C67 107 94 84 94 53 C94 27 78 3 50 3 Z"/></clipPath></defs>
+      <g clip-path="url(#bclip)">
+        <rect x="0" y="0" width="100" height="44" fill="#e2231a"/>
+        <rect x="0" y="44" width="100" height="44" fill="#fff"/>
+        <rect x="0" y="88" width="100" height="44" fill="#003da5"/>
+      </g>
+      <path d="M50 3 C22 3 6 27 6 53 C6 84 33 107 45 117 L55 117 C67 107 94 84 94 53 C94 27 78 3 50 3 Z" fill="none" stroke="rgba(15,27,46,.18)" stroke-width="1.5"/>
+      <path d="M45 117 L55 117 L53.5 128 Q50 131 46.5 128 Z" fill="#0f1b2e"/>
+    </symbol>
+  </svg>
+
+  <div id="brand">
+    <svg class="bmark" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+    <div class="name">RE/MAX EXCELLENCE<small>AGENT PORTAL</small></div>
+  </div>
+
+  <div id="kicker"><span class="k" id="kickerText">WHEN YOU JOIN</span></div>
+
+  <div id="base"></div>
+  <div id="laptop">
+    <div class="win">
+      <div class="bar">
+        <i></i><i></i><i></i>
+        <div class="url"><span class="lock">&#128274;</span> portal.remaxexcellence.ca</div>
+      </div>
+      <div class="screen" id="screen">
+        <img class="shot" id="shotFull"    src="shots/full.png"       alt=""/>
+        <img class="shot" id="shotDash"    src="shots/dashboard.png"  alt=""/>
+        <img class="shot" id="shotList"    src="shots/listings.png"   alt=""/>
+        <img class="shot" id="shotComm"    src="shots/commission.png" alt=""/>
+        <img class="shot" id="shotOffices" src="shots/offices.png"    alt=""/>
+        <img class="shot" id="shotAssets"  src="shots/assets.png"     alt=""/>
+        <img class="shot" id="shotSupport" src="shots/support.png"    alt=""/>
+        <div class="hl" id="hl"></div>
+        <div class="veilglass"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="intro">
+    <svg class="ibal" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+    <div class="logoWrap" id="introLogoWrap"><img class="logo" src="img/logo.png" alt="RE/MAX Excellence"/></div>
+    <h1>When you join <em>RE/MAX Excellence</em></h1>
+  </div>
+
+  <div id="cap"><span class="t" id="capText"></span></div>
+  <div id="progress"></div>
+</div>
+
+<script>
+  // ---------- timeline ----------
+  const S = [
+    { id:"intro",   start:0.0,  end:2.6,  kicker:"WHEN YOU JOIN",
+      cap:"When you join <em>RE/MAX Excellence</em>…" },
+    { id:"scroll",  start:2.6,  end:9.2,  kicker:"ALL IN ONE PLACE", shot:"shotFull", type:"scroll",
+      cap:"…you get one of the most powerful tools our agents have — everything at your fingertips." },
+    { id:"dash",    start:9.2,  end:14.8, kicker:"TRAINING & CALENDAR", shot:"shotDash", type:"pan",
+      cap:"We keep our team ahead — what's happening this month, and the month ahead." },
+    { id:"list",    start:14.8, end:18.9, kicker:"PRE-CONSTRUCTION", shot:"shotList", type:"pan",
+      hl:{x:3,y:30,w:94,h:34},
+      cap:"Pre-construction made easy — browse every project and search in a tap." },
+    { id:"comm",    start:18.9, end:22.6, kicker:"COMMISSION CALCULATOR", shot:"shotComm", type:"pan",
+      cap:"…and run your commission in seconds." },
+    { id:"offices", start:22.6, end:27.0, kicker:"MEETING ROOMS", shot:"shotOffices", type:"pan",
+      cap:"Need a space? Book a meeting room in just a few clicks." },
+    { id:"assets",  start:27.0, end:32.4, kicker:"OFFICE LIBRARY", shot:"shotAssets", type:"pan",
+      cap:"Your whole office library in one place — schedules, deal sheets &amp; deposit info." },
+    { id:"support", start:32.4, end:38.4, kicker:"AI SUPPORT", shot:"shotSupport", type:"pan",
+      hl:{x:4,y:74,w:92,h:20},
+      cap:"And whenever you need a hand, just ask — your AI assistant, any time." },
+  ];
+  const DUR = S[S.length-1].end;
+  window.__duration = DUR;
+
+  // ---------- preload ----------
+  const SHOTS = ["shotFull","shotDash","shotList","shotComm","shotOffices","shotAssets","shotSupport"]
+    .map(id=>document.getElementById(id));
+  let loaded = 0; window.__ready = false;
+  const logo = document.querySelector("#intro .logo");
+  const all = [...SHOTS, logo];
+  all.forEach(img=>{
+    if (img.complete && img.naturalWidth) done(); else { img.onload = done; img.onerror = done; }
+  });
+  function done(){ if (++loaded >= all.length) window.__ready = true; }
+  setTimeout(()=>{ window.__ready = true; }, 12000);
+
+  // ---------- helpers ----------
+  const el = (id)=>document.getElementById(id);
+  const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+  const lerp=(a,b,u)=>a+(b-a)*u;
+  const easeInOut=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+  const easeOut=u=>1-Math.pow(1-u,3);
+  const SCREEN_W = 1540, SCREEN_H = 812;
+
+  const brand=el("brand"), kicker=el("kicker"), kickerText=el("kickerText"),
+        laptop=el("laptop"), base=el("base"), intro=el("intro"),
+        cap=el("cap"), capText=el("capText"), hl=el("hl"),
+        introLogoWrap=el("introLogoWrap"), progress=el("progress");
+
+  function hideAllShots(){ SHOTS.forEach(s=>{ s.style.opacity=0; }); }
+
+  function placeShot(shot, u, type){
+    // displayed height when width = SCREEN_W
+    const ratio = (shot.naturalHeight||1000)/(shot.naturalWidth||1500);
+    const H = SCREEN_W * ratio;
+    let y, scale;
+    if (type==="scroll"){
+      // top-to-bottom fast scroll, ease-in-out, slight settle at ends
+      const e = easeInOut(clamp(u,0,1));
+      const maxScroll = Math.max(0, H - SCREEN_H);
+      y = -maxScroll * e;
+      scale = 1;
+    } else { // pan + gentle ken-burns
+      const e = easeInOut(clamp(u,0,1));
+      scale = lerp(1.0, 1.045, e);
+      const Hs = H*scale;
+      const maxScroll = Math.max(0, Hs - SCREEN_H);
+      if (maxScroll > 4){
+        y = -lerp(maxScroll*0.10, maxScroll*0.78, e);
+      } else {
+        y = (SCREEN_H - Hs)/2; // center short images
+      }
+    }
+    shot.style.transformOrigin = "50% 0%";
+    shot.style.transform = `translateY(${y.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+    shot.style.opacity = 1;
+  }
+
+  function setHighlight(sc, u){
+    if (!sc.hl){ hl.style.opacity=0; return; }
+    const x=sc.hl.x/100*SCREEN_W, y=sc.hl.y/100*SCREEN_H, w=sc.hl.w/100*SCREEN_W, h=sc.hl.h/100*SCREEN_H;
+    hl.style.left=x+"px"; hl.style.top=y+"px"; hl.style.width=w+"px"; hl.style.height=h+"px";
+    const pulse = 0.55 + 0.45*Math.abs(Math.sin(u*Math.PI*3));
+    hl.style.opacity = (u>0.18 ? pulse : 0).toFixed(3);
+  }
+
+  function renderFrame(t){
+    t = clamp(t, 0, DUR-0.001);
+    progress.style.width = (t/DUR*100).toFixed(2)+"%";
+
+    // background drift
+    el("b1").style.transform = `translate(${(t*7).toFixed(1)}px, ${(t*4).toFixed(1)}px)`;
+    el("b2").style.transform = `translate(${(-t*6).toFixed(1)}px, ${(-t*3).toFixed(1)}px)`;
+
+    const sc = S.find(s=> t>=s.start && t<s.end) || S[S.length-1];
+    const u = clamp((t - sc.start)/(sc.end - sc.start), 0, 1);
+
+    // ---- intro vs app ----
+    const inIntro = sc.id==="intro";
+    // intro fade out across its last 0.7s
+    const introOpacity = inIntro ? clamp(u/0.35,0,1) * (1 - clamp((u-0.78)/0.22,0,1)) : 0;
+    intro.style.opacity = introOpacity.toFixed(3);
+    intro.style.transform = `scale(${(1 + 0.04*easeOut(clamp(u,0,1))).toFixed(4)})`;
+    // logo clip-wipe reveal on intro
+    if (inIntro){
+      const w = easeOut(clamp((u-0.12)/0.5,0,1));
+      introLogoWrap.style.width = (w*360).toFixed(0)+"px";
+      introLogoWrap.style.opacity = clamp(u/0.25,0,1);
+    }
+
+    // brand bar appears after intro
+    const brandOn = t > 2.3 ? 1 : 0;
+    brand.style.opacity = brandOn;
+    brand.style.transform = `translateY(${brandOn? '0':'-12px'})`;
+
+    // laptop visible from scroll scene on; "opens" at scene 2 start
+    if (!inIntro){
+      // open animation only during first 1.0s of the scroll scene
+      let openU = sc.id==="scroll" ? clamp(u/0.16,0,1) : 1;
+      const oe = easeOut(openU);
+      laptop.style.opacity = oe.toFixed(3);
+      laptop.style.transform = `translate(-50%,-50%) perspective(1800px) rotateX(${(8*(1-oe)).toFixed(2)}deg) scale(${lerp(0.93,1,oe).toFixed(4)})`;
+      base.style.opacity = (oe*0.9).toFixed(3);
+    } else {
+      laptop.style.opacity = 0; base.style.opacity = 0;
+    }
+
+    // kicker
+    kickerText.textContent = sc.kicker;
+    const kOn = clamp(u/0.12,0,1) * (1 - clamp((u-0.9)/0.1,0,1));
+    kicker.style.opacity = kOn.toFixed(3);
+    kicker.style.transform = `translateX(${lerp(-16,0,easeOut(clamp(u/0.2,0,1))).toFixed(1)}px)`;
+
+    // shots
+    hideAllShots();
+    if (!inIntro && sc.shot){
+      placeShot(el(sc.shot), u, sc.type);
+    }
+    setHighlight(sc, u);
+
+    // caption
+    capText.innerHTML = sc.cap;
+    const capOn = clamp(u/0.10,0,1) * (1 - clamp((u-0.88)/0.12,0,1));
+    cap.style.opacity = capOn.toFixed(3);
+    cap.style.transform = `translateX(-50%) translateY(${lerp(14,0,easeOut(clamp(u/0.18,0,1))).toFixed(1)}px)`;
+  }
+  window.renderFrame = renderFrame;
+  renderFrame(0);
+</script>
+</body>
+</html>
