@@ -133,8 +133,12 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   on-disk mtime is newer than the newest input image rather than trusting buffered logs.
   PENDING with user: the CTA site `joinremaxex.com` is still a placeholder — confirm
   the real website/handle/phone so it can be swapped in and re-rendered.
-  VOICEOVER: `docs/reel/reel-voiceover-script.md` holds a narration script timed to
-  each scene (8 lines, ~70 words, matches the 25.2s cut). Offered SRT/burned captions.
+  VOICEOVER: `docs/reel/reel-voiceover-script.md` now holds a v2 storyboard — a REAL
+  screen-recording walkthrough concept (7 scenes: brand → dashboard scroll → training+
+  calendar → pre-con grid+search+commission calc → meeting-room booking → office library
+  tabs → AI chat), ~38s, opening line provided by the user. This SUPERSEDES the old
+  vector-mock script; the current MP4 does NOT match it yet and would need rebuilding
+  from real portal screen captures (capture-screenshots.mjs / screen recording).
 
 ## CRM expansion (PLAN + PITCH ONLY — not built)
 
