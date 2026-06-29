@@ -133,6 +133,8 @@ Do not confuse the two — the promos are marketing deliverables, the portal is 
   on-disk mtime is newer than the newest input image rather than trusting buffered logs.
   PENDING with user: the CTA site `joinremaxex.com` is still a placeholder — confirm
   the real website/handle/phone so it can be swapped in and re-rendered.
+  VOICEOVER: `docs/reel/reel-voiceover-script.md` holds a narration script timed to
+  each scene (8 lines, ~70 words, matches the 25.2s cut). Offered SRT/burned captions.
 
 ## CRM expansion (PLAN + PITCH ONLY — not built)
 
