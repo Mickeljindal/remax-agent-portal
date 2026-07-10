@@ -86,6 +86,8 @@ const App = () => (
           <Route path="/admin/booking-links" element={<AdminBookingLinks />} />
           <Route path="/admin/listing-kit" element={<AdminResourceKit kit="listing" pageTitle="Listing presentation kit" pageDescription="Templates & talking points to win the listing appointment" />} />
           <Route path="/admin/success-kit" element={<AdminResourceKit kit="success" pageTitle="Agent success kit" pageDescription="Scripts, social media designs, and the content bank" />} />
+          <Route path="/admin/deal-processing" element={<AdminResourceKit kit="deal-processing" pageTitle="Deal processing" pageDescription="How to submit a deal & required documents — shown on the agent Support card" />} />
+          <Route path="/admin/direct-deposit" element={<AdminResourceKit kit="direct-deposit" pageTitle="Direct deposit info" pageDescription="Banking / commission payout info — shown on the agent Support card" />} />
           <Route path="/pending" element={<PendingActivation />} />
           <Route path="/quote" element={<Quote />} />
           <Route path="/directory" element={<AgentDirectory />} />
