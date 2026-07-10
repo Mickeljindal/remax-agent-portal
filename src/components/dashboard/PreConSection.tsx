@@ -815,12 +815,6 @@ export default function PreConSection({
           </div>
         )}
 
-        {!PORTAL_SHOWCASE && assetCategories.length === 0 && (
-          <div className="py-6 text-center text-sm text-muted-foreground">
-            <Image className="mx-auto mb-2 h-8 w-8 opacity-30" />
-            No additional marketing assets yet — admins can upload per project.
-          </div>
-        )}
       </section>
       )}
 
