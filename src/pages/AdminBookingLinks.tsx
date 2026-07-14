@@ -34,7 +34,7 @@ export default function AdminBookingLinks() {
 
   const update = (i: number, key: keyof BookingLink, value: string) =>
     setLinks((prev) => prev.map((l, idx) => (idx === i ? { ...l, [key]: value } : l)));
-  const add = () => setLinks((prev) => [...prev, { label: "", url: "", note: "" }]);
+  const add = () => setLinks((prev) => [...prev, { label: "", url: "", email: "", phone: "", note: "" }]);
   const remove = (i: number) => setLinks((prev) => prev.filter((_, idx) => idx !== i));
   const move = (i: number, dir: -1 | 1) => {
     const t = i + dir;
@@ -45,7 +45,15 @@ export default function AdminBookingLinks() {
   };
 
   const handleSave = async () => {
-    const clean = links.filter((l) => l.label.trim() && l.url.trim());
+    const clean = links
+      .map((l) => ({
+        label: l.label.trim(),
+        url: (l.url || "").trim(),
+        email: (l.email || "").trim(),
+        phone: (l.phone || "").trim(),
+        note: (l.note || "").trim(),
+      }))
+      .filter((l) => l.label && (l.url || l.email || l.phone));
     setSaving(true);
     const ok = await save({ title: title.trim() || "Book a meeting", subtitle: subtitle.trim(), links: clean });
     setSaving(false);
@@ -75,7 +83,8 @@ export default function AdminBookingLinks() {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2"><CalendarClock className="h-6 w-6 text-primary" /> Meeting Booking Links</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            These appear under the Support section so agents can book a meeting (e.g. Calendly). Add as many as you need.
+            These appear under the Support section so agents can reach out. For each person, add a booking
+            URL (e.g. Calendly), and/or an email and WhatsApp number — agents get a button for each option you fill in.
           </p>
         </div>
 
@@ -105,15 +114,23 @@ export default function AdminBookingLinks() {
                 <div className="flex-1 grid gap-2 sm:grid-cols-2">
                   <div>
                     <Label className="text-xs">Button label *</Label>
-                    <Input value={l.label} onChange={(e) => update(i, "label", e.target.value)} placeholder="Book with Shizu" />
+                    <Input value={l.label} onChange={(e) => update(i, "label", e.target.value)} placeholder="Book with Aman" />
                   </div>
                   <div>
-                    <Label className="text-xs">URL *</Label>
-                    <Input value={l.url} onChange={(e) => update(i, "url", e.target.value)} placeholder="https://calendly.com/..." />
+                    <Label className="text-xs">Booking URL (optional)</Label>
+                    <Input value={l.url || ""} onChange={(e) => update(i, "url", e.target.value)} placeholder="https://calendly.com/..." />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Email (optional)</Label>
+                    <Input type="email" value={l.email || ""} onChange={(e) => update(i, "email", e.target.value)} placeholder="aman@remaxex.com" />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Phone / WhatsApp (optional)</Label>
+                    <Input value={l.phone || ""} onChange={(e) => update(i, "phone", e.target.value)} placeholder="+1 (416) 520-3462" />
                   </div>
                   <div className="sm:col-span-2">
                     <Label className="text-xs">Note (optional)</Label>
-                    <Input value={l.note || ""} onChange={(e) => update(i, "note", e.target.value)} placeholder="e.g. Mention Boldtrail 1-on-1" />
+                    <Input value={l.note || ""} onChange={(e) => update(i, "note", e.target.value)} placeholder="e.g. Email or message to request a meeting" />
                   </div>
                 </div>
                 <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive mt-5" onClick={() => remove(i)}><Trash2 className="h-4 w-4" /></Button>

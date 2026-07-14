@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare, Send, Plus, Headphones, Calendar } from "lucide-react";
+import { MessageSquare, Send, Plus, Headphones, Calendar, Mail, MessageCircle } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { PORTAL_SHOWCASE } from "@/config/portalShowcase";
@@ -236,15 +236,49 @@ const SupportChat = ({ agentId, userId, isAdmin }: SupportChatProps) => {
             </div>
             {booking.subtitle && <p className="text-sm text-muted-foreground mb-3">{booking.subtitle}</p>}
             <div className="flex flex-wrap gap-2">
-              {booking.links.map((l, i) => (
-                <a key={i} href={l.url} target="_blank" rel="noopener noreferrer"
-                   className="inline-flex flex-col rounded-lg border border-[#1a4d8f]/30 bg-card px-4 py-2.5 text-left transition-all hover:border-[#1a4d8f] hover:shadow-sm">
-                  <span className="flex items-center gap-1.5 text-sm font-semibold text-[#1a4d8f]">
-                    <Calendar className="h-4 w-4" /> {l.label}
-                  </span>
-                  {l.note && <span className="mt-0.5 text-[11px] text-muted-foreground">{l.note}</span>}
-                </a>
-              ))}
+              {booking.links.map((l, i) => {
+                const isContact = !!(l.email || l.phone);
+                const waDigits = (l.phone || "").replace(/\D/g, "");
+                const prefill = encodeURIComponent("Hi, I'd like to request a meeting.");
+
+                // URL-only entry (e.g. Calendly) — clickable card, unchanged.
+                if (!isContact) {
+                  return (
+                    <a key={i} href={l.url} target="_blank" rel="noopener noreferrer"
+                       className="inline-flex flex-col rounded-lg border border-[#1a4d8f]/30 bg-card px-4 py-2.5 text-left transition-all hover:border-[#1a4d8f] hover:shadow-sm">
+                      <span className="flex items-center gap-1.5 text-sm font-semibold text-[#1a4d8f]">
+                        <Calendar className="h-4 w-4" /> {l.label}
+                      </span>
+                      {l.note && <span className="mt-0.5 text-[11px] text-muted-foreground">{l.note}</span>}
+                    </a>
+                  );
+                }
+
+                // Contact entry — offer Email and/or WhatsApp.
+                return (
+                  <div key={i}
+                       className="inline-flex flex-col rounded-lg border border-[#1a4d8f]/30 bg-card px-4 py-2.5 text-left">
+                    <span className="flex items-center gap-1.5 text-sm font-semibold text-[#1a4d8f]">
+                      <Calendar className="h-4 w-4" /> {l.label}
+                    </span>
+                    {l.note && <span className="mt-0.5 text-[11px] text-muted-foreground">{l.note}</span>}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {l.email && (
+                        <a href={`mailto:${l.email}?subject=${encodeURIComponent("Meeting request")}&body=${prefill}`}
+                           className="inline-flex items-center gap-1 rounded-md bg-[#1a4d8f]/10 px-2.5 py-1 text-xs font-medium text-[#1a4d8f] transition-colors hover:bg-[#1a4d8f]/20">
+                          <Mail className="h-3.5 w-3.5" /> Email
+                        </a>
+                      )}
+                      {waDigits && (
+                        <a href={`https://wa.me/${waDigits}?text=${prefill}`} target="_blank" rel="noopener noreferrer"
+                           className="inline-flex items-center gap-1 rounded-md bg-[#25D366]/15 px-2.5 py-1 text-xs font-medium text-[#128C7E] transition-colors hover:bg-[#25D366]/25">
+                          <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>

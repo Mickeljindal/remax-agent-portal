@@ -3,7 +3,12 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface BookingLink {
   label: string;
-  url: string;
+  /** External booking URL (e.g. Calendly). Optional when email/phone is used. */
+  url?: string;
+  /** Contact email — agents get a "mailto" option. */
+  email?: string;
+  /** Phone number (any format) — agents get a "WhatsApp" option. */
+  phone?: string;
   note?: string;
 }
 
@@ -36,7 +41,7 @@ export function useBookingLinks() {
       setSetting({
         title: v.title || DEFAULTS.title,
         subtitle: v.subtitle || DEFAULTS.subtitle,
-        links: Array.isArray(v.links) ? v.links.filter((l) => l && l.url && l.label) : [],
+        links: Array.isArray(v.links) ? v.links.filter((l) => l && l.label && (l.url || l.email || l.phone)) : [],
       });
     } else {
       setSetting(DEFAULTS);
