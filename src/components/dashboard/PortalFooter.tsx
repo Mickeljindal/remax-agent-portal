@@ -58,9 +58,9 @@ export default function PortalFooter() {
           <div>
             <h3 className="font-display font-semibold text-lg mb-4">Mississauga</h3>
             <p className="text-sm text-primary-foreground/80 leading-relaxed">
-              100 Milverton Dr #610
+              102-115 Matheson Blvd W
               <br />
-              Mississauga, ON L6R 4H1
+              Mississauga, ON L5R 3L1
               <br />
               <a href="tel:+19055074436" className="text-accent hover:underline">
                 (905) 507-4436

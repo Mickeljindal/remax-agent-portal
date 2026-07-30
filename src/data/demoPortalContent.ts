@@ -472,9 +472,9 @@ export const demoOffices = [
   {
     id: "demo-o1",
     name: "Mississauga Office",
-    address: "100 Milverton Dr #610\nMississauga, ON L6R 4H1",
+    address: "102-115 Matheson Blvd W\nMississauga, ON L5R 3L1",
     phone: "(905) 507-4436",
-    mapQuery: "100 Milverton Dr Mississauga ON",
+    mapQuery: "102-115 Matheson Blvd W Mississauga ON",
     hours: ["Mon–Fri: 9:00 AM – 6:00 PM", "Sat: 10:00 AM – 4:00 PM", "Sun: Closed"],
   },
   {
