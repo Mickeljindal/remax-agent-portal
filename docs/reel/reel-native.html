@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=1080,height=1920"/>
+<title>RE/MAX Excellence — Agent Portal Reel (Native UI)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --navy:hsl(220 50% 18%); --navyDeep:#141a2e; --ink:hsl(220 50% 15%);
+    --red:hsl(4 80% 56%); --bg:hsl(220 30% 97%); --muted:hsl(220 15% 45%);
+    --border:hsl(220 20% 88%); --blue:#2563eb; --card:#fff;
+  }
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);
+    font-family:'DM Sans',system-ui,sans-serif;color:var(--ink)}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+  .glow{position:absolute;border-radius:50%;filter:blur(120px);z-index:0;pointer-events:none}
+  #g1{width:560px;height:560px;background:hsl(4 80% 56% / .12);left:-160px;top:120px}
+  #g2{width:620px;height:620px;background:hsl(220 60% 40% / .12);right:-200px;bottom:120px}
+  #dots{position:absolute;inset:0;z-index:0;opacity:.5;pointer-events:none;
+    background-image:radial-gradient(hsl(220 30% 60% / .18) 1.4px,transparent 1.4px);background-size:34px 34px}
+
+  h1,h2,h3,.disp{font-family:'Playfair Display',serif}
+
+  /* ---------- top app header (navy) ---------- */
+  #hdr{position:absolute;top:0;left:0;right:0;height:104px;z-index:20;background:var(--navyDeep);
+    border-bottom:4px solid var(--red);display:flex;align-items:center;justify-content:space-between;
+    padding:0 34px;will-change:transform,opacity}
+  #hdr .brand{display:flex;align-items:center;gap:14px}
+  #hdr .bmark{width:34px;height:44px}
+  #hdr .lock b{font-family:'Playfair Display',serif;color:#fff;font-size:22px;font-weight:800;line-height:1;display:block}
+  #hdr .lock small{color:#93a4c4;font-size:11px;font-weight:700;letter-spacing:.22em;display:block;margin-top:3px}
+  #hdr .nav{display:flex;gap:19px;align-items:center}
+  #hdr .nav span{color:rgba(255,255,255,.82);font-size:18px;font-weight:600;position:relative;padding:6px 0;white-space:nowrap}
+  #hdr .nav span.on{color:#fff}
+  #hdr .nav span.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:3px;border-radius:3px;background:var(--red)}
+  #hdr .right{display:flex;align-items:center;gap:14px}
+  #hdr .bell{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:18px;position:relative}
+  #hdr .bell b{position:absolute;top:-3px;right:-3px;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  #hdr .ava{display:flex;align-items:center;gap:10px}
+  #hdr .ava .ci{width:40px;height:40px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:16px}
+  #hdr .ava .who b{color:#fff;font-size:15px;font-weight:700;display:block;line-height:1}
+  #hdr .ava .who small{color:#93a4c4;font-size:12px}
+
+  /* ---------- section header ---------- */
+  #sec{position:absolute;left:56px;right:56px;top:150px;z-index:12;will-change:transform,opacity}
+  #sec .bar{width:56px;height:7px;border-radius:6px;background:var(--red);margin-bottom:16px}
+  #sec h2{font-size:74px;font-weight:900;letter-spacing:-.02em;line-height:.98;color:var(--ink)}
+  #sec p{margin-top:12px;font-size:30px;color:var(--muted);font-weight:500}
+
+  /* ---------- content stage ---------- */
+  #content{position:absolute;left:56px;right:56px;top:404px;bottom:120px;z-index:10}
+  .scene{position:absolute;inset:0;opacity:0;display:none;flex-direction:column;justify-content:center}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:28px;box-shadow:0 40px 90px rgba(16,32,64,.16);padding:34px;will-change:transform,opacity}
+  .an{will-change:transform,opacity}
+
+  .cardhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+  .cardhead .l{display:flex;align-items:center;gap:14px}
+  .cardhead .ic{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:26px}
+  .cardhead .ic.red{background:hsl(4 80% 56% / .12)}
+  .cardhead .t{font-family:'Playfair Display',serif;font-size:30px;font-weight:800;color:var(--ink)}
+  .cardhead .d{font-size:17px;color:var(--muted);margin-top:2px}
+  .btn{border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:17px;font-weight:700;color:var(--ink);background:#fff}
+  .btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 18px;font-size:17px;font-weight:800}
+  .pill.amber{background:#fef3c7;color:#b45309}
+
+  /* calendar */
+  .caltool{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .caltool .nav{display:flex;gap:8px;align-items:center}
+  .caltool .nav b{width:44px;height:44px;border-radius:11px;background:#f1f4f9;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--navy);font-weight:800}
+  .caltool .nav .today{width:auto;padding:0 18px;font-size:16px}
+  .caltool .mon{font-family:'Playfair Display',serif;font-size:30px;font-weight:800}
+  .caltool .seg{display:flex;background:#f1f4f9;border-radius:11px;overflow:hidden}
+  .caltool .seg span{padding:11px 18px;font-size:15px;font-weight:700;color:var(--muted)}
+  .caltool .seg span.on{background:var(--navy);color:#fff}
+  .cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+  .cgrid .dow{text-align:center;font-size:16px;font-weight:800;color:var(--muted);padding:4px 0}
+  .cell{height:96px;border:1px solid var(--border);border-radius:12px;padding:8px 9px;position:relative;background:#fff}
+  .cell .n{font-size:17px;font-weight:700;color:var(--ink)}
+  .cell.mut{background:#fafbfd}.cell.mut .n{color:#c2cad6}
+  .cell.today{background:hsl(4 80% 56% / .09);border-color:hsl(4 80% 56% / .35)}
+  .ev{margin-top:5px;border-radius:7px;padding:4px 8px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;will-change:transform,opacity}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px}
+  .legend b{display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:600;color:var(--muted)}
+  .legend i{width:14px;height:14px;border-radius:4px}
+
+  /* course progress rows */
+  .crow{display:flex;align-items:center;gap:22px;padding:18px 0;border-top:1px solid var(--border)}
+  .ring{width:88px;height:88px;flex:none;position:relative}
+  .ring svg{transform:rotate(-90deg)}
+  .ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:var(--ink)}
+  .crow .info{flex:1;min-width:0}
+  .crow .info .ct{font-size:23px;font-weight:800;color:var(--ink)}
+  .crow .info .cm{font-size:16px;color:var(--muted);margin:3px 0 10px}
+  .crow .bar{height:14px;border-radius:8px;background:#eef2f7;overflow:hidden}
+  .crow .bar i{display:block;height:100%;border-radius:8px}
+  .spill{font-size:15px;font-weight:800;padding:8px 16px;border-radius:999px}
+  .spill.blue{background:#dbeafe;color:#1d4ed8}.spill.green{background:#dcfce7;color:#15803d}.spill.slate{background:#e2e8f0;color:#475569}
+
+  /* listing filter + cards */
+  .filter{display:grid;grid-template-columns:280px 1fr;gap:16px;margin-bottom:22px}
+  .field{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-size:19px;color:var(--ink);display:flex;align-items:center;gap:10px}
+  .field .ph{color:#9aa6b8}
+  .field .cur{width:2px;height:22px;background:var(--navy);display:inline-block;margin-left:1px}
+  .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .lcard{border:1px solid var(--border);border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 12px 30px rgba(16,32,64,.08)}
+  .lcard .img{height:168px;position:relative;background-size:cover;background-position:center}
+  .lcard .img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35))}
+  .lcard .badge{position:absolute;top:12px;z-index:2;font-size:14px;font-weight:800;padding:6px 12px;border-radius:999px}
+  .lcard .new{left:12px;background:hsl(0 72% 51%);color:#fff}
+  .lcard .stat{right:12px}
+  .stat.active{background:#d1fae5;color:#065f46}.stat.soon{background:#fef3c7;color:#92400e}.stat.ready{background:#dbeafe;color:#1e40af}
+  .lcard .body{padding:16px 18px}
+  .lcard .bld{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .lcard .ttl{font-size:23px;font-weight:800;color:var(--ink);margin-top:3px;line-height:1.1}
+  .lcard .loc{font-size:16px;color:var(--muted);margin-top:6px}
+  .lcard .row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .lcard .price{font-size:24px;font-weight:800;color:var(--navy)}
+  .lcard .coop{font-size:14px;font-weight:800;background:hsl(4 80% 56% / .12);color:hsl(4 70% 42%);padding:6px 12px;border-radius:999px}
+
+  /* commission calculator */
+  .calc .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .lblf{font-size:16px;font-weight:700;color:var(--muted);margin-bottom:8px;display:block}
+  .inp{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 20px;font-size:30px;font-weight:800;color:var(--ink)}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .tile{background:#f6f8fb;border-radius:14px;padding:16px 18px}
+  .tile.red{background:hsl(4 80% 56% / .09)}
+  .tile small{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block}
+  .tile b{font-size:26px;font-weight:800;color:var(--ink);margin-top:6px;display:block}
+  .payout{margin-top:18px;border-radius:18px;padding:26px 30px;color:#fff;
+    background:linear-gradient(120deg,#1d4ed8,#1e3a8a);display:flex;align-items:center;justify-content:space-between}
+  .payout .lab{font-size:22px;font-weight:700;opacity:.92}
+  .payout .big{font-family:'Playfair Display',serif;font-size:70px;font-weight:900;line-height:1}
+  .payout .frm{font-size:15px;opacity:.7;margin-top:4px}
+
+  /* booking */
+  .book .office{display:flex;gap:14px;margin-bottom:20px}
+  .book .otab{padding:12px 22px;border-radius:12px;font-size:19px;font-weight:700;border:1px solid var(--border);color:var(--muted);background:#fff}
+  .book .otab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .book .addr{font-size:19px;color:var(--muted);margin-bottom:6px}
+  .book .addr b{color:var(--ink)}
+  .book .phone{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:20px}
+  .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .slot{height:82px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;will-change:transform,opacity}
+  .slot.free{background:#d1fae5;color:#065f46}
+  .slot.booked{background:hsl(0 72% 51% / .14);color:hsl(0 60% 45%);text-decoration:line-through}
+  .slot.sel{background:#1d4ed8;color:#fff}
+  .toast{margin-top:22px;background:#0f1b2e;color:#fff;border-radius:14px;padding:18px 24px;font-size:22px;font-weight:800;display:flex;align-items:center;gap:12px;will-change:transform,opacity}
+
+  /* library tiles */
+  .dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .dtile{border-radius:20px;padding:30px 26px;color:#fff;min-height:264px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 16px 40px rgba(16,32,64,.18);will-change:transform,opacity}
+  .dtile .emoji{font-size:44px}
+  .dtile .dt{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;line-height:1.05}
+  .dtile .dl{margin-top:14px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:11px;padding:11px 0;text-align:center;font-size:17px;font-weight:700}
+
+  /* support chat */
+  .chatwrap{display:grid;grid-template-columns:1fr;gap:0}
+  .chathead{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:20px}
+  .chathead .tk{font-size:24px;font-weight:800;color:var(--ink)}
+  .chathead .sub{font-size:16px;color:var(--muted);margin-top:3px}
+  .chathead .st{font-size:15px;font-weight:800;background:hsl(0 72% 51% / .12);color:hsl(0 60% 45%);padding:8px 16px;border-radius:999px}
+  .cbub{display:flex;align-items:flex-end;gap:14px;margin-bottom:16px;will-change:transform,opacity}
+  .cbub .av{width:56px;height:56px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:19px}
+  .cbub.them .av{background:var(--navy)} .cbub.me .av{background:hsl(0 72% 51%)}
+  .cbub .msg{max-width:640px;padding:18px 22px;border-radius:20px;font-size:22px;font-weight:500;line-height:1.35}
+  .cbub.them .msg{background:#f1f4f9;color:var(--ink);border-bottom-left-radius:7px}
+  .cbub.me{flex-direction:row-reverse}
+  .cbub.me .msg{background:var(--blue);color:#fff;border-bottom-right-radius:7px}
+  .ctyping{display:flex;gap:8px;padding:20px 24px;background:#f1f4f9;border-radius:20px;border-bottom-left-radius:7px;width:96px;will-change:opacity}
+  .ctyping i{width:14px;height:14px;border-radius:50%;background:#9aa6b8}
+  .scards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px}
+  .scard{border:1px solid var(--border);border-radius:16px;padding:16px;background:#fff;will-change:transform,opacity}
+  .scard .si{width:44px;height:44px;border-radius:12px;background:#1a4d8f14;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px}
+  .scard b{font-size:17px;font-weight:800;color:var(--ink);display:block}
+  .scard small{font-size:14px;color:var(--muted)}
+
+  /* intro / outro (navy) */
+  .full{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px;overflow:hidden;
+    background:radial-gradient(130% 90% at 50% -10%, #21335f 0%, #16234a 45%, #0e1830 75%, #0a1122 100%)}
+  .full .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.28;transform:scale(1.16);will-change:transform}
+  .full .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
+  #intro .kick{font-size:26px;font-weight:800;letter-spacing:.42em;color:#ff9e95}
+  #intro .ibal{margin-top:28px;width:132px;height:166px;filter:drop-shadow(0 24px 46px rgba(0,0,0,.5));will-change:transform,opacity}
+  #intro .logoWrap{margin-top:34px;overflow:hidden;will-change:clip-path}
+  #intro .logo{width:720px;max-width:82vw;display:block;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+  #intro h1{margin-top:30px;font-size:52px;font-weight:700;color:#fff;line-height:1.16;text-shadow:0 4px 20px rgba(0,0,0,.4)}
+  #intro h1 em{font-style:normal;color:#ff8f84}
+  #outro .obal{width:112px;height:140px;margin-bottom:24px;filter:drop-shadow(0 22px 44px rgba(0,0,0,.5));will-change:transform,opacity}
+  #outro .logo{width:660px;max-width:80vw;display:block;filter:drop-shadow(0 12px 34px rgba(0,0,0,.5))}
+  #outro h1{margin-top:26px;font-size:56px;font-weight:800;color:#fff;line-height:1.1}
+  #outro h1 em{font-style:normal;color:#ff8f84}
+  #outro .cta{margin-top:46px;background:var(--red);color:#fff;font-size:40px;font-weight:900;padding:28px 72px;border-radius:22px;box-shadow:0 24px 60px rgba(226,60,45,.5);will-change:transform,opacity}
+  #outro .handle{margin-top:30px;font-size:30px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.03em}
+
+  /* laptop reveal */
+  #open .inner{perspective:1800px;width:100%}
+  #open .okick{font-size:23px;font-weight:800;letter-spacing:.42em;color:#ff9e95;margin-bottom:64px;text-align:center}
+  .laptop{position:relative;width:840px;height:508px;margin:0 auto;transform-style:preserve-3d;will-change:transform}
+  .laptop .lid{position:absolute;left:12px;top:0;width:816px;height:476px;transform-origin:50% 100%;transform:rotateX(-90deg);
+    background:#0b1120;border:12px solid #05070e;border-radius:20px;box-shadow:0 46px 96px rgba(0,0,0,.62);overflow:hidden;will-change:transform}
+  .laptop .screen{position:absolute;inset:0;background:#0b1120 url('shots/dashboard.png') top center/cover no-repeat;opacity:0;will-change:opacity}
+  .laptop .deck{position:absolute;left:-34px;bottom:0;width:908px;height:30px;border-radius:0 0 24px 24px;
+    background:linear-gradient(#c9d3e2,#93a6c2);box-shadow:0 28px 58px rgba(0,0,0,.5)}
+  .laptop .deck::after{content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);width:170px;height:9px;background:#7c8ea9;border-radius:0 0 12px 12px}
+
+  #prog{position:absolute;bottom:52px;left:56px;right:56px;display:flex;gap:9px;z-index:30}
+  #prog .seg{flex:1;height:8px;border-radius:6px;background:hsl(220 20% 82%);overflow:hidden}
+  #prog .seg i{display:block;height:100%;width:0;background:var(--navy)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <clipPath id="bclip" clipPathUnits="userSpaceOnUse"><path d="M50 3 C22 3 6 27 6 53 C6 84 33 107 45 117 L55 117 C67 107 94 84 94 53 C94 27 78 3 50 3 Z"/></clipPath>
+    <symbol id="balloon" viewBox="0 0 100 132">
+      <g clip-path="url(#bclip)"><rect x="0" y="0" width="100" height="40" fill="#e2231a"/><rect x="0" y="40" width="100" height="38" fill="#fff"/><rect x="0" y="78" width="100" height="44" fill="#13427d"/></g>
+      <path d="M45 117 L55 117 L53.5 128 Q50 131 46.5 128 Z" fill="#0f1b2e"/>
+    </symbol>
+  </defs></svg>
+
+  <div class="glow" id="g1"></div>
+  <div class="glow" id="g2"></div>
+  <div id="dots"></div>
+
+  <!-- APP HEADER -->
+  <div id="hdr">
+    <div class="brand">
+      <svg class="bmark" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+      <div class="lock"><b>Agent Portal</b><small>REMAX EXCELLENCE CANADA</small></div>
+    </div>
+    <div class="nav">
+      <span data-nav="Dashboard">Dashboard</span><span data-nav="Courses">Courses</span>
+      <span data-nav="Listings">Listings</span><span data-nav="Assets">Assets</span>
+      <span data-nav="Vendors">Vendors</span><span data-nav="Buyer kit">Buyer kit</span>
+    </div>
+    <div class="right">
+      <div class="bell">🔔<b>3</b></div>
+      <div class="ava"><div class="ci">DA</div><div class="who"><b>Demo Agent</b><small>RECO# 4829107</small></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION HEADER -->
+  <div id="sec"><div class="bar"></div><h2 id="ptitle"></h2><p id="psub"></p></div>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- DASH: calendar + course progress -->
+    <div class="scene" id="c_dash">
+      <div class="panel an" style="margin-bottom:0">
+        <div class="cardhead">
+          <div class="l"><div class="ic red">📅</div><div><div class="t">Calendar &amp; Events</div><div class="d">Your month at a glance</div></div></div>
+          <div class="btn">+ Add Reminder</div>
+        </div>
+        <div class="caltool">
+          <div class="nav"><b>‹</b><b>›</b><b class="today">Today</b></div>
+          <div class="mon">April 2026</div>
+          <div class="seg"><span class="on">Month</span><span>Week</span><span>Day</span><span>List</span></div>
+        </div>
+        <div class="cgrid" id="calgrid"></div>
+        <div class="legend">
+          <b><i style="background:#dc2626"></i>Pre-con</b><b><i style="background:#2563eb"></i>Office</b>
+          <b><i style="background:#16a34a"></i>Training</b><b><i style="background:#f59e0b"></i>Events</b>
+          <b><i style="background:#ea580c"></i>Deadline</b>
+        </div>
+      </div>
+      <div class="panel an" style="margin-top:20px">
+        <div class="cardhead">
+          <div class="l"><div class="ic red">🎓</div><div><div class="t">My course progress</div><div class="d">Pick up where you left off</div></div></div>
+          <div class="pill amber">🔥 7-day streak</div>
+        </div>
+        <div class="crow" style="border-top:none">
+          <div class="ring"><svg width="88" height="88" viewBox="0 0 104 104"><circle cx="52" cy="52" r="46" fill="none" stroke="#eef2f7" stroke-width="10"/><circle id="ring1" cx="52" cy="52" r="46" fill="none" stroke="#DC2626" stroke-width="10" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="289"/></svg><b id="ring1n">0%</b></div>
+          <div class="info"><div class="ct">Financial Literacy for Real Estate</div><div class="cm">Udemy · 12 modules · Last watched 2 days ago</div><div class="bar"><i id="bar1" style="width:0;background:#DC2626"></i></div></div>
+          <div class="spill blue">In progress</div>
+        </div>
+        <div class="crow">
+          <div class="ring"><svg width="88" height="88" viewBox="0 0 104 104"><circle cx="52" cy="52" r="46" fill="none" stroke="#eef2f7" stroke-width="10"/><circle id="ring2" cx="52" cy="52" r="46" fill="none" stroke="#EA580C" stroke-width="10" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="289"/></svg><b id="ring2n">0%</b></div>
+          <div class="info"><div class="ct">How to Create an Online Course</div><div class="cm">Udemy · 10 modules · Last watched yesterday</div><div class="bar"><i id="bar2" style="width:0;background:#EA580C"></i></div></div>
+          <div class="spill green">Almost done</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST: pre-con listings -->
+    <div class="scene" id="c_list">
+      <div class="filter">
+        <div class="field an"><span>⌕</span><span class="ph">All statuses</span></div>
+        <div class="field an"><span>⌕</span><span id="searchtxt"></span><span class="cur"></span></div>
+      </div>
+      <div class="lgrid" id="lgrid"></div>
+    </div>
+
+    <!-- COMM: commission calculator -->
+    <div class="scene" id="c_comm">
+      <div class="panel calc an">
+        <div class="cardhead"><div class="l"><div class="ic red">🧮</div><div><div class="t">HST &amp; commission payout calculator</div><div class="d">Calculated on the net-of-HST base only (not the HST amount).</div></div></div></div>
+        <div class="grid2">
+          <div><span class="lblf">Sale price (including 13% HST)</span><div class="inp" id="comm_sale">$0</div></div>
+          <div><span class="lblf">Agent commission %</span><div class="inp" id="comm_pct">0.0</div></div>
+        </div>
+        <div class="tiles">
+          <div class="tile"><small>Sale price (incl. HST)</small><b id="t_sale">$0</b></div>
+          <div class="tile"><small>Net before HST</small><b id="t_net">$0</b></div>
+          <div class="tile red"><small>HST portion (no commission)</small><b id="t_hst">$0</b></div>
+        </div>
+        <div class="payout">
+          <div><div class="lab">✦ Commission payout @ 2.5%</div><div class="frm">Formula: Net before HST × Commission %</div></div>
+          <div class="big" id="comm_payout">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOK: meeting room booking -->
+    <div class="scene" id="c_book">
+      <div class="panel book an">
+        <div class="cardhead"><div class="l"><div class="ic red">🚪</div><div><div class="t">Office locations &amp; room booking</div><div class="d">Real rooms, real-time availability</div></div></div></div>
+        <div class="office"><div class="otab on">Mississauga Office</div><div class="otab">Brampton Office</div></div>
+        <div class="addr"><b>102-115 Matheson Blvd W</b>, Mississauga, ON L5R 3L1</div>
+        <div class="phone">(905) 507-4436</div>
+        <div style="font-size:22px;font-weight:800;color:var(--ink);margin-bottom:6px">Boardroom A</div>
+        <div style="font-size:17px;color:var(--muted);margin-bottom:16px">Capacity 10 · Projector · VC · Whiteboard — Today's slots</div>
+        <div class="slots" id="slots">
+          <div class="slot free">9:00</div><div class="slot booked">10:00</div><div class="slot free">11:00</div><div class="slot free">12:00</div>
+          <div class="slot free" id="slot1pm">1:00</div><div class="slot free">2:00</div><div class="slot booked">3:00</div><div class="slot free">4:00</div>
+        </div>
+        <div class="toast" id="booktoast">✅ Booked · Boardroom A · Today 1:00 PM</div>
+      </div>
+    </div>
+
+    <!-- LIB: office library -->
+    <div class="scene" id="c_lib">
+      <div class="dgrid" id="dgrid"></div>
+    </div>
+
+    <!-- SUPPORT: chat -->
+    <div class="scene" id="c_support">
+      <div class="scards">
+        <div class="scard an"><div class="si">🤝</div><b>Marketing support</b><small>Request marketing assistance</small></div>
+        <div class="scard an"><div class="si">👥</div><b>Vendors</b><small>Approved vendor list</small></div>
+        <div class="scard an"><div class="si">📄</div><b>Deal processing</b><small>Submit a deal &amp; docs</small></div>
+        <div class="scard an"><div class="si">💳</div><b>Direct deposit info</b><small>Info &amp; process explained</small></div>
+      </div>
+      <div class="panel an" style="margin-top:18px">
+        <div class="chathead">
+          <div><div class="tk">#TKT-1042 — Email signature issue</div><div class="sub">Support · Mike R. · Marketing &amp; tech</div></div>
+          <div class="st">Open</div>
+        </div>
+        <div class="cbub them" data-i="0"><div class="av">MR</div><div class="msg">Hi Sarah! I can see your ticket. Which email client are you using — Outlook or Gmail?</div></div>
+        <div class="cbub me" data-i="1"><div class="av">SJ</div><div class="msg">Hi Mike! Outlook 365 on Windows 11. The signature image just shows a broken link icon.</div></div>
+        <div class="cbub them" data-i="2"><div class="av">MR</div><div class="msg">Got it — usually a cached image. Try File → Options → Mail → Signatures, delete and re-add the image.</div></div>
+        <div class="ctyping" id="ctyping"><i></i><i></i><i></i></div>
+        <div class="cbub me" data-i="3"><div class="av">SJ</div><div class="msg">Thank you, trying that now! 🙏</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INTRO -->
+  <div class="full" id="intro">
+    <div class="bg" style="background-image:url('img/skyline.jpg')"></div>
+    <div class="inner">
+      <div class="kick">MEET OUR NEW</div>
+      <svg class="ibal" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+      <div class="logoWrap" id="introLogoWrap"><img class="logo" src="img/logo.png" alt="RE/MAX Excellence"/></div>
+      <h1><em>Agent Portal</em></h1>
+    </div>
+  </div>
+
+  <!-- OPEN: laptop reveal -->
+  <div class="full" id="open">
+    <div class="inner">
+      <div class="okick" id="okick">YOUR ALL-IN-ONE WORKSPACE</div>
+      <div class="laptop" id="laptop">
+        <div class="lid" id="laptopLid"><div class="screen" id="laptopScreen"></div></div>
+        <div class="deck"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTRO -->
+  <div class="full" id="outro">
+    <div class="bg" style="background-image:url('img/handshake.jpg')"></div>
+    <div class="inner">
+      <svg class="obal" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+      <img class="logo" src="img/logo.png" alt="RE/MAX Excellence"/>
+      <h1>Everything you need. <em>One login.</em></h1>
+      <div class="cta">Join our team</div>
+      <div class="handle">joinremaxex.com</div>
+    </div>
+  </div>
+
+  <div id="prog"></div>
+</div>
+
+<script>
+  // ---------------- data build ----------------
+  // Calendar cells (April 2026, Sunday start)
+  const CAL = [
+    {n:29,mut:1},{n:30,mut:1},{n:31,mut:1},{n:1},{n:2},{n:3,ev:[["Pre-Con Launch","#dc2626"]]},{n:4},
+    {n:5},{n:6},{n:7},{n:8,ev:[["Sales meeting","#2563eb"]]},{n:9},{n:10,ev:[["Marketing Workshop","#16a34a"]]},{n:11},
+    {n:12},{n:13},{n:14},{n:15,today:1,ev:[["New agent orientation","#2563eb"]]},{n:16},{n:17,ev:[["Open House","#2563eb"]]},{n:18},
+    {n:19},{n:20},{n:21},{n:22,ev:[["Awards Night","#f59e0b"]]},{n:23},{n:24,ev:[["Course Deadline","#ea580c"]]},{n:25},
+    {n:26},{n:27},{n:28},{n:29,ev:[["Builder lunch","#f59e0b"]]},{n:30},{n:1,mut:1},{n:2,mut:1},
+  ];
+  const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  (function(){
+    const g=document.getElementById("calgrid");
+    DOW.forEach(d=>{const e=document.createElement("div");e.className="dow";e.textContent=d;g.appendChild(e);});
+    let ei=0;
+    CAL.forEach(c=>{
+      const cell=document.createElement("div");
+      cell.className="cell"+(c.mut?" mut":"")+(c.today?" today":"");
+      cell.innerHTML='<div class="n">'+c.n+'</div>';
+      (c.ev||[]).forEach(([t,col])=>{const ev=document.createElement("div");ev.className="ev";ev.style.background=col;ev.textContent=t;ev.dataset.i=(ei++);cell.appendChild(ev);});
+      g.appendChild(cell);
+    });
+  })();
+
+  // Listings
+  const LISTINGS=[
+    {img:"img/home1.jpg",bld:"Caivan",ttl:"Caivan Brampton Townhomes",loc:"Brampton, ON · Townhome",price:"From $689,900",stat:["Active","active"],coop:"2.5% co-op",nu:1},
+    {img:"img/home2.jpg",bld:"Mattamy Homes",ttl:"Mattamy Heritage Towns",loc:"Mississauga, ON · Home",price:"From $824,000",stat:["Coming Soon","soon"],coop:"3% co-op",nu:1},
+    {img:"img/interior1.jpg",bld:"GRC",ttl:"GRC Condominiums",loc:"Brampton, ON · Condo",price:"From $548,000",stat:["Ready","ready"],coop:"2.25% co-op",nu:0},
+    {img:"img/skyline.jpg",bld:"Rathna",ttl:"Rathna Condominiums",loc:"Brampton, ON · Condo",price:"From $499,900",stat:["Active","active"],coop:"",nu:1},
+    {img:"img/home2.jpg",bld:"Liberty Development",ttl:"Liberty Residences",loc:"Oakville, ON · Condo",price:"From $1,049,000",stat:["Coming Soon","soon"],coop:"2.75% co-op",nu:0},
+    {img:"img/home1.jpg",bld:"Primont Homes",ttl:"Primont Heritage Collection",loc:"Caledon, ON · Home",price:"From $1,199,000",stat:["Active","active"],coop:"2.5% co-op",nu:0},
+  ];
+  (function(){
+    const g=document.getElementById("lgrid");
+    LISTINGS.forEach((l,i)=>{
+      const c=document.createElement("div");c.className="lcard an";c.dataset.i=i;
+      c.innerHTML=
+        '<div class="img" style="background-image:url('+l.img+')">'+
+          (l.nu?'<span class="badge new">New</span>':'')+
+          '<span class="badge stat '+l.stat[1]+'">'+l.stat[0]+'</span>'+
+        '</div>'+
+        '<div class="body"><div class="bld">'+l.bld+'</div><div class="ttl">'+l.ttl+'</div>'+
+        '<div class="loc">📍 '+l.loc+'</div>'+
+        '<div class="row"><span class="price">'+l.price+'</span>'+(l.coop?'<span class="coop">'+l.coop+'</span>':'')+'</div></div>';
+      g.appendChild(c);
+    });
+  })();
+
+  // Library tiles
+  const DOCS=[
+    ["📄","Showing Instructions","linear-gradient(135deg,#1a4d8f,#0a2a52)"],
+    ["📋","Offer Data Sheet","linear-gradient(135deg,#334155,#1e293b)"],
+    ["📝","Clauses","linear-gradient(135deg,#e2231a,#a3120c)"],
+    ["📑","Schedule B","linear-gradient(135deg,#1a4d8f,#123a6b)"],
+    ["🗂️","Deal Sheet","linear-gradient(135deg,#b91c1c,#7f1414)"],
+    ["💼","Commission Schedule","linear-gradient(135deg,#243b6b,#141f3c)"],
+  ];
+  (function(){
+    const g=document.getElementById("dgrid");
+    DOCS.forEach((d,i)=>{const t=document.createElement("div");t.className="dtile an";t.dataset.i=i;t.style.background=d[2];
+      t.innerHTML='<div class="emoji">'+d[0]+'</div><div><div class="dt">'+d[1]+'</div><div class="dl">⤓ Download PDF</div></div>';g.appendChild(t);});
+  })();
+
+  // ---------------- timeline ----------------
+  const S=[
+    {id:"meet", start:0.0,  end:2.4, type:"meet"},
+    {id:"open", start:2.4,  end:5.4, type:"open"},
+    {id:"dash",  start:5.4,  end:9.2, nav:"Dashboard", el:"c_dash",  title:"Calendar &amp; training", sub:"Everything happening — this month and next."},
+    {id:"list",  start:9.2,  end:13.0,nav:"Listings",  el:"c_list",  title:"Pre-construction", sub:"Every project, searchable in a tap."},
+    {id:"comm",  start:13.0, end:16.2,nav:"Listings",  el:"c_comm",  title:"Commission calculator", sub:"Run your numbers in seconds."},
+    {id:"book",  start:16.2, end:19.0,nav:"Vendors",   el:"c_book",  title:"Meeting rooms", sub:"Book a boardroom in clicks."},
+    {id:"lib",   start:19.0, end:21.8,nav:"Assets",    el:"c_lib",   title:"Office library", sub:"Every form, one place."},
+    {id:"support",start:21.8,end:25.2,nav:"Dashboard", el:"c_support",title:"Support", sub:"Real help, whenever you need it."},
+    {id:"outro", start:25.2, end:28.2,type:"outro"},
+  ];
+  const DUR=S[S.length-1].end; window.__duration=DUR;
+
+  // ---------------- preload ----------------
+  let imgsDone=false, fontsDone=false;
+  function maybeReady(){ if(imgsDone && fontsDone) window.__ready=true; }
+  const pre=["img/home1.jpg","img/home2.jpg","img/interior1.jpg","img/skyline.jpg","img/handshake.jpg","img/logo.png","shots/dashboard.png"];
+  let n=0; pre.forEach(src=>{const im=new Image();im.onload=im.onerror=()=>{ if(++n>=pre.length){imgsDone=true;maybeReady();} };im.src=src;});
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>{fontsDone=true;maybeReady();});} else {fontsDone=true;}
+  maybeReady();
+  setTimeout(()=>{window.__ready=true;},20000);
+
+  // ---------------- helpers ----------------
+  const el=(id)=>document.getElementById(id);
+  const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+  const lerp=(a,b,u)=>a+(b-a)*u;
+  const easeOut=u=>1-Math.pow(1-u,3);
+  const easeIn=u=>u*u;
+  const easeInOut=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+  const easeOutBack=t=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);};
+  const money=v=>"$"+Math.round(v).toLocaleString("en-US");
+
+  const hdr=el("hdr"), sec=el("sec"), ptitle=el("ptitle"), psub=el("psub"),
+        intro=el("intro"), outro=el("outro"), prog=el("prog"),
+        introLogoWrap=el("introLogoWrap");
+  const navSpans=[...document.querySelectorAll("#hdr .nav span")];
+  const scenes={dash:el("c_dash"),list:el("c_list"),comm:el("c_comm"),book:el("c_book"),lib:el("c_lib"),support:el("c_support")};
+  for(let i=0;i<S.length;i++){const d=document.createElement("div");d.className="seg";d.innerHTML="<i></i>";prog.appendChild(d);}
+  const segs=[...prog.querySelectorAll(".seg i")];
+
+  function stagger(nodes,u,{d0=0.06,step=0.07,dur=0.4,dy=28}={}){
+    nodes.forEach((el,i)=>{const a=easeOut(clamp((u-(d0+i*step))/dur,0,1));
+      el.style.opacity=a.toFixed(3); el.style.transform=`translateY(${((1-a)*dy).toFixed(1)}px)`;});
+  }
+
+  // scene animators
+  function animDash(u){
+    stagger([...document.querySelectorAll("#calgrid .ev")],u,{d0:0.10,step:0.03,dur:0.3,dy:8});
+    const e=easeOut(clamp((u-0.34)/0.5,0,1));
+    [["ring1","ring1n","bar1",0.45],["ring2","ring2n","bar2",0.76]].forEach(([rid,nid,bid,pct])=>{
+      el(rid).style.strokeDashoffset=(289*(1-pct*e)).toFixed(1);
+      el(nid).textContent=Math.round(pct*e*100)+"%";
+      el(bid).style.width=(pct*e*100).toFixed(1)+"%";
+    });
+  }
+  const SEARCH="Brampton";
+  function animList(u){
+    const chars=Math.round(clamp((u-0.05)/0.18,0,1)*SEARCH.length);
+    el("searchtxt").textContent = chars? SEARCH.slice(0,chars) : "";
+    el("searchtxt").style.color="#0f1b2e";
+    if(!chars){ el("searchtxt").textContent="Search by project, builder, or area…"; el("searchtxt").style.color="#9aa6b8"; }
+    stagger([...document.querySelectorAll("#lgrid .lcard")],u,{d0:0.22,step:0.08,dur:0.4,dy:40});
+  }
+  function animComm(u){
+    const e=easeOut(clamp((u-0.1)/0.55,0,1));
+    el("comm_sale").textContent=money(850000*e);
+    el("comm_pct").textContent=(2.5*easeOut(clamp((u-0.1)/0.4,0,1))).toFixed(1);
+    el("t_sale").textContent=money(850000*e);
+    el("t_net").textContent=money(752212*e);
+    el("t_hst").textContent=money(97788*e);
+    const p=easeOut(clamp((u-0.34)/0.5,0,1));
+    el("comm_payout").textContent=money(18805*p);
+  }
+  function animBook(u){
+    stagger([...document.querySelectorAll("#slots .slot")],u,{d0:0.08,step:0.05,dur:0.3,dy:20});
+    const sel=u>0.52; const s=el("slot1pm");
+    s.className="slot "+(sel?"sel":"free"); s.textContent=sel?"1:00 ✓":"1:00";
+    const ta=easeOutBack(clamp((u-0.62)/0.3,0,1));
+    el("booktoast").style.opacity=clamp(ta,0,1).toFixed(3);
+    el("booktoast").style.transform=`translateY(${((1-clamp(ta,0,1))*24).toFixed(1)}px)`;
+  }
+  function animLib(u){
+    stagger([...document.querySelectorAll("#dgrid .dtile")],u,{d0:0.1,step:0.09,dur:0.42,dy:44});
+  }
+  function animSupport(u){
+    stagger([...document.querySelectorAll("#c_support .scard")],u,{d0:0.02,step:0.05,dur:0.3,dy:22});
+    const bubs=[...document.querySelectorAll("#c_support .cbub")];
+    const times=[0.22,0.38,0.54,0.84]; // reveal points
+    bubs.forEach((b,i)=>{const a=easeOutBack(clamp((u-times[i])/0.18,0,1));
+      b.style.opacity=clamp(a,0,1).toFixed(3);
+      b.style.transform=`translateY(${((1-clamp(a,0,1))*22).toFixed(1)}px) scale(${(0.9+0.1*clamp(a,0,1)).toFixed(3)})`;});
+    const ty=el("ctyping"); const show=u>0.64&&u<0.84; ty.style.opacity=show?"1":"0";
+  }
+
+  function renderFrame(t){
+    t=clamp(t,0,DUR-0.001);
+    el("g1").style.transform=`translate(${(Math.sin(t*0.5)*30).toFixed(1)}px,${(Math.cos(t*0.4)*22).toFixed(1)}px)`;
+    el("g2").style.transform=`translate(${(Math.cos(t*0.45)*34).toFixed(1)}px,${(Math.sin(t*0.5)*26).toFixed(1)}px)`;
+    for(let i=0;i<S.length;i++){const st=S[i].start,en=S[i].end;segs[i].style.width=(clamp((t-st)/(en-st),0,1)*100).toFixed(1)+"%";}
+
+    const sc=S.find(s=>t>=s.start&&t<s.end)||S[S.length-1];
+    const u=clamp((t-sc.start)/(sc.end-sc.start),0,1);
+    const isMeet=sc.type==="meet", isOpen=sc.type==="open", isOutro=sc.type==="outro", isFeat=!isMeet&&!isOpen&&!isOutro;
+
+    // meet — brand announcement ("Meet our new Agent Portal")
+    if(isMeet){
+      const appear=easeOut(clamp(u/0.32,0,1)), leave=clamp((u-0.82)/0.18,0,1);
+      intro.style.display="flex"; intro.style.opacity=(appear*(1-leave)).toFixed(3);
+      intro.querySelector(".bg").style.transform=`scale(${(1.16+0.08*u).toFixed(4)})`;
+      intro.querySelector(".inner").style.transform=`translateY(${(-28*leave).toFixed(1)}px)`;
+      const w=easeOut(clamp((u-0.12)/0.5,0,1)); introLogoWrap.style.clipPath=`inset(0 ${((1-w)*100).toFixed(1)}% 0 0)`;
+      const ab=easeOutBack(clamp((u-0.05)/0.4,0,1)); intro.querySelector(".ibal").style.transform=`translateY(${((1-clamp(ab,0,1))*50).toFixed(1)}px) scale(${(0.6+0.4*clamp(ab,0,1)).toFixed(3)})`;
+    } else {intro.style.opacity=0;intro.style.display="none";}
+
+    // open — laptop opens and reveals the portal, then pushes in
+    if(isOpen){
+      const o=el("open"); o.style.display="flex";
+      const appear=easeOut(clamp(u/0.18,0,1)), leave=clamp((u-0.86)/0.14,0,1);
+      o.style.opacity=(appear*(1-leave)).toFixed(3);
+      const op=easeInOut(clamp((u-0.08)/0.5,0,1));           // lid opening
+      el("laptopLid").style.transform=`rotateX(${lerp(-90,-6,op).toFixed(1)}deg)`;
+      el("laptopScreen").style.opacity=clamp((op-0.35)/0.4,0,1).toFixed(3);
+      const push=easeIn(clamp((u-0.66)/0.32,0,1));           // dive into the screen
+      el("laptop").style.transform=`scale(${(1+push*1.2).toFixed(3)}) translateY(${(push*-26).toFixed(0)}px)`;
+      const kf=easeOut(clamp(u/0.24,0,1)); el("okick").style.opacity=((1-leave)*kf).toFixed(3);
+    } else {const o=el("open"); o.style.opacity=0; o.style.display="none";}
+    // outro
+    if(isOutro){
+      const appear=easeOut(clamp(u/0.3,0,1));
+      outro.style.display="flex"; outro.style.opacity=appear.toFixed(3);
+      outro.querySelector(".bg").style.transform=`scale(${(1.16+0.08*u).toFixed(4)})`;
+      const ac=easeOutBack(clamp((u-0.42)/0.3,0,1)); const cta=outro.querySelector(".cta");
+      cta.style.opacity=clamp(ac,0,1).toFixed(3); cta.style.transform=`scale(${(0.72+0.28*clamp(ac,0,1)).toFixed(3)})`;
+    } else {outro.style.opacity=0;outro.style.display="none";}
+
+    // header + section + content only during features
+    hdr.style.opacity=isFeat?1:0; sec.style.opacity=isFeat?1:0;
+    el("content").style.opacity=isFeat?1:0;
+
+    Object.values(scenes).forEach(s=>{s.style.display="none";s.style.opacity=0;});
+
+    if(isFeat){
+      navSpans.forEach(sp=>sp.classList.toggle("on",sp.dataset.nav===sc.nav));
+      ptitle.innerHTML=sc.title; psub.innerHTML=sc.sub;
+      const inS=easeOut(clamp(u/0.14,0,1)), outS=clamp((u-0.9)/0.1,0,1);
+      sec.style.transform=`translateY(${((1-inS)*20 - outS*16).toFixed(1)}px)`;
+      sec.style.opacity=clamp(inS-outS,0,1).toFixed(3);
+
+      const cur=scenes[sc.id]; cur.style.display="flex";
+      const inC=easeOut(clamp((u-0.05)/0.22,0,1)), outC=clamp((u-0.9)/0.1,0,1);
+      cur.style.opacity=clamp(inC-outC,0,1).toFixed(3);
+      cur.querySelectorAll(".panel").forEach(p=>{p.style.transform=`translateY(${((1-inC)*34).toFixed(1)}px)`;});
+
+      if(sc.id==="dash")animDash(u);
+      else if(sc.id==="list")animList(u);
+      else if(sc.id==="comm")animComm(u);
+      else if(sc.id==="book")animBook(u);
+      else if(sc.id==="lib")animLib(u);
+      else if(sc.id==="support")animSupport(u);
+    }
+  }
+  window.renderFrame=renderFrame; renderFrame(0);
+</script>
+</body>
+</html>

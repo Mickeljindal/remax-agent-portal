@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=1080,height=1920"/>
+<title>RE/MAX Excellence — Agent Portal Reel (Vertical)</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#070f1f;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#fff}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;
+    background:radial-gradient(130% 90% at 50% -5%, #1f5fb0 0%, #103163 42%, #0a1b39 72%, #070f1f 100%)}
+
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;z-index:0;will-change:transform}
+  #b1{width:640px;height:640px;background:#e2231a;left:-190px;top:-150px}
+  #b2{width:700px;height:700px;background:#1f7fe0;right:-250px;bottom:40px}
+  #grain{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:6px 6px;z-index:9;pointer-events:none}
+  #vignette{position:absolute;inset:0;z-index:8;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 42%, transparent 55%, rgba(3,8,18,.55) 100%)}
+
+  /* brand bar */
+  #brand{position:absolute;top:64px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:16px;z-index:7;will-change:opacity,transform}
+  #brand .bmark{width:48px;height:60px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
+  #brand .name{font-size:25px;font-weight:800;letter-spacing:.14em}
+  #brand .name small{display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.3em;margin-top:3px}
+
+  /* scene headline block */
+  #head{position:absolute;left:70px;right:70px;top:190px;z-index:6;text-align:center;will-change:opacity,transform}
+  #head .kick{display:inline-block;background:rgba(226,35,26,.95);color:#fff;font-size:24px;font-weight:800;
+    letter-spacing:.18em;padding:11px 26px;border-radius:999px;box-shadow:0 14px 34px rgba(226,35,26,.45)}
+  #head h2{margin-top:22px;font-size:82px;line-height:1.02;font-weight:900;letter-spacing:-.03em;text-shadow:0 6px 30px rgba(0,0,0,.5)}
+  #head h2 em{font-style:normal;color:#ff7a6e}
+
+  /* browser card holding the real screenshot */
+  #card{position:absolute;left:50px;top:556px;width:980px;z-index:5;will-change:transform,opacity;
+    border-radius:26px;overflow:hidden;background:#0e1a2e;
+    box-shadow:0 60px 130px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05)}
+  #card .bar{height:60px;background:linear-gradient(#1b2c49,#16243d);display:flex;align-items:center;padding:0 22px;gap:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+  #card .bar i{width:15px;height:15px;border-radius:50%}
+  #card .bar i:nth-child(1){background:#ff5f57}#card .bar i:nth-child(2){background:#febc2e}#card .bar i:nth-child(3){background:#28c840}
+  #card .bar .url{margin-left:20px;flex:1;height:34px;background:#0c1626;border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;display:flex;align-items:center;padding:0 18px;color:#8aa3c8;font-size:16px;font-weight:600;gap:10px}
+  #card .bar .url .lock{color:#28c840;font-size:13px}
+  #screen{position:relative;width:100%;height:800px;background:#fff;overflow:hidden}
+  #screen img{position:absolute;left:0;top:0;width:980px;display:block;opacity:0;will-change:transform,opacity}
+  #screen .glass{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.06));z-index:3}
+  #screen .sheen{position:absolute;top:0;left:0;width:58%;height:100%;z-index:4;pointer-events:none;
+    background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.38) 50%,transparent 100%);
+    transform:translateX(-180%) skewX(-12deg);will-change:transform,opacity;mix-blend-mode:screen;opacity:0}
+
+  /* caption */
+  #cap{position:absolute;left:60px;right:60px;bottom:150px;z-index:7;text-align:center;will-change:opacity,transform}
+  /* card sits higher + taller now; caption stays above progress */
+  #cap .t{display:inline-block;background:rgba(8,16,30,.72);color:#fff;font-size:34px;font-weight:700;line-height:1.32;
+    padding:18px 30px;border-radius:18px;box-shadow:0 16px 50px rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08)}
+  #cap .t em{font-style:normal;color:#ff8f84}
+
+  /* intro / outro */
+  .full{position:absolute;inset:0;z-index:11;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px;overflow:hidden}
+  .full .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transform:scale(1.16);will-change:transform}
+  .full .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,18,38,.72),rgba(8,18,38,.52) 45%,rgba(8,18,38,.86))}
+  .full .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
+  #intro .kicker{font-size:28px;font-weight:800;letter-spacing:.4em;color:#ff9e95;will-change:opacity,transform}
+  #intro .ibal{margin-top:30px;width:150px;height:188px;filter:drop-shadow(0 26px 50px rgba(0,0,0,.55));will-change:transform,opacity}
+  #intro .logoWrap{margin-top:40px;overflow:hidden;will-change:clip-path}
+  #intro .logo{display:block;width:760px;max-width:82vw;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+  #intro p{margin-top:34px;font-size:42px;font-weight:600;color:rgba(255,255,255,.92);line-height:1.22;text-shadow:0 4px 20px rgba(0,0,0,.5);will-change:opacity,transform}
+
+  #outro .obal{width:120px;height:150px;filter:drop-shadow(0 22px 44px rgba(0,0,0,.55));margin-bottom:26px;will-change:transform,opacity}
+  #outro .logo{display:block;width:700px;max-width:80vw;filter:drop-shadow(0 12px 34px rgba(0,0,0,.55));will-change:opacity,transform}
+  #outro p{margin-top:30px;font-size:38px;font-weight:600;color:rgba(255,255,255,.9);line-height:1.3;text-shadow:0 4px 18px rgba(0,0,0,.5);will-change:opacity,transform}
+  #outro .cta{margin-top:52px;background:#e2231a;color:#fff;font-size:44px;font-weight:900;padding:32px 78px;border-radius:24px;box-shadow:0 26px 64px rgba(226,35,26,.55);will-change:transform,opacity}
+  #outro .handle{margin-top:36px;font-size:32px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.04em;will-change:opacity}
+
+  #prog{position:absolute;bottom:56px;left:70px;right:70px;display:flex;gap:9px;z-index:12}
+  #prog .seg{flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.22);overflow:hidden}
+  #prog .seg i{display:block;height:100%;width:0;background:#fff}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <clipPath id="bclip" clipPathUnits="userSpaceOnUse">
+        <path d="M50 3 C22 3 6 27 6 53 C6 84 33 107 45 117 L55 117 C67 107 94 84 94 53 C94 27 78 3 50 3 Z"/>
+      </clipPath>
+      <symbol id="balloon" viewBox="0 0 100 132">
+        <g clip-path="url(#bclip)">
+          <rect x="0" y="0" width="100" height="40" fill="#e2231a"/>
+          <rect x="0" y="40" width="100" height="38" fill="#ffffff"/>
+          <rect x="0" y="78" width="100" height="44" fill="#13427d"/>
+        </g>
+        <path d="M45 117 L55 117 L53.5 128 Q50 131 46.5 128 Z" fill="#0f1b2e"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="blob" id="b1"></div>
+  <div class="blob" id="b2"></div>
+
+  <div id="brand">
+    <svg class="bmark" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+    <div class="name">RE/MAX EXCELLENCE<small>AGENT PORTAL</small></div>
+  </div>
+
+  <div id="head">
+    <span class="kick" id="kick">ALL IN ONE</span>
+    <h2 id="h2"></h2>
+  </div>
+
+  <div id="card">
+    <div class="bar"><i></i><i></i><i></i>
+      <div class="url"><span class="lock">&#128274;</span> agentportal.joinremaxex.com</div>
+    </div>
+    <div id="screen">
+      <img id="shot_full"    src="shots/full.png"       alt=""/>
+      <img id="shot_dash"    src="shots/dashboard.png"  alt=""/>
+      <img id="shot_list"    src="shots/listings.png"   alt=""/>
+      <img id="shot_comm"    src="shots/commission.png" alt=""/>
+      <img id="shot_office"  src="shots/offices.png"    alt=""/>
+      <img id="shot_lib"     src="shots/assets.png"     alt=""/>
+      <img id="shot_support" src="shots/support.png"    alt=""/>
+      <div class="glass"></div>
+      <div class="sheen"></div>
+    </div>
+  </div>
+
+  <div id="cap"><span class="t" id="capText"></span></div>
+
+  <!-- INTRO -->
+  <div class="full" id="intro">
+    <div class="bg" style="background-image:url('img/skyline.jpg')"></div>
+    <div class="veil"></div>
+    <div class="inner">
+      <div class="kicker">WHEN YOU JOIN</div>
+      <svg class="ibal" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+      <div class="logoWrap" id="introLogoWrap"><img class="logo" src="img/logo.png" alt="RE/MAX Excellence"/></div>
+      <p>The one portal that makes<br/>your every day easier.</p>
+    </div>
+  </div>
+
+  <!-- OUTRO -->
+  <div class="full" id="outro">
+    <div class="bg" style="background-image:url('img/handshake.jpg')"></div>
+    <div class="veil"></div>
+    <div class="inner">
+      <svg class="obal" viewBox="0 0 100 132"><use href="#balloon"/></svg>
+      <img class="logo" src="img/logo.png" alt="RE/MAX Excellence"/>
+      <p>Training &middot; Pre&#8209;con &middot; Tools &middot; Support<br/>&mdash; everything, one login.</p>
+      <div class="cta">Join our team</div>
+      <div class="handle">joinremaxex.com</div>
+    </div>
+  </div>
+
+  <div id="vignette"></div>
+  <div id="grain"></div>
+  <div id="prog"></div>
+</div>
+
+<script>
+  // ---------- timeline ----------
+  const S = [
+    { id:"intro",  start:0.0,  end:2.4,  type:"intro" },
+    { id:"full",   start:2.4,  end:5.8,  kick:"ALL IN ONE",       h:["Your whole portal,","<em>one login</em>"],      shot:"shot_full",    stype:"scroll", cap:"Everything at your fingertips." },
+    { id:"dash",   start:5.8,  end:8.6,  kick:"STAY AHEAD",       h:["Training &amp;","<em>your calendar</em>"],       shot:"shot_dash",    stype:"pan",    cap:"Know what's happening — this month and next." },
+    { id:"list",   start:8.6,  end:11.6, kick:"PRE&#8209;CONSTRUCTION", h:["Every project,","<em>one tap</em>"],       shot:"shot_list",    stype:"pan",    cap:"Browse &amp; search pre&#8209;con in seconds." },
+    { id:"comm",   start:11.6, end:14.2, kick:"INSTANT MATH",     h:["Commission,","<em>in seconds</em>"],             shot:"shot_comm",    stype:"pan",    cap:"Run your numbers instantly." },
+    { id:"office", start:14.2, end:16.8, kick:"MEETING ROOMS",    h:["Book a room,","<em>in clicks</em>"],             shot:"shot_office",  stype:"pan",    cap:"Real rooms, real&#8209;time availability." },
+    { id:"lib",    start:16.8, end:19.4, kick:"OFFICE LIBRARY",   h:["Every form,","<em>in one place</em>"],           shot:"shot_lib",     stype:"pan",    cap:"Schedules, deal sheets &amp; deposit info." },
+    { id:"support",start:19.4, end:22.2, kick:"AI SUPPORT",       h:["Any question,","<em>just ask</em>"],             shot:"shot_support", stype:"pan",    cap:"Your AI assistant, any time." },
+    { id:"outro",  start:22.2, end:25.4, type:"outro" },
+  ];
+  const DUR = S[S.length-1].end;
+  window.__duration = DUR;
+
+  // ---------- preload ----------
+  const SHOT_IDS = ["shot_full","shot_dash","shot_list","shot_comm","shot_office","shot_lib","shot_support"];
+  const SHOTS = SHOT_IDS.map(id=>document.getElementById(id));
+  const extra = ["img/skyline.jpg","img/handshake.jpg","img/logo.png"].map(src=>{const i=new Image();i.src=src;return i;});
+  let loaded=0; window.__ready=false;
+  const all=[...SHOTS,...extra];
+  function done(){ if(++loaded>=all.length) window.__ready=true; }
+  all.forEach(img=>{ if(img.complete && img.naturalWidth) done(); else { img.onload=done; img.onerror=done; } });
+  setTimeout(()=>{ window.__ready=true; }, 15000);
+
+  // ---------- helpers ----------
+  const el=(id)=>document.getElementById(id);
+  const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+  const lerp=(a,b,u)=>a+(b-a)*u;
+  const easeInOut=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+  const easeOut=u=>1-Math.pow(1-u,3);
+  const easeOutBack=t=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);};
+  const CARD_W=980, SCREEN_H=800;
+
+  const brand=el("brand"), head=el("head"), kick=el("kick"), h2=el("h2"),
+        card=el("card"), cap=el("cap"), capText=el("capText"),
+        intro=el("intro"), outro=el("outro"),
+        introLogoWrap=el("introLogoWrap"), prog=el("prog");
+  const sheen=document.querySelector("#screen .sheen");
+
+  for(let i=0;i<S.length;i++){ const d=document.createElement("div"); d.className="seg"; d.innerHTML="<i></i>"; prog.appendChild(d); }
+  const segs=[...prog.querySelectorAll(".seg i")];
+
+  function hideShots(){ SHOTS.forEach(s=>s.style.opacity=0); }
+
+  function placeShot(img, u, stype){
+    const ratio=(img.naturalHeight||1000)/(img.naturalWidth||1500);
+    const H=CARD_W*ratio;
+    let y, scale;
+    if(stype==="scroll"){
+      const e=easeInOut(clamp(u,0,1));
+      const maxScroll=Math.max(0,H-SCREEN_H);
+      y=-maxScroll*e; scale=1;
+    } else {
+      const e=easeInOut(clamp(u,0,1));
+      scale=lerp(1.0,1.05,e);
+      const Hs=H*scale;
+      const maxScroll=Math.max(0,Hs-SCREEN_H);
+      if(maxScroll>6){ y=-lerp(maxScroll*0.08,maxScroll*0.72,e); }
+      else { y=(SCREEN_H-Hs)/2; }
+    }
+    img.style.transformOrigin="50% 0%";
+    img.style.transform=`translateY(${y.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+    img.style.opacity=1;
+  }
+
+  function renderFrame(t){
+    t=clamp(t,0,DUR-0.001);
+    // background drift (deterministic)
+    el("b1").style.transform=`translate(${(Math.sin(t*0.6)*40).toFixed(1)}px,${(Math.cos(t*0.5)*30).toFixed(1)}px)`;
+    el("b2").style.transform=`translate(${(Math.cos(t*0.4)*48).toFixed(1)}px,${(Math.sin(t*0.45)*38).toFixed(1)}px)`;
+
+    // progress
+    let acc=0;
+    for(let i=0;i<S.length;i++){ const st=S[i].start,en=S[i].end; segs[i].style.width=(clamp((t-st)/(en-st),0,1)*100).toFixed(1)+"%"; }
+
+    const sc=S.find(s=>t>=s.start && t<s.end)||S[S.length-1];
+    const u=clamp((t-sc.start)/(sc.end-sc.start),0,1);
+    const isIntro=sc.type==="intro", isOutro=sc.type==="outro", isFeat=!isIntro&&!isOutro;
+
+    // ---- INTRO ----
+    if(isIntro){
+      const appear=easeOut(clamp(u/0.34,0,1));
+      const leave=clamp((u-0.82)/0.18,0,1);
+      intro.style.display="flex"; intro.style.opacity=(appear*(1-leave)).toFixed(3);
+      intro.querySelector(".bg").style.transform=`scale(${(1.16+0.10*u).toFixed(4)})`;
+      intro.querySelector(".inner").style.transform=`translateY(${(-30*leave).toFixed(1)}px)`;
+      const kw=easeOut(clamp((u-0.10)/0.5,0,1));
+      introLogoWrap.style.clipPath=`inset(0 ${((1-kw)*100).toFixed(1)}% 0 0)`;
+    } else { intro.style.opacity=0; intro.style.display="none"; }
+
+    // ---- OUTRO ----
+    if(isOutro){
+      const appear=easeOut(clamp(u/0.32,0,1));
+      outro.style.display="flex"; outro.style.opacity=appear.toFixed(3);
+      outro.querySelector(".bg").style.transform=`scale(${(1.16+0.10*u).toFixed(4)})`;
+      const al=easeOut(clamp((u-0.12)/0.34,0,1));
+      outro.querySelector(".logo").style.opacity=al.toFixed(3);
+      outro.querySelector(".logo").style.transform=`translateY(${((1-al)*26).toFixed(1)}px)`;
+      const ap=easeOut(clamp((u-0.30)/0.3,0,1));
+      outro.querySelector("p").style.opacity=ap.toFixed(3);
+      const ac=easeOutBack(clamp((u-0.46)/0.3,0,1));
+      outro.querySelector(".cta").style.opacity=clamp(ac,0,1).toFixed(3);
+      outro.querySelector(".cta").style.transform=`scale(${(0.7+0.3*clamp(ac,0,1)).toFixed(3)})`;
+      const ah=easeOut(clamp((u-0.62)/0.3,0,1));
+      outro.querySelector(".handle").style.opacity=ah.toFixed(3);
+    } else { outro.style.opacity=0; outro.style.display="none"; }
+
+    // ---- FEATURE ----
+    brand.style.opacity=isFeat?1:0;
+    head.style.opacity=isFeat?1:0;
+    card.style.opacity=isFeat?1:0;
+    cap.style.opacity=isFeat?1:0;
+    hideShots();
+
+    if(isFeat){
+      brand.querySelector(".bmark").style.transform=`translateY(${(Math.sin(t*1.8)*4).toFixed(1)}px)`;
+
+      // headline in/out
+      const inH=easeOut(clamp(u/0.16,0,1));
+      const outH=clamp((u-0.88)/0.12,0,1);
+      const hop=clamp(inH-outH,0,1);
+      head.style.opacity=hop.toFixed(3);
+      head.style.transform=`translateY(${((1-inH)*24 - outH*20).toFixed(1)}px)`;
+      const ak=easeOutBack(clamp((u-0.04)/0.34,0,1));
+      kick.style.opacity=clamp(ak,0,1).toFixed(3);
+      kick.style.transform=`scale(${(0.7+0.3*clamp(ak,0,1)).toFixed(3)})`;
+      kick.innerHTML=sc.kick;
+      h2.innerHTML=`${sc.h[0]}<br/>${sc.h[1]}`;
+
+      // card entrance + subtle float
+      const ac=easeOut(clamp((u-0.10)/0.4,0,1));
+      const outC=clamp((u-0.9)/0.1,0,1);
+      card.style.opacity=clamp(ac-outC,0,1).toFixed(3);
+      card.style.transform=`translateY(${((1-ac)*50 - outC*24).toFixed(1)}px) scale(${(0.97+0.03*ac).toFixed(4)})`;
+
+      // the real screenshot motion
+      placeShot(el(sc.shot), u, sc.stype);
+
+      // premium light-sweep gloss across the screen (once per scene)
+      const sw=easeInOut(clamp((u-0.24)/0.5,0,1));
+      sheen.style.transform=`translateX(${(-180+sw*470).toFixed(1)}%) skewX(-12deg)`;
+      sheen.style.opacity=(sw>0.03 && sw<0.97)?"0.9":"0";
+
+      // caption
+      capText.innerHTML=sc.cap;
+      const cIn=easeOut(clamp((u-0.16)/0.2,0,1));
+      const cOut=clamp((u-0.9)/0.1,0,1);
+      cap.style.opacity=clamp(cIn-cOut,0,1).toFixed(3);
+      cap.style.transform=`translateY(${((1-cIn)*18).toFixed(1)}px)`;
+    }
+  }
+  window.renderFrame=renderFrame;
+  renderFrame(0);
+</script>
+</body>
+</html>
