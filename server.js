@@ -93,7 +93,7 @@ if (!adminClient) {
 const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL || `http://localhost:${PORT}`;
 
 const BUCKETS = {
-  "course-videos": { folder: "course-videos", maxSize: 2 * 1024 * 1024 * 1024, mimes: ["video/mp4", "video/webm", "video/quicktime", "video/x-msvideo", "video/x-matroska"] },
+  "course-videos": { folder: "course-videos", maxSize: 0, mimes: ["video/mp4", "video/webm", "video/quicktime", "video/x-msvideo", "video/x-matroska"] }, // maxSize 0 = no app-level size cap (nginx client_max_body_size is the real limit)
   "precon-documents": { folder: "precon-documents", maxSize: 100 * 1024 * 1024, mimes: ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "image/jpeg", "image/png"] },
   "precon-images": { folder: "precon-images", maxSize: 25 * 1024 * 1024, mimes: ["image/jpeg", "image/png", "image/webp", "image/gif"] },
   "property-images": { folder: "property-images", maxSize: 25 * 1024 * 1024, mimes: ["image/jpeg", "image/png", "image/webp", "image/gif"] },
@@ -146,7 +146,7 @@ function makeUploader(bucket) {
   const cfg = BUCKETS[bucket];
   return multer({
     storage,
-    limits: { fileSize: cfg.maxSize },
+    limits: cfg.maxSize ? { fileSize: cfg.maxSize } : {}, // 0/undefined = no size cap
     fileFilter: (req, file, cb) => {
       if (cfg.mimes.length && !cfg.mimes.includes(file.mimetype)) return cb(new Error(`File type ${file.mimetype} not allowed`));
       cb(null, true);
@@ -647,7 +647,13 @@ app.use(express.static(DIST, {
 // SPA fallback for everything else (must be last)
 app.get("*", (_req, res) => res.sendFile(path.join(DIST, "index.html")));
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`[server] RE/MAX Agent Portal running on port ${PORT}`);
   console.log(`[server] Uploads stored in: ${UPLOAD_ROOT}`);
 });
+// Large uploads (course videos) can take minutes on slower connections; Node's
+// default 5-minute requestTimeout would abort them. Disable it so big files
+// finish. NOTE: the KloudBean nginx proxy must ALSO allow the body size +
+// read timeout (client_max_body_size + proxy_read_timeout) — see docs.
+server.requestTimeout = 0;
+server.headersTimeout = 120000;

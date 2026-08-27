@@ -35,7 +35,7 @@ export const UPLOAD_PRESETS = {
   listingGallery: { recommended: "1920 × 1080 px (16:9)", formats: "JPG, PNG, WebP", maxSize: "Max 25 MB" },
   propertyImage: { recommended: "1200 × 800 px (3:2)", formats: "JPG, PNG, WebP", maxSize: "Max 25 MB" },
   courseThumbnail: { recommended: "1280 × 720 px (16:9)", formats: "JPG, PNG, WebP", maxSize: "Max 25 MB" },
-  courseVideo: { recommended: "1080p MP4 (H.264)", formats: "MP4, WebM, MOV", maxSize: "Max 2 GB" },
+  courseVideo: { recommended: "1080p MP4 (H.264)", formats: "MP4, WebM, MOV", maxSize: "Large files OK — or paste a video URL" },
   documentPdf: { recommended: "PDF preferred", formats: "PDF, DOC, PPT, JPG, PNG", maxSize: "Max 100 MB" },
   avatar: { recommended: "400 × 400 px (square)", formats: "JPG, PNG", maxSize: "Max 5 MB" },
 };

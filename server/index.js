@@ -33,7 +33,7 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "*").split(",").map((s) 
 const BUCKETS = {
   "course-videos": {
     folder: "course-videos",
-    maxSize: 2 * 1024 * 1024 * 1024, // 2 GB
+    maxSize: 0, // 0 = no app-level cap; nginx client_max_body_size is the real limit
     mimes: ["video/mp4", "video/webm", "video/quicktime", "video/x-msvideo", "video/x-matroska"],
   },
   "precon-documents": {
@@ -115,7 +115,7 @@ function makeUploader(bucket) {
   const cfg = BUCKETS[bucket];
   return multer({
     storage,
-    limits: { fileSize: cfg.maxSize },
+    limits: cfg.maxSize ? { fileSize: cfg.maxSize } : {}, // 0/undefined = no size cap
     fileFilter: (req, file, cb) => {
       if (cfg.mimes.length && !cfg.mimes.includes(file.mimetype)) {
         return cb(new Error(`File type ${file.mimetype} not allowed for ${bucket}`));
