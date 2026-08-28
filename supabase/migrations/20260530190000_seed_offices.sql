@@ -15,9 +15,7 @@ BEGIN
     INSERT INTO public.meeting_rooms (location_id, name, capacity, amenities, is_virtual) VALUES
       (miss_id, 'Boardroom A', 10, 'Projector · VC · Whiteboard', false),
       (miss_id, 'Meeting Room B', 4, 'Zoom-ready · TV', false),
-      (miss_id, 'Virtual Room', 50, 'Zoom / Teams link', true),
-      (bram_id, 'Conference Room', 12, 'Projector · Whiteboard', false),
-      (bram_id, 'Huddle Room', 4, 'TV · Webcam', false),
-      (bram_id, 'Virtual Room', 50, 'Zoom / Teams link', true);
+      (miss_id, 'Open Collaboration Space', 8, 'Open seating · Whiteboard', false),
+      (bram_id, 'Conference Room', 12, 'Projector · Whiteboard', false);
   END IF;
 END $$;
