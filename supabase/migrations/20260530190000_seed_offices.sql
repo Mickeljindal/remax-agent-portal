@@ -13,9 +13,9 @@ BEGIN
       RETURNING id INTO bram_id;
 
     INSERT INTO public.meeting_rooms (location_id, name, capacity, amenities, is_virtual) VALUES
-      (miss_id, 'Boardroom A', 10, 'Projector · VC · Whiteboard', false),
+      (miss_id, 'Meeting Room A', 10, 'Projector · VC · Whiteboard', false),
       (miss_id, 'Meeting Room B', 4, 'Zoom-ready · TV', false),
       (miss_id, 'Open Collaboration Space', 8, 'Open seating · Whiteboard', false),
-      (bram_id, 'Conference Room', 12, 'Projector · Whiteboard', false);
+      (bram_id, 'Meeting Room', 12, 'Projector · Whiteboard', false);
   END IF;
 END $$;
