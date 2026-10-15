@@ -116,12 +116,12 @@ const Auth = () => {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth`,
-    });
+    // Sent through our own server + Resend (Supabase's default mailer doesn't
+    // deliver to agents). The email links to /reset-password.
+    const { error } = await callServerApi("forgot-password", { email }, { auth: false });
     setLoading(false);
     if (error) {
-      toast({ variant: "destructive", title: "Request failed", description: error.message });
+      toast({ variant: "destructive", title: "Request failed", description: error });
     } else {
       setForgotOpen(false);
       setForgotEmail("");

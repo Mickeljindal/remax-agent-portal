@@ -2,9 +2,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import type { ReactNode } from "react";
+import { isRecoveryHash } from "./lib/recovery";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import AdminPanel from "./pages/AdminPanel";
@@ -44,15 +47,31 @@ import AdminResourceKit from "./pages/AdminResourceKit";
 
 const queryClient = new QueryClient();
 
+/**
+ * Supabase-hosted recovery links land on any page (usually "/") with
+ * `#...type=recovery`. Without this, Index/Auth see the new session and jump
+ * straight to /dashboard, so the agent never gets to set a new password.
+ * The hash is kept so the Supabase client can still read the tokens.
+ */
+const RecoveryRedirect = ({ children }: { children: ReactNode }) => {
+  const location = useLocation();
+  if (location.pathname !== "/reset-password" && isRecoveryHash(location.hash)) {
+    return <Navigate to={{ pathname: "/reset-password", hash: location.hash }} replace />;
+  }
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <RecoveryRedirect>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/preview" element={<ClientPreview />} />
           <Route path="/share/contact" element={<ShareContactLanding />} />
           <Route path="/share/listing" element={<ShareListingLanding />} />
@@ -95,6 +114,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </RecoveryRedirect>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -378,6 +378,107 @@ app.post("/api/admin-reset-password", async (req, res) => {
   }
 });
 
+// ─── Self-service forgot password ───
+// Supabase's built-in mailer only delivers to project team members, so reset
+// emails never reached agents. Instead we generate the recovery token with the
+// service role and deliver it through Resend like every other portal email.
+// The link points at our own /reset-password page (built from PUBLIC_BASE_URL,
+// never from the request Host header) so it doesn't depend on Supabase's
+// redirect allow-list either.
+const forgotPasswordHits = new Map(); // key -> [timestamps]
+const FORGOT_WINDOW_MS = 15 * 60_000;
+const FORGOT_MAX_PER_EMAIL = 3;
+const FORGOT_MAX_PER_IP = 10;
+
+function hitRateLimit(key, max) {
+  const now = Date.now();
+  const hits = (forgotPasswordHits.get(key) || []).filter((t) => now - t < FORGOT_WINDOW_MS);
+  if (hits.length >= max) {
+    forgotPasswordHits.set(key, hits);
+    return true;
+  }
+  hits.push(now);
+  forgotPasswordHits.set(key, hits);
+  return false;
+}
+
+// Prevent the rate-limit map from growing unbounded.
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, hits] of forgotPasswordHits) {
+    if (!hits.some((t) => now - t < FORGOT_WINDOW_MS)) forgotPasswordHits.delete(key);
+  }
+}, FORGOT_WINDOW_MS).unref();
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
+
+app.post("/api/forgot-password", async (req, res) => {
+  if (!adminClient) return res.status(503).json({ error: "Password reset is not configured on the server." });
+
+  // Always the same response so the endpoint can't be used to discover which emails have accounts.
+  const genericOk = { success: true, message: "If an account exists for this email, a reset link has been sent." };
+
+  try {
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+      return res.status(400).json({ error: "Enter a valid email address." });
+    }
+
+    const ip = (req.headers["x-forwarded-for"] || "").toString().split(",")[0].trim() || req.socket.remoteAddress || "unknown";
+    if (hitRateLimit(`ip:${ip}`, FORGOT_MAX_PER_IP)) {
+      return res.status(429).json({ error: "Too many reset requests. Please try again in a few minutes." });
+    }
+    if (hitRateLimit(`email:${email}`, FORGOT_MAX_PER_EMAIL)) {
+      // Quietly stop sending more emails to this address, without revealing anything.
+      return res.json(genericOk);
+    }
+
+    const { data, error } = await adminClient.auth.admin.generateLink({ type: "recovery", email });
+    if (error || !data?.properties?.hashed_token) {
+      // Most commonly "user not found" — log it, but respond identically.
+      console.warn(`forgot-password: no link generated for ${email}: ${error?.message || "no token"}`);
+      return res.json(genericOk);
+    }
+
+    const resetUrl = `${PUBLIC_BASE_URL.replace(/\/$/, "")}/reset-password?token_hash=${encodeURIComponent(
+      data.properties.hashed_token
+    )}&type=recovery`;
+
+    const emailCfg = await resolveEmailConfig();
+    const subject = "Reset your password";
+    const body = `We received a request to reset the password for your ${escapeHtml(emailCfg.portalName)} account.
+
+<a href="${resetUrl}" style="display:inline-block;background:#003DA5;color:#ffffff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;">Reset password</a>
+
+Or copy this link into your browser:
+<span style="word-break:break-all;color:#003DA5;">${resetUrl}</span>
+
+This link expires in 1 hour and can only be used once. If you didn't request a reset, you can ignore this email — your password won't change.`;
+
+    const result = await sendResendEmail({
+      from: emailCfg.fromEmail,
+      to: email,
+      subject,
+      html: buildHtmlEmail(subject, body, escapeHtml(emailCfg.portalName)),
+    });
+    if (!result.ok) {
+      console.error(`forgot-password: Resend failed for ${email}:`, result.error);
+      return res.status(502).json({ error: "We couldn't send the reset email right now. Please try again later." });
+    }
+    // Dev convenience only: never log live reset tokens in production.
+    if (result.skipped && process.env.NODE_ENV !== "production") {
+      console.log(`[NO RESEND KEY] Reset link for ${email}: ${resetUrl}`);
+    }
+
+    res.json(genericOk);
+  } catch (e) {
+    console.error("forgot-password error:", e);
+    res.status(500).json({ error: "Password reset request failed. Please try again." });
+  }
+});
+
 // ─── Send notification email (replaces send-notification edge function) ───
 app.post("/api/send-notification", async (req, res) => {
   if (!adminClient) return res.status(503).json({ error: "Notifications are not configured on the server." });
