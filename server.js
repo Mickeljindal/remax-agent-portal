@@ -132,7 +132,19 @@ const storage = multer.diskStorage({
     if (!cfg) return cb(new Error("Unknown bucket"), "");
     const sub = (req.query.folder || "").toString().replace(/[^a-zA-Z0-9_-]/g, "");
     const dir = path.join(UPLOAD_ROOT, cfg.folder, sub);
-    fs.mkdirSync(dir, { recursive: true });
+    // Must not throw here: on Node 22 a synchronous throw inside this multer
+    // callback is uncaught and crashes the whole server (site-wide 502).
+    try {
+      fs.mkdirSync(dir, { recursive: true });
+    } catch (e) {
+      console.error(`[upload] cannot create ${dir}: ${e.code || e.message}`);
+      const err = new Error(
+        e.code === "EACCES" || e.code === "EPERM"
+          ? "Server can't write to the upload folder (permission denied). Ask the server admin to fix folder ownership."
+          : "Server couldn't prepare the upload folder."
+      );
+      return cb(err, "");
+    }
     cb(null, dir);
   },
   filename: (req, file, cb) => {
